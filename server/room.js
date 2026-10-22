@@ -291,7 +291,7 @@ export class Room {
       half: this.reveal && this.reveal.kind === "half" ? this.reveal.order : null,
     });
     this.step = "race.finish";
-    this.after(this.p(22000), () => this.nextRace(), true);
+    this.after(this.p(30000), () => this.nextRace(), true); // long enough to read the race summary
     this.changed();
   }
   endSeason() {

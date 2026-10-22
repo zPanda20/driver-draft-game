@@ -1,6 +1,7 @@
 // The race screen: track card, pop-up decisions, and the shared animated timing tower.
 import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast, themeOf, drvPic, trkPic } from "./core.js";
 
+let sumClosed = -1; // the round whose summary the player has dismissed
 let RS = null; // persistent race-screen state: rows, last seen reveal, timers
 const RH = 30;
 
@@ -12,18 +13,25 @@ export const raceHandlers = {
   popupNo() { send({ t: "popup", take: false }); },
   speedVote(a) { send({ t: "speedVote", dir: a.dir }); },
   speedSet(a) { send({ t: "pace", pace: +a.value }); },
+  sumClose() { sumClosed = st.S.race.round; const e = $("#rSum"); if (e) e.innerHTML = ""; },
   jump(a) { const r = $(`#cr${a.car}`), s = $("#tscroll"); if (r && s) s.scrollTo({ top: Math.max(0, r.offsetTop - 80), behavior: "smooth" }); },
 };
 
 function trackOf(id) { return st.cat.tracks.find((t) => t.id === id); }
 const tag = (c, l) => (c ? `<span class="pill">${l}</span>` : "");
 
+// A tiny Start · Half · Finish rail, so the race has a visible shape.
+function rail(S) {
+  const at = S.step === "race.finish" ? 2 : S.step === "race.half" || S.step === "race.mid" ? 1 : 0;
+  return `<span class="rail" title="Race progress">${["Start", "Half", "Finish"].map((l, i) => `<i class="${i < at ? "done" : i === at ? "now" : ""}">${l}</i>`).join("")}</span>`;
+}
+
 function header(S) {
   const t = trackOf(S.race.track), R = S.reveal;
   const rain = Math.round(t.rain * 100);
   const wet = R && (R.kind === "half" || R.kind === "finish") && R.round === S.race.round ? R.rain : null;
   const ov = t.ovt >= 8 ? "very hard" : t.ovt >= 6 ? "hard" : t.ovt >= 4 ? "medium" : "easy";
-  return `<div class="rhead">${trkPic(t, 54)}<div><div class="phase">Round ${S.race.round + 1} of 18 · ${esc(t.region)}</div><div class="rtitle">${esc(t.name)}</div></div>
+  return `<div class="rhead">${trkPic(t, 54)}<div><div class="phase">Round ${S.race.round + 1} of 18 · ${esc(t.region)} ${rail(S)}</div><div class="rtitle">${esc(t.name)}</div></div>
     <div class="tags">${tag(t.street, "Street")}${tag(t.power, "Power")}${tag(t.down, "Downforce")}${tag(t.highrain, "Wet-prone")}<span class="pill">${esc(t.type)}</span><span class="pill">Overtaking: ${ov}</span></div>
     <div class="grow"></div>
     <div class="col gap4" style="align-items:flex-end"><span class="small mute">Chance of rain ${rain}%</span><div class="rainbar"><i style="width:${rain}%"></i></div></div>
@@ -141,7 +149,7 @@ function animateFinish(S, R, animate) {
     place(ord, { grid: R.grid, delta: true, pts: R.points, out, why: R.why, caption: "Final classification" });
     const w = R.order[0], t = S.teams[w >> 1];
     banner.innerHTML = `<div class="banner">🏁 ${esc(lastName(drvName(t.drivers[w & 1])))} wins for ${esc(t.name)}</div>`;
-    extras(S, R);
+    extras(S, R); showSummary(S, R);
   };
   if (!animate) { final(); return; }
   banner.innerHTML = `<div class="banner">🏁 Chequered flag</div>`;
@@ -171,6 +179,49 @@ function extras(S, R) {
     <div class="card"><h3>Gambles</h3><div class="ticker">${dec.join("") || "<div class='mute'>Nobody took a gamble.</div>"}</div></div></div>`;
 }
 
+// ---------- end-of-race summary pop-up ----------
+const ord = (n) => n + (n % 10 === 1 && n !== 11 ? "st" : n % 10 === 2 && n !== 12 ? "nd" : n % 10 === 3 && n !== 13 ? "rd" : "th");
+function summary(S, R) {
+  const fin = R.order.filter((c) => !R.dnf[c]);
+  if (!fin.length) return "";
+  const drv = (ci) => S.teams[ci >> 1].drivers[ci & 1];
+  const w = fin[0], wt = S.teams[w >> 1];
+  const podium = [1, 0, 2].filter((i) => fin[i] != null).map((i) => {
+    const ci = fin[i], t = S.teams[ci >> 1];
+    return `<div class="pod p${i + 1} ${S.me && S.me.teamId === t.id ? "me" : ""}">${drvPic(drv(ci), i === 0 ? 54 : 44)}<b>${esc(lastName(drvName(drv(ci))))}</b><small>${iconHTML(t.livery, 16)} ${esc(t.name)}</small><div class="step">P${i + 1}</div></div>`;
+  }).join("");
+  const banner = `<div class="winner" style="--wb:url(/liveries/${esc(wt.livery)}/banner.png)"><div class="wk">Race winner</div><div class="wn">${esc(wt.name)}</div><div class="wd">${esc(drvName(drv(w)))}${wt.owner ? ` · driven by ${esc(wt.owner)}'s team` : " · autopilot"}</div></div>`;
+  let mine = "";
+  const me = S.me && S.me.teamId;
+  if (me != null) {
+    const half = R.half && R.half.length ? R.half : null;
+    const cars = [me * 2, me * 2 + 1].map((ci) => {
+      const pos = fin.indexOf(ci) + 1, gp = R.grid.indexOf(ci) + 1, why = R.dnf[ci] ? R.why[ci] : null;
+      const hp = half ? half.indexOf(ci) + 1 : 0, pts = R.points[ci] || 0;
+      const notes = [];
+      if (why) notes.push(why === "crash" ? "💥 Crashed out" : why === "failure" ? "🔧 Retired with a failure" : "✖ Retired");
+      for (const e of R.events) if (e.car === ci && e.type === "pit") notes.push("⏱ Pit-stop error");
+      const mv = R.movers.find((m) => m.car === ci); if (mv && !why) notes.push(`📈 Climbed from P${mv.from} to P${mv.to}`);
+      const d = why ? 0 : gp - pos;
+      const dl = why ? "" : d > 0 ? `<span class="up">▲${d}</span>` : d < 0 ? `<span class="dn2">▼${-d}</span>` : `<span class="mute">–</span>`;
+      return `<div class="mc"><div class="mp">${why ? "OUT" : "P" + pos}</div>${drvPic(drv(ci), 40)}<div class="mi"><b>${esc(drvName(drv(ci)))}</b><div class="small mute">Started P${gp}${why ? "" : ` · finished P${pos}`} ${dl}${hp && !why ? ` · P${hp} at half` : ""}</div>${notes.length ? `<div class="small">${notes.join(" · ")}</div>` : ""}</div><div class="mpts">${pts ? "+" + pts : "0"}<small>pts</small></div></div>`;
+    }).join("");
+    const gain = (t) => (R.points[t * 2] || 0) + (R.points[t * 2 + 1] || 0);
+    const rankOf = (f) => { const l = S.teams.map((t) => ({ id: t.id, v: f(t) })).sort((a, b) => b.v - a.v || a.id - b.id); return l.findIndex((x) => x.id === me) + 1; };
+    const now = rankOf((t) => t.pts), was = rankOf((t) => t.pts - gain(t.id)), g = gain(me);
+    const mv = was - now;
+    mine = `<div class="sumine"><h4>Your race</h4>${cars}<div class="mtot"><b>+${g} points</b> this race · ${ord(now)} in the championship ${mv > 0 ? `<span class="up">▲${mv}</span>` : mv < 0 ? `<span class="dn2">▼${-mv}</span>` : `<span class="mute">(no change)</span>`}</div></div>`;
+  }
+  return `<div class="sumback"><div class="sumcard" role="dialog" aria-label="Race summary"><div class="sumhead"><span class="phase">Round ${R.round + 1} · ${esc(R.track.name || trackOf(R.track).name)}</span></div>
+    ${banner}<div class="podium">${podium}</div>${mine}
+    <div class="sumact"><span class="small mute">The next race starts shortly.</span><button class="btn pri" data-act="sumClose">Continue</button></div></div></div>`;
+}
+function showSummary(S, R) {
+  const el = $("#rSum"); if (!el) return;
+  if (sumClosed === R.round) { el.innerHTML = ""; return; }
+  if (!el.innerHTML) el.innerHTML = summary(S, R);
+}
+
 const SPEED_NAME = ["Relaxed", "Normal", "Fast", "Turbo"];
 function speedBar(S) {
   const sp = S.speed; if (!sp || !S.me) return "";
@@ -185,7 +236,7 @@ export function raceUpdate(S, mw) {
     if (RS) RS.timers.forEach(clearTimeout);
     RS = { rows: new Map(), timers: [], seq: null, round: -1, step: "", cur: null, boot: true };
     mw.innerHTML = `<div id="raceRoot" class="col"><div class="card" id="rHead"></div><div class="rline"><div id="rBanner"></div><div id="rSpeed"></div></div>
-      <div class="card"><div id="rMine" class="mycars"></div><div class="tscroll mt" id="tscroll" data-keep="tower" data-fit><div class="tower" id="tower"></div></div></div><div id="rExtra"></div><div id="rPopup"></div></div>`;
+      <div class="card"><div id="rMine" class="mycars"></div><div class="tscroll mt" id="tscroll" data-keep="tower" data-fit><div class="tower" id="tower"></div></div></div><div id="rExtra"></div><div id="rPopup"></div><div id="rSum"></div></div>`;
     buildRows(S);
   }
   const R = S.reveal, round = S.race.round;
@@ -204,7 +255,7 @@ export function raceUpdate(S, mw) {
     RS.timers.forEach(clearTimeout); RS.timers = [];
     RS.round = round; RS.seq = null; RS.cur = null;
     for (const r of RS.rows.values()) r.classList.add("hide");
-    $("#rExtra").innerHTML = ""; $("#rMine").innerHTML = "";
+    $("#rExtra").innerHTML = ""; $("#rMine").innerHTML = ""; $("#rSum").innerHTML = "";
   }
   const step = S.step;
   const isNew = R && RS.seq !== R.seq;
@@ -218,5 +269,6 @@ export function raceUpdate(S, mw) {
   } else if (step === "race.finish" && R && R.kind === "finish" && R.round === round) {
     if (isNew) { RS.timers.forEach(clearTimeout); RS.timers = []; animateFinish(S, R, !RS.boot); RS.seq = R.seq; }
   }
+  if (step !== "race.finish") $("#rSum").innerHTML = "";
   RS.boot = false;
 }

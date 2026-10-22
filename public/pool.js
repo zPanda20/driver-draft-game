@@ -15,6 +15,51 @@ export const groupOf = (id) => { const p = st.idx[id]; return p && p.kind === "p
 
 function pair(c, p) { return c === p ? `${stat(c)}` : `${stat(c)}<small class="mute">/${Math.round(p)}</small>`; }
 
+// ---- how good is what is left? (drives the tab glow and the "best" labels) ----
+const median = (a) => { const v = a.slice().sort((x, y) => x - y); return v[Math.floor(v.length / 2)]; };
+let baseCache = null;
+function baselines() {
+  if (baseCache && baseCache.cat === st.cat) return baseCache;
+  const o = (l) => ({ top: Math.max(...l.map((x) => x.overall)), med: median(l.map((x) => x.overall)) });
+  const c = { cat: st.cat, drivers: o(st.cat.drivers), principals: o(st.cat.principals), parts: {} };
+  for (const k of SLOTS) { const b = st.cat.parts.filter((p) => p.slot === k).map((p) => p.bonus); c.parts[k] = { top: Math.max(...b), med: median(b) }; }
+  return (baseCache = c);
+}
+// need: how many of this kind the player still needs. txt: the best one left. hot: 0..1, how far the best one left has fallen from the best there was (1 = down to a typical one).
+function tabInfo(S, k) {
+  const nd = S.me.needs, B = baselines();
+  const need = k === "drivers" ? nd.driver : k === "principals" ? nd.principal : nd.slots.includes(k) ? 1 : 0;
+  let best = null, base, txt;
+  if (k === "drivers" || k === "principals") {
+    const av = (k === "drivers" ? st.cat.drivers : st.cat.principals).filter((x) => !isTaken(S, x.id));
+    best = av.length ? Math.max(...av.map((x) => x.overall)) : null; base = B[k]; txt = best == null ? "none left" : `best ${best.toFixed(1)}`;
+  } else {
+    best = [50, 30, 20, 10].find((x) => freeParts(S, k, x).length) || null; base = B.parts[k]; txt = best == null ? "none left" : `best +${best}`;
+  }
+  const hot = best == null ? 1 : Math.max(0, Math.min(1, (base.top - best) / Math.max(1e-6, base.top - base.med)));
+  return { need, txt, hot };
+}
+
+// ---- driver strengths: one word for what stands out about a driver, compared with the field ----
+const SKEYS = ["pace", "race", "craft", "wet", "tyre", "cons", "safety"];
+const sval = (d, k) => (k === "cons" || k === "safety" ? d[k] : d.career[k]);
+let fieldCache = null;
+function field() {
+  if (fieldCache && fieldCache.cat === st.cat) return fieldCache;
+  const F = { cat: st.cat, m: {}, sd: {} };
+  for (const k of SKEYS) { const v = st.cat.drivers.map((d) => sval(d, k)), m = v.reduce((a, b) => a + b, 0) / v.length; F.m[k] = m; F.sd[k] = Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / v.length) || 1; }
+  return (fieldCache = F);
+}
+const STAG = { pace: "Qualifier", race: "Racer", craft: "Fighter", wet: "Rainmaster", tyre: "Tyre-wise", cons: "Consistent", safety: "Clean" };
+export function strengthTag(d) {
+  const F = field(), z = SKEYS.map((k) => (sval(d, k) - F.m[k]) / F.sd[k]), mz = z.reduce((a, b) => a + b, 0) / z.length;
+  let bi = 0; z.forEach((v, i) => { if (v > z[bi]) bi = i; });
+  return z[bi] >= 0.6 || z[bi] - mz >= 0.45 ? STAG[SKEYS[bi]] : "All-rounder";
+}
+const SLABEL = { pace: "Qualifying", race: "Race pace", craft: "Racecraft", wet: "Wet weather", tyre: "Tyre care", cons: "Consistency", safety: "Safety" };
+const CHIPS = [["overall", "Best overall"], ["wet", "Wet specialists"], ["cons", "Most consistent"], ["safety", "Safest"]];
+const MORE = [["pace", "Qualifying pace"], ["race", "Race pace"], ["craft", "Racecraft"], ["tyre", "Tyre care"], ["name", "Name A to Z"], ["rank", "Overall rank"]];
+
 // opts.mode: "draft" | "parts" | "fa" | "browse".  opts.sel: { pri, alt } item ids (draft).  opts.canAct: boolean
 export function poolView(S, opts) {
   const me = S.me, needs = me ? me.needs : null;
@@ -22,20 +67,24 @@ export function poolView(S, opts) {
   const tabs = TABS.filter(([k]) => (opts.tabs ? opts.tabs.includes(k) : true));
   if (!tabs.find(([k]) => k === tab)) st.ui.tab = tabs[0][0];
   const cur = st.ui.tab;
-  const need = (k) => {
-    if (!needs) return 0;
-    if (k === "drivers") return needs.driver; if (k === "principals") return needs.principal;
-    return needs.slots.includes(k) ? 1 : 0;
-  };
-  // In the parts re-draft each slot tab shows the best grade still in the pool, so you can see at a glance where the Elite part is.
-  const best = (k) => { const b = [50, 30, 20, 10].find((x) => freeParts(S, k, x).length); return b ? `best +${b}` : "none left"; };
   const people = cur === "drivers" || cur === "principals";
+  const sortKey = st.ui.sort.drivers;
+  const chips = cur === "drivers" ? `<div class="chips">${CHIPS.map(([k, l]) => `<button class="chip ${sortKey === k ? "on" : ""}" data-act="sort" data-kind="drivers" data-k="${k}">${l}</button>`).join("")}<select class="chipsel ${MORE.some(([k]) => k === sortKey) ? "on" : ""}" data-change="sortMore" aria-label="More ways to sort"><option value="">More sorts…</option>${MORE.map(([k, l]) => `<option value="${k}" ${sortKey === k ? "selected" : ""}>${l}</option>`).join("")}</select></div>` : "";
   const tools = people ? `<input id="filter" placeholder="Search" value="${esc(st.ui.q)}" style="width:130px"><label class="small mute row gap6"><input type="checkbox" data-change="hideTaken" ${st.ui.hide ? "checked" : ""}> hide taken</label>` : "";
-  const tabsRow = `<div class="tabs">${tabs.map(([k, l]) => `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}">${l}${needs ? `<span class="k">${need(k) ? (k === "drivers" || k === "principals" ? "need " + need(k) : opts.mode === "parts" ? best(k) : "need") : "✓"}</span>` : ""}</button>`).join("")}</div>`;
+  // Tabs: a tab you still need something from glows, harder the worse what is left (draft and re-draft); a tab you have filled goes quiet but stays clickable.
+  const live = needs && (opts.mode === "draft" || opts.mode === "parts");
+  const tabsRow = `<div class="tabs">${tabs.map(([k, l]) => {
+    if (!needs) return `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}"><b>${l}</b></button>`;
+    const t = tabInfo(S, k), isP = k === "drivers" || k === "principals";
+    if (!live) return `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}"><b>${l}</b><small>${t.need ? (isP ? "need " + t.need : "need") : "✓"}</small></button>`;
+    const glow = t.need ? ` glow${t.hot >= 0.6 ? " hot" : ""}` : " done", g = t.need ? `--gb:${Math.round(55 + t.hot * 45)}%;--gs:${(6 + t.hot * 12).toFixed(1)}px;--ga:${Math.round(35 + t.hot * 50)}%` : "";
+    const sub = t.need ? `${isP ? "need " + t.need + " · " : "need · "}${t.txt}` : `✓ ${isP ? "full" : "filled"}`;
+    return `<button class="tab ${k === cur ? "on" : ""}${glow}" style="${g}" data-act="tab" data-tab="${k}"><b>${l}</b><small>${sub}</small></button>`;
+  }).join("")}</div>`;
   let body = "";
   if (cur === "drivers" || cur === "principals") body = personTable(S, cur, opts);
   else body = partTable(S, cur, opts);
-  return `<div class="card poolcard"><div class="row poolhead"><h3>${opts.title || "Pool"}</h3><div class="grow"></div>${tools}</div>${tabsRow}${opts.hint ? `<p class="small mute mt">${opts.hint}</p>` : ""}<div class="scroller mt" data-keep="pool"${opts.fit ? " data-fit" : ""}>${body}</div></div>`;
+  return `<div class="card poolcard"><div class="row poolhead"><h3>${opts.title || "Pool"}</h3>${chips}<div class="grow"></div>${tools}</div>${tabsRow}${opts.hint ? `<p class="small mute mt">${opts.hint}</p>` : ""}<div class="scroller mt" data-keep="pool"${opts.fit ? " data-fit" : ""}>${body}</div></div>`;
 }
 
 function actionCells(S, it, opts) {
@@ -47,7 +96,7 @@ function actionCells(S, it, opts) {
     if (taken || !opts.canAct) return `<td></td>`;
     const nd = S.me && S.me.needs;
     if (nd && !(isDriver ? nd.driver : nd.principal)) return `<td><span class="mute small">${isDriver ? "drivers full" : "principal set"}</span></td>`;
-    return `<td><button class="btn sm ${mine === "pri" ? "pri" : ""}" data-act="setPick" data-slot="pri" data-id="${it.id}">1st</button> <button class="btn sm ${mine === "alt" ? "pri" : ""}" data-act="setPick" data-slot="alt" data-id="${it.id}">Alt</button></td>`;
+    return `<td><button class="btn sm ${mine === "pri" ? "pri" : ""}" data-act="setPick" data-slot="pri" data-id="${it.id}">Pick</button> <button class="btn sm ${mine === "alt" ? "pri" : ""}" data-act="setPick" data-slot="alt" data-id="${it.id}">Backup</button></td>`;
   }
   if (opts.mode === "fa") {
     if (taken || !opts.canAct) return `<td></td>`;
@@ -66,9 +115,11 @@ function personTable(S, kind, opts) {
   const th = (k, l, cls = "") => `<th class="${cls}" data-act="sort" data-kind="${kind}" data-k="${k}">${l}${sortKey === k ? " ▾" : ""}</th>`;
   const owner = (id) => { const t = S.taken[id]; return t == null ? "" : chip(S.teams[t], 16); };
   if (kind === "drivers") {
-    return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Driver", "l")}${th("overall", "OVR")}${th("pace", "Pace")}${th("race", "Race")}${th("craft", "Craft")}${th("wet", "Wet")}${th("tyre", "Tyre")}${th("cons", "Cons")}${th("safety", "Safe")}<th></th></tr></thead><tbody>${rows.map((d) => {
+    return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Driver", "l")}<th class="l nosort">Strength</th>${th("overall", "OVR")}<th></th></tr></thead><tbody>${rows.map((d) => {
       const sel = opts.sel || {}; const cls = sel.pri === d.id ? "pri" : sel.alt === d.id ? "alt" : "";
-      return `<tr class="it ${cls} ${isTaken(S, d.id) ? "gone" : ""}"><td class="mute">${d.rank}</td><td class="l">${drvPic(d.i, 30, "inl")}<b>${esc(d.name)}</b> <span class="tiny mute">${esc(d.series)}</span>${S.taken[d.id] != null ? " " + owner(d.id) : ""}</td><td class="ovr">${d.overall.toFixed(1)}</td><td>${pair(d.career.pace, d.peak.pace)}</td><td>${pair(d.career.race, d.peak.race)}</td><td>${pair(d.career.craft, d.peak.craft)}</td><td>${pair(d.career.wet, d.peak.wet)}</td><td>${pair(d.career.tyre, d.peak.tyre)}</td><td>${stat(d.cons)}</td><td>${stat(d.safety)}</td>${actionCells(S, d, opts)}</tr>`;
+      const open = st.ui.open === d.id;
+      const more = open ? `<tr class="more"><td colspan="5"><div class="sgrid">${SKEYS.map((k) => `<div class="sc"><span class="tiny mute">${SLABEL[k]}</span>${stat(sval(d, k))}${k === "cons" || k === "safety" ? "" : `<span class="tiny mute">peak ${Math.round(d.peak[k])}</span>`}</div>`).join("")}</div></td></tr>` : "";
+      return `<tr class="it ${cls} ${isTaken(S, d.id) ? "gone" : ""} ${open ? "open" : ""}" data-act="rowOpen" data-id="${d.id}" title="Tap for the full stats"><td class="mute">${d.rank}</td><td class="l">${drvPic(d.i, 30, "inl")}<b>${esc(d.name)}</b> <span class="tiny mute">${esc(d.series)}</span>${S.taken[d.id] != null ? " " + owner(d.id) : ""}</td><td class="l"><span class="stag">${strengthTag(d)}</span>${SKEYS.includes(sortKey) ? ` <span class="tiny mute">${SLABEL[sortKey]} ${Math.round(sval(d, sortKey))}</span>` : ""}</td><td class="ovr">${d.overall.toFixed(1)}</td>${actionCells(S, d, opts)}</tr>${more}`;
     }).join("")}</tbody></table>`;
   }
   return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Principal", "l")}${th("overall", "OVR")}${th("strategy", "Strategy")}${th("mentality", "Mentality")}${th("mechanical", "Mechanical")}<th></th></tr></thead><tbody>${rows.map((p) => {
@@ -88,7 +139,7 @@ function partTable(S, slot, opts) {
     const key = `${slot}:${b}`, selP = groupOf(sel.pri) === key, selA = groupOf(sel.alt) === key;
     let act = "";
     if (ownSlot) act = `<span class="mute small">slot filled</span>`;
-    else if (opts.mode === "draft" && opts.canAct) act = `<button class="btn sm ${selP ? "pri" : ""}" data-act="setPick" data-slot="pri" data-id="${free[0].id}">1st</button> <button class="btn sm ${selA ? "pri" : ""}" data-act="setPick" data-slot="alt" data-id="${free[0].id}">Alt</button>`;
+    else if (opts.mode === "draft" && opts.canAct) act = `<button class="btn sm ${selP ? "pri" : ""}" data-act="setPick" data-slot="pri" data-id="${free[0].id}">Pick</button> <button class="btn sm ${selA ? "pri" : ""}" data-act="setPick" data-slot="alt" data-id="${free[0].id}">Backup</button>`;
     else if (opts.mode === "parts" && opts.canAct) act = `<button class="btn sm pri" data-act="partTake" data-id="${free[0].id}">Take</button>`;
     const star = me && !ownSlot && opts.mode !== "draft" ? `<span class="queue ${wish.includes(key) ? "on" : ""}" title="Queue: auto-pick this on my turn" data-act="wish" data-key="${key}">★</span>` : "";
     return `<tr class="it ${selP ? "pri" : selA ? "alt" : ""}"><td class="l"><span class="tier ${tierCls(b)}">+${b}</span> ${TIER[b]}</td><td>${SLOTNAME[slot]} +${b}</td><td>${free.length} of ${total} left</td><td>${star}${act}</td></tr>`;

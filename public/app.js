@@ -148,7 +148,7 @@ function nowLine(S) {
     if (!me) return { kind: "info", text: `Round ${d.round} of 7: ${d.locked.length}/${d.humans.length} locked in.` };
     const pk = me.pick || {};
     if (pk.locked) return { kind: "wait", text: left.length ? `Locked in. Waiting for ${who(S, left)}.` : "Locked in. Everyone is ready." };
-    return { kind: "you", text: pk.pri ? (pk.alt ? "Both picks set. Press Lock in." : "Add a backup pick, then press Lock in.") : "Your pick: choose what you want most and a backup, then lock in." };
+    return { kind: "you", text: pk.pri ? (pk.alt ? "Pick and Backup set. Press Lock in." : "Add a Backup, then press Lock in.") : "Choose your Pick (what you want most) and a Backup, then lock in." };
   }
   if (step === "draft.reveal") return { kind: "info", text: `Round ${S.draft?.round || ""} results.` };
   if (step === "draft.done") return { kind: "info", text: "Line-ups are set. The season starts soon." };

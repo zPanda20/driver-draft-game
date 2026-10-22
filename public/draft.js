@@ -22,8 +22,8 @@ export function teamBoard(S, { locked = [], mark = true } = {}) {
 }
 
 function pickCard(kind, id) {
-  const lbl = kind === "pri" ? "Priority pick" : "Alternate";
-  if (!id) return `<div class="pickcard ${kind}"><div class="what">${lbl}</div><div class="mute small">${kind === "pri" ? "Press “1st” on the item you want most." : "Optional: press “Alt” on a back-up."}</div></div>`;
+  const lbl = kind === "pri" ? "Pick" : "Backup";
+  if (!id) return `<div class="pickcard ${kind}"><div class="what">${lbl}</div><div class="mute small">${kind === "pri" ? "Press “Pick” on what you want most." : "Press “Backup” on a second choice."}</div></div>`;
   const it = st.idx[id];
   let sub = "";
   if (it.kind === "driver") sub = `OVR ${it.overall.toFixed(1)} · ${esc(it.series)}`;
@@ -39,15 +39,16 @@ export function draftView(S, h) {
   const me = S.me, d = S.draft;
   const lockedN = d.locked.length, humans = d.humans.length;
   const howOpen = st.ui.pickHow != null ? st.ui.pickHow : d.round === 1; // the explanation is open in round 1, then folds away
-  const how = `<p class="small mute pbhow">Pick one item this round. Your <b>priority</b> goes into a draw if other teams want it too; teams that have drafted less value so far are slightly favoured. If you lose, your <b>alternate</b> is tried. If both are lost you get the best leftover of the type you asked for.</p>`;
+  const how = `<p class="small mute pbhow">Each round you get one item. If other teams want your <b>Pick</b> too, a draw decides, and teams that have drafted less value so far get slightly better odds. Lose it and you get your <b>Backup</b>. If that is gone too, you get the best one left of the same type.</p>`;
+  const flow = `<div class="pbflow" aria-label="How a pick resolves"><span class="fs a">Pick</span><i>→</i><span class="fl">lose the draw?</span><span class="fs b">Backup</span><i>→</i><span class="fl">gone too?</span><span class="fs c">Best left of that type</span></div>`;
   const left = `<span class="small mute">Still needed: ${me && me.needs.driver ? me.needs.driver + " driver" + (me.needs.driver > 1 ? "s" : "") + ", " : ""}${me && me.needs.principal ? "principal, " : ""}${me && me.needs.slots.length ? me.needs.slots.map((s) => SLOTNAME[s].toLowerCase()).join(", ") : ""}</span>`;
   const head = (mid, right) => `<div class="pbtop"><div><div class="phase">Round ${d.round} of 7</div><div class="rtitle sm">${me ? "Make your pick" : "Teams are choosing"}</div></div><div class="pbhint">${mid || ""}</div><span class="pill ${lockedN === humans ? "good" : ""}">${lockedN}/${humans} locked in</span>${right || ""}</div>`;
   const howBtn = me ? `<button class="linkbtn" data-act="pickHow">${howOpen ? "Hide help" : "How picks work"}</button>` : "";
   if (!me) return { main: `<div class="card pickbar">${head()}</div><div class="card"><h3>Teams</h3>${teamBoard(S, { locked: d.locked })}</div>`, side: h.chatCard(S) };
   const pk = me.pick || {}, locked = !!pk.locked;
-  const hint = locked ? `<span class="locked-note">✓ Locked in. Waiting for the others.</span>` : pk.pri && pk.alt ? `<span class="lockhint">Both picks set. Press Lock in.</span>` : pk.pri ? `<span class="lockhint soft">Add a backup pick, then lock in.</span>` : left;
+  const hint = locked ? `<span class="locked-note">✓ Locked in. Waiting for the others.</span>` : pk.pri && pk.alt ? `<span class="lockhint">Pick and Backup set. Press Lock in.</span>` : pk.pri ? `<span class="lockhint soft">Add a Backup, then lock in.</span>` : left;
   const btn = locked ? `<button class="btn" data-act="unlock">Change my pick</button>` : `<button class="btn pri big ${pk.pri && pk.alt ? "lockready" : ""}" data-act="lock" ${pk.pri ? "" : "disabled"}>${pk.pri && pk.alt ? "🔒 LOCK IN NOW" : "Lock in"}</button>`;
-  const bar = `<div class="card pickbar">${head(hint, howBtn)}${howOpen ? how : ""}
+  const bar = `<div class="card pickbar">${head(hint, howBtn)}${howOpen ? how : ""}${flow}
     <div class="pbmid">${pickCard("pri", pk.pri)}${pickCard("alt", pk.alt)}<div class="pbbtn">${btn}</div></div></div>`;
   const pool = poolView(S, { mode: "draft", sel: pk, canAct: !locked, title: "Pool", fit: true });
   return { main: bar + pool, side: h.teamsList(S).replace('class="card"', 'class="card" data-keep="tl"') + h.chatCard(S) };
@@ -56,8 +57,8 @@ export function draftView(S, h) {
 function viaText(r, wanted) {
   const asked = r.asked ? itemLabel(r.asked) : null;
   const rivals = r.asked ? wanted.filter((w) => w.pri === r.asked).length : 0;
-  if (r.via === "pri") return rivals > 1 ? `Won the draw (${rivals} teams wanted it)` : "Got their priority pick";
-  if (r.via === "alt") return `Lost the draw for ${asked}; alternate came through`;
+  if (r.via === "pri") return rivals > 1 ? `Won the draw (${rivals} teams wanted it)` : "Got their pick";
+  if (r.via === "alt") return `Lost the draw for ${asked}; Backup came through`;
   if (r.via === "auto") return "No pick made: auto-drafted";
   return `Lost out on ${asked}; best leftover`;
 }
@@ -80,6 +81,8 @@ export function lineupsScreen(S, title) {
 }
 
 export const draftHandlers = {
+  rowOpen(a) { st.ui.open = st.ui.open === a.id ? null : a.id; st.render(); },
+  sortMore(a) { if (a.value) { st.ui.sort.drivers = a.value; st.render(); } },
   pickHow() { const open = st.ui.pickHow != null ? st.ui.pickHow : (st.S.draft && st.S.draft.round === 1); st.ui.pickHow = !open; st.render(); },
   tab(a) { st.ui.tab = a.tab; st.render(); },
   sort(a) { st.ui.sort[a.kind] = a.k; st.render(); },
