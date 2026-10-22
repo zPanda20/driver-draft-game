@@ -3,6 +3,9 @@
 // answer by value. Every trade is checked again at the moment it happens, so a stale offer can never move something twice.
 import { validateOffer, executeOffer, pickEstimates, valuer, botVerdict, MAX_SIDE } from "../engine/trade.js";
 
+// An offer needs both sides: it starts "open" (waiting for the other team), becomes "agreed" when they accept, and only moves
+// assets once the team that made it confirms. That also covers autopilot teams, so a probe never trades by accident.
+const live = (o) => o.status === "open" || o.status === "agreed";
 const OPEN_LIMIT = 4, OFFER_LIMIT = 40;
 const speed = () => +process.env.TEST_SPEED || 1;
 
@@ -29,7 +32,7 @@ export const tradingMethods = {
   },
   endTrade() {
     if (!this.trade) return;
-    for (const o of this.trade.offers) if (o.status === "open") { o.status = "void"; o.note = "The window closed."; }
+    for (const o of this.trade.offers) if (live(o)) { o.status = "void"; o.note = "The window closed."; }
     const stage = this.trade.stage;
     if (stage === 1) {
       this.turnIdx = 0; this.step = "parts";
@@ -48,7 +51,7 @@ export const tradingMethods = {
     const tp = this.playerOfTeam(to);
     if (target.human && tp && !tp.connected) return this.tradeNote(token, `${target.name} is offline.`);
     const mine = this.trade.offers.filter((o) => o.from === p.teamId);
-    if (mine.filter((o) => o.status === "open").length >= OPEN_LIMIT) return this.tradeNote(token, `You already have ${OPEN_LIMIT} offers waiting. Cancel one first.`);
+    if (mine.filter(live).length >= OPEN_LIMIT) return this.tradeNote(token, `You already have ${OPEN_LIMIT} offers waiting. Cancel one first.`);
     if (mine.length >= OFFER_LIMIT) return this.tradeNote(token, "That is enough offers for one window.");
     give = [...new Set(Array.isArray(give) ? give.map(String) : [])]; get = [...new Set(Array.isArray(get) ? get.map(String) : [])];
     const err = validateOffer(this.tradeCtx(), this.trade.stage, p.teamId, to, give, get);
@@ -66,7 +69,7 @@ export const tradingMethods = {
       const ctx = this.tradeCtx();
       if (validateOffer(ctx, this.trade.stage, offer.from, offer.to, offer.give, offer.get)) { offer.status = "void"; offer.note = "An asset moved."; return this.changed(); }
       const v = botVerdict(ctx, this.tradeVc, offer.to, offer.give, offer.get, Math.random);
-      if (v.accept) return this.doTrade(offer, "Deal.");
+      if (v.accept) { offer.status = "agreed"; offer.note = "They accept. Confirm to complete the deal."; return this.changed(); }
       offer.status = "declined"; offer.note = v.close ? "Close. Sweeten the deal." : "Not interested.";
       this.changed();
     }, delay);
@@ -79,12 +82,21 @@ export const tradingMethods = {
     if (!accept) { offer.status = "declined"; offer.note = "Declined."; return this.changed(); }
     const err = validateOffer(this.tradeCtx(), this.trade.stage, offer.from, offer.to, offer.give, offer.get);
     if (err) { offer.status = "void"; offer.note = "An asset moved."; this.tradeNote(token, "That offer is no longer valid."); return; }
-    this.doTrade(offer, "Accepted.");
+    offer.status = "agreed"; offer.note = "Accepted. Waiting for them to confirm."; this.changed();
+  },
+  // The team that made the offer has the last word.
+  tradeConfirm(token, id) {
+    const p = this.players.get(token); if (!p || p.teamId == null || !this.inTrade()) return;
+    const offer = this.trade.offers.find((o) => o.id === +id);
+    if (!offer || offer.status !== "agreed" || offer.from !== p.teamId) return;
+    const err = validateOffer(this.tradeCtx(), this.trade.stage, offer.from, offer.to, offer.give, offer.get);
+    if (err) { offer.status = "void"; offer.note = "An asset moved."; this.tradeNote(token, "That deal is no longer valid."); return; }
+    this.doTrade(offer, "Done.");
   },
   tradeCancel(token, id) {
     const p = this.players.get(token); if (!p || !this.inTrade()) return;
     const offer = this.trade.offers.find((o) => o.id === +id);
-    if (!offer || offer.status !== "open" || offer.from !== p.teamId) return;
+    if (!offer || !live(offer) || offer.from !== p.teamId) return;
     offer.status = "cancelled"; offer.note = "Withdrawn."; this.changed();
   },
   doTrade(offer, note) {
@@ -92,7 +104,7 @@ export const tradingMethods = {
     offer.status = "accepted"; offer.note = note;
     this.pushFeed({ kind: "trade", ...rec });
     for (const o of this.trade.offers) {
-      if (o.status === "open" && validateOffer(ctx, this.trade.stage, o.from, o.to, o.give, o.get)) { o.status = "void"; o.note = "An asset moved."; }
+      if (live(o) && validateOffer(ctx, this.trade.stage, o.from, o.to, o.give, o.get)) { o.status = "void"; o.note = "An asset moved."; }
     }
     this.tradeVc = valuer(this.game, this.game.rd.turns, this.faSlots);
     this.changed();

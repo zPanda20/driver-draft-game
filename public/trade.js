@@ -41,12 +41,22 @@ function assetGrid(S, tid, side) {
   return groups.map((gname) => `<div class="agroup"><div class="tiny mute">${gname}</div>${rows.filter((r) => r.g === gname).map((r) => `<button class="asset ${sel.includes(r.id) ? "on" : ""}" data-act="trTog" data-side="${side}" data-id="${r.id}"><span class="al">${esc(assetLabel(S, r.id))}</span><span class="as">${assetSub(S, r.id)}</span></button>`).join("")}</div>`).join("");
 }
 
-const STATUS = { open: ["waiting", "warn"], accepted: ["accepted", "good"], declined: ["declined", "bad"], cancelled: ["withdrawn", ""], void: ["void", ""] };
+const STATUS = { open: ["waiting", "warn"], agreed: ["they accept", "good"], accepted: ["traded", "good"], declined: ["declined", "bad"], cancelled: ["withdrawn", ""], void: ["void", ""] };
 
-function offersToMe(S) {
-  const me = S.me.teamId, list = S.trade.offers.filter((o) => o.to === me && o.status === "open");
+// Deals the other side has accepted: the team that made the offer must confirm.
+function toConfirm(S) {
+  const me = S.me.teamId, list = S.trade.offers.filter((o) => o.from === me && o.status === "agreed");
   if (!list.length) return "";
-  return `<div class="card offer-in"><h3>Offers for you</h3>${list.map((o) => `<div class="offer">
+  return `<div class="card offer-in"><h3>Confirm your deal</h3>${list.map((o) => `<div class="offer">
+    <div class="row wrap gap6">${chip(S.teams[o.to], 22, "", true)}<span class="small mute">${esc(o.note || "accepts")}</span></div>
+    <div class="small">You give ${tradeList(S, o.give)}</div><div class="small">You get ${tradeList(S, o.get)}</div>
+    <div class="row mt gap6"><button class="btn sm good" data-act="trConfirm" data-id="${o.id}">Confirm the trade</button><button class="btn sm bad" data-act="trCancel" data-id="${o.id}">Walk away</button></div></div>`).join("")}</div>`;
+}
+function offersToMe(S) {
+  const me = S.me.teamId, list = S.trade.offers.filter((o) => o.to === me && o.status === "open"), waiting = S.trade.offers.filter((o) => o.to === me && o.status === "agreed");
+  if (!list.length && !waiting.length) return "";
+  return `<div class="card ${list.length ? "offer-in" : ""}"><h3>Offers for you</h3>${waiting.map((o) => `<div class="offer"><div class="row wrap gap6">${chip(S.teams[o.from], 22, "", true)}<span class="pill good">you accepted</span><span class="small mute">Waiting for them to confirm.</span></div>
+    <div class="small">You get ${tradeList(S, o.give)} · you give ${tradeList(S, o.get)}</div></div>`).join("")}${list.map((o) => `<div class="offer">
     <div class="row wrap gap6">${chip(S.teams[o.from], 22, "", true)}<span class="small mute">offers</span></div>
     <div class="small">You get ${tradeList(S, o.give)}</div><div class="small">You give ${tradeList(S, o.get)}</div>
     <div class="row mt gap6"><button class="btn sm good" data-act="trAnswer" data-id="${o.id}" data-yes="1">Accept</button><button class="btn sm bad" data-act="trAnswer" data-id="${o.id}" data-yes="0">Decline</button></div></div>`).join("")}</div>`;
@@ -82,7 +92,10 @@ export function tradeView(S, h) {
   const n = tr.note; if (n) { const key = `${tr.stage}:${n.id}`; if (st.ui.trNoteKey !== key) { st.ui.trNoteKey = key; toast(n.text); } }
   if (me) { // a ping when a new offer arrives
     const seen = st.ui.trSeen || (st.ui.trSeen = new Set());
-    for (const o of tr.offers) if (o.to === me.teamId && o.status === "open" && !seen.has(o.id)) { seen.add(o.id); toast(`Offer from ${S.teams[o.from].name}`); }
+    for (const o of tr.offers) {
+      if (o.to === me.teamId && o.status === "open" && !seen.has(o.id)) { seen.add(o.id); toast(`Offer from ${S.teams[o.from].name}`); }
+      if (o.from === me.teamId && o.status === "agreed" && !seen.has("a" + o.id)) { seen.add("a" + o.id); toast(`${S.teams[o.to].name} accepts. Confirm to complete.`); }
+    }
   }
   const act = tr.active.length, done = tr.done.filter((id) => tr.active.includes(id)).length, mineDone = me && tr.done.includes(me.teamId);
   const intro = tr.stage === 1
@@ -92,7 +105,7 @@ export function tradeView(S, h) {
     <span class="pill ${done === act ? "good" : ""}">${done}/${act} done</span>${me ? `<button class="btn ${mineDone ? "" : "pri"}" data-act="trDone" data-on="${mineDone ? 0 : 1}">${mineDone ? "Keep trading" : "I'm done trading"}</button>` : ""}</div>
     <p class="small mute mt">${intro}</p></div>`;
   if (!me) return { main: head + `<div class="card"><h3>Latest trades</h3>${tradeLog(S)}</div>`, side: h.chatCard(S) };
-  return { main: head + offersToMe(S) + builder(S) + myOffers(S), side: `<div class="card"><h3>Latest trades</h3>${tradeLog(S)}</div>` + h.standingsCard(S) + h.chatCard(S) };
+  return { main: head + toConfirm(S) + offersToMe(S) + builder(S) + myOffers(S), side: `<div class="card"><h3>Latest trades</h3>${tradeLog(S)}</div>` + h.standingsCard(S) + h.chatCard(S) };
 }
 
 export function tradeLog(S) {
@@ -105,6 +118,7 @@ export const tradeHandlers = {
   trTog(a) { const u = T(), l = u[a.side], i = l.indexOf(a.id); if (i >= 0) l.splice(i, 1); else if (l.length < st.S.trade.max) l.push(a.id); st.render(); },
   trSend() { const u = T(); if (u.to == null || !u.give.length || !u.get.length) return; send({ t: "tradeOffer", to: u.to, give: u.give, get: u.get }); u.give = []; u.get = []; st.render(); },
   trAnswer(a) { send({ t: "tradeRespond", id: +a.id, accept: a.yes === "1" }); },
+  trConfirm(a) { send({ t: "tradeConfirm", id: +a.id }); },
   trCancel(a) { send({ t: "tradeCancel", id: +a.id }); },
   trDone(a) { send({ t: "tradeDone", on: a.on === "1" }); },
 };

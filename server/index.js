@@ -151,6 +151,7 @@ function handle(ws, m) {
     case "faClaim": room.faClaim(t, m.driver, m.principal); break;
     case "tradeOffer": room.tradeOffer(t, m.to, m.give, m.get); break;
     case "tradeRespond": room.tradeRespond(t, m.id, !!m.accept); break;
+    case "tradeConfirm": room.tradeConfirm(t, m.id); break;
     case "tradeCancel": room.tradeCancel(t, m.id); break;
     case "tradeDone": room.tradeDone(t, m.on !== false); break;
     case "keep": room.setKeep(t, m.drivers, m.principal, !!m.confirm); break;

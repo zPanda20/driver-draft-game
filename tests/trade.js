@@ -56,7 +56,10 @@ A.send({ t: "tradeOffer", to: botId, give: [`d:${aDrv}`], get: [`rp:${botPick[1]
 await A.until((s) => s.trade.offers.some((o) => o.to === botId && o.status !== "open"), 15000);
 let o1 = A.s.trade.offers.find((o) => o.to === botId);
 console.log("   bot answered:", o1.status, o1.note);
-if (o1.status === "accepted") check("bot deal moved the pick to A and the driver to the bot", A.s.trade.picks[botPick[1]].w === me(A) && team(A, botId).drivers.includes(aDrv));
+check("a bot's yes waits for my confirmation (nothing moved yet)", o1.status === "agreed" && A.s.trade.picks[botPick[1]].w === botId && team(A, botId).drivers.includes(aDrv) === false);
+A.send({ t: "tradeConfirm", id: o1.id });
+await A.until((s) => s.trade.picks[botPick[1]].w === me(A), 5000);
+check("confirming moved the pick to A and the driver to the bot", team(A, botId).drivers.includes(aDrv));
 // 2. an insulting offer (a +10 pick for a star) should be refused by a bot: ask a bot for its best driver, offering nothing of value
 const botT = team(A, botId), botBest = botT.drivers.slice().sort((x, y) => A.cat.drivers[y].overall - A.cat.drivers[x].overall)[0];
 const lowPick = A.s.trade.picks.map((p, i) => [p, i]).filter(([p]) => p.w === me(A)).pop();
@@ -74,12 +77,17 @@ const aPickI = ownPicks(A)[0], bPickI = B.s.trade.picks.map((p, i) => [p, i]).fi
 A.send({ t: "tradeOffer", to: me(B), give: [aPickI], get: [`rp:${bPickI}`] });
 const off = (await B.until((s) => s.trade.offers.some((o) => o.from === me(A) && o.status === "open"), 5000)).trade.offers.find((o) => o.from === me(A) && o.status === "open");
 B.send({ t: "tradeRespond", id: off.id, accept: true });
+await sleep(400);
+check("B accepting alone does not move anything", B.s.trade.picks[bPickI].w === me(B) && B.s.trade.offers.find((o) => o.id === off.id).status === "agreed");
+A.send({ t: "tradeConfirm", id: off.id });
 await B.until((s) => s.trade.picks[bPickI].w === me(A), 5000);
 check("human pick swap executed", B.s.trade.picks[bPickI].w === me(A) && B.s.trade.picks[+aPickI.slice(3)].w === me(B));
 // 5. a stale offer is voided once its asset moves: C offers for the pick A just gave B
 C.send({ t: "tradeOffer", to: me(B), give: [`d:${team(C, me(C)).drivers[0]}`], get: [aPickI] }); await sleep(300);
 const cOff = C.s.trade.offers[0];
-B.send({ t: "tradeRespond", id: cOff.id, accept: true }); await sleep(300);
+B.send({ t: "tradeRespond", id: cOff.id, accept: true }); await sleep(300); C.send({ t: "tradeConfirm", id: cOff.id }); await sleep(300);
+check("C cannot confirm a deal whose asset already moved", C.s.trade.picks[+aPickI.slice(3)].w !== me(C) || C.s.trade.offers[0].status === "accepted");
+A.send({ t: "tradeConfirm", id: cOff.id }); await sleep(100); // someone else's offer: ignored
 check("C's offer for the swapped pick works once, ownership is consistent", C.s.trade.picks[+aPickI.slice(3)].w === me(C) || C.s.trade.offers[0].status !== "accepted");
 // 6. strip A down: give a bot both remaining drivers + principal for nothing important => lineup must be repaired at the end
 const aT = team(A, me(A));
