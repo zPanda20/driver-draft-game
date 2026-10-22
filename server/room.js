@@ -152,7 +152,10 @@ export class Room {
   // ---------- draft ----------
   startDraft() {
     this.phase = "draft"; this.draftRound = 0; this.rng = makeRng(this.seed, "live");
-    this.nextDraftRound();
+    // Players first see their own team and the seven empty boxes for five seconds; the round-1 timer starts after that.
+    this.step = "draft.intro";
+    this.after(5000, () => this.nextDraftRound());
+    this.changed();
   }
   nextDraftRound() {
     const g = this.game;

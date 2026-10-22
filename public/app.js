@@ -4,6 +4,7 @@ import { draftView, draftHandlers } from "./draft.js";
 import { raceUpdate, raceHandlers, raceActive, raceReset } from "./race.js";
 import { offView, offHandlers } from "./off.js";
 import { helpHandlers, maybeHelp, renderHelp } from "./help.js";
+import { renderIntro } from "./intro.js";
 import { tradeHandlers } from "./trade.js";
 
 const app = $("#app");
@@ -102,7 +103,7 @@ app.addEventListener("input", (e) => { if (e.target.id === "filter") { st.ui.q =
 
 // ---------- rendering ----------
 const PHASE = {
-  lobby: () => "Lobby", "draft.pick": (S) => `First draft · round ${S.draft?.round}/7`, "draft.reveal": (S) => `First draft · round ${S.draft?.round}/7 results`, "draft.done": () => "Line-ups set",
+  lobby: () => "Lobby", "draft.intro": () => "First draft · get ready", "draft.pick": (S) => `First draft · round ${S.draft?.round}/7`, "draft.reveal": (S) => `First draft · round ${S.draft?.round}/7 results`, "draft.done": () => "Line-ups set",
   "season.intro": (S) => `Season ${S.seasonNo}`, "season.end": (S) => `Season ${S.seasonNo} complete`,
   trade: () => "Off-season · trade window", trade2: () => "Off-season · final trades", parts: () => "Off-season · parts re-draft", "parts.turn": () => "Off-season · parts re-draft", fa: () => "Off-season · free agency", "fa.turn": () => "Off-season · free agency", lock: () => "Off-season · lock-in", "offseason.done": () => "New line-ups",
 };
@@ -219,6 +220,7 @@ function render() {
   applyTheme();
   renderTop();
   maybeHelp(S);
+  renderIntro(S);
   const isRace = S.phase === "season" && S.step.startsWith("race.");
   let main = "", side = "", full = false;
   if (S.step === "lobby") ({ main, side } = lobby(S));

@@ -33,6 +33,7 @@ function pickCard(kind, id) {
 }
 
 export function draftView(S, h) {
+  if (S.step === "draft.intro") return { main: `<div class="card"><div class="phase">First draft</div><div class="rtitle">Get ready</div><p class="small mute mt">The draft starts in a few seconds. Seven picks each: two drivers, a team principal and four car parts.</p></div><div class="card"></div>${h.teamsList(S)}`, side: h.chatCard(S) };
   if (S.step === "draft.reveal") return reveal(S, h);
   if (S.step === "draft.done") return { main: lineupsScreen(S, "First draft complete"), side: h.standingsCard(S) + h.chatCard(S) };
   const me = S.me, d = S.draft;

@@ -335,3 +335,27 @@ h1,h2,h3{letter-spacing:.02em}
 /* track outlines: the PNG is only a mask, so the line takes the player's livery colour */
 .trk{--h:60px;display:inline-block;flex:none;height:var(--h);width:calc(var(--h) * 1.5);background:var(--acc);-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
 .res .trk{width:calc(var(--h) * 1.2)}
+
+/* the window that opens the first draft: left side of the livery wallpaper at full brightness, with dark plates so text stays readable */
+.introback{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:rgba(5,7,11,.78);animation:introIn .25s ease-out}
+.introcard{position:relative;width:min(760px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:20px;padding:22px 24px 30px;border:2px solid var(--acc);box-shadow:0 18px 60px rgba(0,0,0,.6);
+  background:var(--wall) left center/cover no-repeat,var(--panel2)}
+.ihead{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.iname{background:rgba(11,14,20,.8);border-radius:14px;padding:10px 18px;min-width:0}
+.itag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.itn{font-size:clamp(24px,5vw,38px);font-weight:900;line-height:1.05;overflow-wrap:anywhere}
+.itp{font-size:15px;color:var(--acc);font-weight:700;margin-top:2px}
+.islots{display:grid;gap:14px;justify-items:center}
+.irow{display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
+.islot{display:flex;flex-direction:column;align-items:center;gap:6px}
+.ibox{width:clamp(120px,24vw,170px);height:clamp(60px,11vw,84px);border-radius:12px;background:rgba(11,14,20,.82);border:2px dashed rgba(255,255,255,.55)}
+.ilab{font-weight:800;font-size:14px;background:rgba(11,14,20,.85);border-radius:999px;padding:3px 12px}
+.ifoot{display:flex;justify-content:center;margin-top:18px}
+.ibtn{background:rgba(11,14,20,.85);border-radius:999px;padding:7px 18px;font-weight:700}
+.ibtn b{color:var(--acc);font-size:1.15em}
+.ibar{position:absolute;left:0;right:0;bottom:0;height:8px;background:rgba(11,14,20,.6);border-radius:0 0 18px 18px;overflow:hidden}
+.ibar i{display:block;height:100%;width:100%;background:var(--acc);transform-origin:left;animation:introBar linear forwards}
+#intro.paused .ibar i{animation-play-state:paused}
+@keyframes introBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@keyframes introIn{from{opacity:0}to{opacity:1}}
+@media (max-width:520px){.introcard{padding:16px 14px 26px}.irow{gap:12px}}

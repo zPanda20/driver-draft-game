@@ -93,7 +93,7 @@ export const helpHandlers = {
 
 // Open once per browser: when the player has picked a team (livery), or as soon as the game starts.
 export function maybeHelp(S) {
-  if (st.watch || !S || H.open) return;
+  if (st.watch || !S || H.open || S.step === "draft.intro") return;
   if (store("help") === "1") return;
   const me = (S.players || []).find((p) => p.you);
   const hasTeam = S.step !== "lobby" || (me && me.livery);
