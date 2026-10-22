@@ -1,5 +1,5 @@
 // Season intro and end, the off-season parts re-draft, free agency, and the lock-in.
-import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME, drvPic, prnPic } from "./core.js";
+import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME, drvPic, prnPic, trkPic } from "./core.js";
 import { poolView, groupOf } from "./pool.js";
 import { teamBoard, lineupsScreen } from "./draft.js";
 import { tradeView, tradeList } from "./trade.js";
@@ -8,7 +8,7 @@ import { partsView, partsHandlers } from "./parts.js";
 function trackOf(id) { return st.cat.tracks.find((t) => t.id === id); }
 
 function calendar(S) {
-  return `<div class="rgrid">${S.calendar.map((id, i) => { const t = trackOf(id); return `<div class="res"><b style="width:26px;color:var(--mute)">${i + 1}</b><div class="t"><div class="b2">${esc(t.name)}</div><div class="a">${esc(t.region)} · ${esc(t.type)}${t.street ? " · street" : ""}${t.highrain ? " · wet-prone" : ""}</div></div></div>`; }).join("")}</div>`;
+  return `<div class="rgrid">${S.calendar.map((id, i) => { const t = trackOf(id); return `<div class="res"><b style="width:26px;color:var(--mute)">${i + 1}</b>${trkPic(t, 34, true) || `<span class="trk" style="--h:34px;background:none"></span>`}<div class="t"><div class="b2">${esc(t.name)}</div><div class="a">${esc(t.region)} · ${esc(t.type)}${t.street ? " · street" : ""}${t.highrain ? " · wet-prone" : ""}</div></div></div>`; }).join("")}</div>`;
 }
 
 function feedBox(S, kinds) {

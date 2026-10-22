@@ -331,3 +331,7 @@ h1,h2,h3{letter-spacing:.02em}
 .dpic.big{box-shadow:0 0 0 3px var(--acc);margin-bottom:6px}
 .liv .dpic{margin-bottom:6px}
 .mycar .dpic{margin-right:-2px}
+
+/* track outlines: the PNG is only a mask, so the line takes the player's livery colour */
+.trk{--h:60px;display:inline-block;flex:none;height:var(--h);width:calc(var(--h) * 1.5);background:var(--acc);-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+.res .trk{width:calc(var(--h) * 1.2)}

@@ -17,3 +17,4 @@ function scan(folder) {
 }
 export const driverPics = () => scan("drivers");
 export const principalPics = () => scan("principals");
+export const trackPics = () => scan("tracks");

@@ -1,5 +1,5 @@
 // The race screen: track card, pop-up decisions, and the shared animated timing tower.
-import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast, themeOf, drvPic } from "./core.js";
+import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast, themeOf, drvPic, trkPic } from "./core.js";
 
 let RS = null; // persistent race-screen state: rows, last seen reveal, timers
 const RH = 30;
@@ -23,7 +23,7 @@ function header(S) {
   const rain = Math.round(t.rain * 100);
   const wet = R && (R.kind === "half" || R.kind === "finish") && R.round === S.race.round ? R.rain : null;
   const ov = t.ovt >= 8 ? "very hard" : t.ovt >= 6 ? "hard" : t.ovt >= 4 ? "medium" : "easy";
-  return `<div class="rhead"><div><div class="phase">Round ${S.race.round + 1} of 18 · ${esc(t.region)}</div><div class="rtitle">${esc(t.name)}</div></div>
+  return `<div class="rhead">${trkPic(t, 78)}<div><div class="phase">Round ${S.race.round + 1} of 18 · ${esc(t.region)}</div><div class="rtitle">${esc(t.name)}</div></div>
     <div class="tags">${tag(t.street, "Street")}${tag(t.power, "Power")}${tag(t.down, "Downforce")}${tag(t.highrain, "Wet-prone")}<span class="pill">${esc(t.type)}</span><span class="pill">Overtaking: ${ov}</span></div>
     <div class="grow"></div>
     <div class="col gap4" style="align-items:flex-end"><span class="small mute">Chance of rain ${rain}%</span><div class="rainbar"><i style="width:${rain}%"></i></div></div>

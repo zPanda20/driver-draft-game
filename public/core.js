@@ -39,6 +39,12 @@ function personPic(list, folder, ref, size, cls, photoOnly) { // photoOnly: draw
 }
 export const drvPic = (ref, size = 32, cls = "", photoOnly = false) => personPic(st.cat.drivers, "drivers", ref, size, cls, photoOnly);
 export const prnPic = (ref, size = 32, cls = "", photoOnly = false) => personPic(st.cat.principals, "principals", ref, size, cls, photoOnly);
+// A track outline, painted in the player's livery colour (the PNG is only a mask). `small` uses the thicker line made for tiny sizes.
+export function trkPic(t, h = 60, small = false) {
+  if (!t || !t.pic) return "";
+  const f = small ? t.pic.replace(/\.png$/, "-s.png") : t.pic;
+  return `<span class="trk" style="--h:${h}px;--m:url(/tracks/${esc(f)})" role="img" aria-label="${esc(t.name)} outline"></span>`;
+}
 export const drvName = (ref) => (ref == null ? "—" : st.cat.drivers[ref].name);
 export const prnName = (ref) => (ref == null ? "—" : st.cat.principals[ref].name);
 export const lastName = (n) => { const p = String(n).split(" "); return p.length > 1 ? p.slice(1).join(" ") : n; };
