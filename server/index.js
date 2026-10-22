@@ -149,6 +149,10 @@ function handle(ws, m) {
     case "auto": room.setAuto(t, !!m.on); break;
     case "partPick": room.pickPart(t, m.id); break;
     case "faClaim": room.faClaim(t, m.driver, m.principal); break;
+    case "tradeOffer": room.tradeOffer(t, m.to, m.give, m.get); break;
+    case "tradeRespond": room.tradeRespond(t, m.id, !!m.accept); break;
+    case "tradeCancel": room.tradeCancel(t, m.id); break;
+    case "tradeDone": room.tradeDone(t, m.on !== false); break;
     case "keep": room.setKeep(t, m.drivers, m.principal, !!m.confirm); break;
     case "chat": room.addChat(t, m.text); break;
     case "continue": room.continueGame(t); break;

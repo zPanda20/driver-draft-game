@@ -19,6 +19,6 @@ ws.on("message", (d) => {
     console.log(`restored: step=${s.step} season=${s.seasonNo} teams=${s.teams.length} history=${s.history.length} host=${s.host} me.team=${s.me?.teamId} champion=${s.reveal?.champion}`);
     ws.send(JSON.stringify({ t: "continue", token: "tok-host" }));
   }
-  if (s.step === "parts" || s.step === "parts.turn") { console.log("moved on to", s.step); srv.kill(); process.exit(0); }
+  if (s.step === "trade" || s.step === "parts" || s.step === "parts.turn") { console.log("moved on to", s.step); srv.kill(); process.exit(0); }
 });
 setTimeout(() => { console.log("TIMEOUT"); srv.kill(); process.exit(2); }, 15000);

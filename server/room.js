@@ -1,12 +1,13 @@
 // One game room: lobby, draft, season, off-season. The server is the referee; browsers only send choices.
 import { makeRng, shuffle } from "../engine/rng.js";
 import { createGame, startSeason, prepareRace, autoAnswer, answer, runFirstHalf, runSecondHalf, finishSeason, standingsOf, driverStandingsOf } from "../engine/season.js";
-import { makePool, beginDraftRound, botPicks, validPick, resolveDraftRound, beginPartsRedraft, botPartChoice, takePart, freeAgents, claimFA, botClaim, lockIn, needsOf } from "../engine/draft.js";
+import { makePool, beginDraftRound, botPicks, validPick, resolveDraftRound, beginPartsRedraft, botPartChoice, takePart, freeAgents, claimFA, botClaim, lockIn, needsOf, fillMissingParts, ensureLineups, principalsOf } from "../engine/draft.js";
+import { tradingMethods } from "./trading.js";
 import { describeOption } from "./describe.js";
 import { pointsTable, pointsFormat } from "../engine/pool.js";
 
 export const PACES = [1.4, 1, 0.7, 0.5]; // seconds-multiplier per speed level: Relaxed, Normal, Fast, Turbo
-const DEFAULTS = { minTeams: 10, pace: 1, draftSec: 45, popupSec: 15, partsSec: 12, faSec: 25, lockSec: 30, redraft: "straight", decisions: true };
+const DEFAULTS = { minTeams: 10, pace: 1, draftSec: 45, popupSec: 15, partsSec: 12, faSec: 25, lockSec: 30, tradeSec: 150, trading: true, redraft: "straight", decisions: true };
 const KEEP_FEED = 40;
 
 export class Room {
@@ -85,9 +86,10 @@ export class Room {
     if (!this.isHost(token) || this.phase !== "lobby") return;
     const num = (k, lo, hi) => { if (s[k] != null && isFinite(+s[k])) this.settings[k] = Math.max(lo, Math.min(hi, +s[k])); };
     if (s.pace != null) this.settings.pace = this.nearestPace(+s.pace);
-    num("minTeams", 10, 30); num("draftSec", 15, 120); num("popupSec", 8, 40); num("partsSec", 5, 40); num("faSec", 10, 60); num("lockSec", 10, 90);
+    num("minTeams", 10, 30); num("draftSec", 15, 120); num("popupSec", 8, 40); num("partsSec", 5, 40); num("faSec", 10, 60); num("lockSec", 10, 90); num("tradeSec", 30, 600);
     if (s.redraft === "straight" || s.redraft === "snake") this.settings.redraft = s.redraft;
     if (typeof s.decisions === "boolean") this.settings.decisions = s.decisions;
+    if (typeof s.trading === "boolean") this.settings.trading = s.trading;
   }
   nearestPace(v) { return PACES.reduce((b, x) => (Math.abs(x - v) < Math.abs(b - v) ? x : b), PACES[1]); }
   // Host sets the speed directly, at any time after the lobby.
@@ -225,6 +227,7 @@ export class Room {
   // ---------- season ----------
   beginSeason() {
     const g = this.game;
+    this.trade = null;
     startSeason(g, { decisions: this.settings.decisions });
     this.phase = "season"; this.raceIdx = -1; this.step = "season.intro";
     this.setReveal({ kind: "intro", season: g.season.no });
@@ -310,7 +313,10 @@ export class Room {
     const worstFirst = (this.lastStandings || standingsOf(g)).slice().reverse();
     this.worstFirst = worstFirst;
     beginPartsRedraft(g, worstFirst, makeRng(g.seed, "redraft", g.seasonNo), { snake: this.settings.redraft === "snake" });
-    this.turnIdx = 0; this.step = "parts";
+    this.faSlots = worstFirst.map((t) => ({ orig: t.id, team: t.id })); // free-agency order; slots can be traded too
+    this.trade = null; this.turnIdx = 0;
+    if (this.tradeEnabled()) return this.startTrade(1);
+    this.step = "parts";
     this.setReveal({ kind: "offseason", season: g.seasonNo });
     this.after(this.p(5000), () => this.partsTurn());
     this.changed();
@@ -330,6 +336,7 @@ export class Room {
     while (this.turnIdx < rd.turns.length) {
       const turn = rd.turns[this.turnIdx], t = g.teams[turn.team];
       const p = this.playerOfTeam(t.id);
+      if (!needsOf(t).slots.length) { this.turnIdx++; continue; } // a team holding more picks than it has slots to fill passes
       if (!t.human || !p || !p.connected || p.auto) {
         // automatic turn: bots, absent players, or players on auto
         const it = (p && this.wishPick(t, p)) || botPartChoice(g, t, g.draftRng);
@@ -344,6 +351,8 @@ export class Room {
       this.after(this.settings.partsSec * 1000, () => this.partsTimeout());
       return this.changed();
     }
+    // Teams that traded picks away fill their last slots from whatever is left, worst team first.
+    for (const r of fillMissingParts(g, this.worstFirst)) this.pushFeed({ kind: "part", team: r.team, item: r.item.id, round: 5 });
     this.startFA();
   }
   partsTimeout() {
@@ -374,7 +383,7 @@ export class Room {
 
   startFA() {
     this.faIdx = 0; this.step = "fa";
-    this.faTurns = this.worstFirst.map((t) => t.id);
+    this.faTurns = this.faSlots.map((x) => x.team);
     this.changed();
     this.after(this.p(2000), () => this.faTurn());
   }
@@ -390,6 +399,7 @@ export class Room {
       this.after(this.settings.faSec * 1000, () => this.faTimeout());
       return this.changed();
     }
+    if (this.tradeEnabled()) return this.startTrade(2);
     this.startLock();
   }
   pushClaim(t) {
@@ -405,8 +415,9 @@ export class Room {
   }
 
   startLock() {
+    ensureLineups(this.game, this.worstFirst); // anyone still short after trades gets the best of what is left
     this.step = "lock"; this.keepChoices = new Map(); this.keepConfirmed = new Set();
-    this.lockHumans = this.humanTeams().filter((t) => t.drivers.length > 2 || t.principal2 != null).map((t) => t.id);
+    this.lockHumans = this.humanTeams().filter((t) => t.drivers.length > 2 || principalsOf(t).length > 1).map((t) => t.id);
     if (!this.lockHumans.length) return this.finishLock();
     this.after(this.settings.lockSec * 1000, () => this.finishLock());
     this.changed();
@@ -415,7 +426,7 @@ export class Room {
     const p = this.players.get(token); if (!p || this.step !== "lock" || !this.lockHumans.includes(p.teamId)) return;
     const t = this.game.teams[p.teamId];
     const ds = (drivers || []).map(Number).filter((x) => t.drivers.includes(x));
-    this.keepChoices.set(t.id, { drivers: ds.length === 2 ? ds : undefined, principal: [t.principal, t.principal2].includes(+principal) ? +principal : undefined });
+    this.keepChoices.set(t.id, { drivers: ds.length === 2 ? ds : undefined, principal: principalsOf(t).includes(+principal) ? +principal : undefined });
     if (confirm) this.keepConfirmed.add(t.id); else this.keepConfirmed.delete(t.id);
     this.changed();
     if (this.lockHumans.every((id) => this.keepConfirmed.has(id) || !this.playerOfTeam(id)?.connected)) this.after(1000, () => this.finishLock());
@@ -486,7 +497,7 @@ export class Room {
   // ---------- views ----------
   teamPub(t) {
     const p = this.playerOfTeam(t.id);
-    return { id: t.id, name: t.name, owner: p ? p.name : null, livery: t.livery, human: !!t.human, connected: t.human ? !!(p && p.connected) : true, drivers: t.drivers, principal: t.principal, principal2: t.principal2 ?? null, parts: t.partIds, pts: t.pts, wins: t.wins, titles: t.titles, ptsBySeason: undefined };
+    return { id: t.id, name: t.name, owner: p ? p.name : null, livery: t.livery, human: !!t.human, connected: t.human ? !!(p && p.connected) : true, drivers: t.drivers, principal: t.principal, principal2: t.principal2 ?? null, spare: t.spare || [], parts: t.partIds, pts: t.pts, wins: t.wins, titles: t.titles, ptsBySeason: undefined };
   }
 
   view(token) {
@@ -521,9 +532,10 @@ export class Room {
     if (this.phase === "offseason" && g.rd) {
       const turns = g.rd.turns, cur = this.step.startsWith("parts") ? turns[this.turnIdx] : null;
       v.parts = { idx: this.turnIdx, total: turns.length, team: cur ? cur.team : null, round: cur ? cur.round : null, upNext: turns.slice(this.turnIdx + 1, this.turnIdx + 6).map((x) => x.team) };
-      if (this.step.startsWith("fa") || this.step === "lock") {
+      if (this.step.startsWith("fa") || this.step === "lock" || this.step === "trade2") {
         v.fa = { idx: this.faIdx, total: this.faTurns.length, team: this.step === "fa.turn" ? this.faTurns[this.faIdx] : null, upNext: this.faTurns.slice(this.faIdx + 1, this.faIdx + 6) };
       }
+      if (this.trade) v.trade = this.tradeView(token);
       if (this.step === "lock") v.lock = { teams: this.lockHumans, confirmed: [...this.keepConfirmed] };
     }
     if (me && me.teamId != null) {
@@ -546,11 +558,11 @@ export class Room {
         }
         if (gam.length) mv.gambles = gam;
       }
-      if (this.step === "lock" && this.lockHumans.includes(t.id)) mv.keep = { drivers: t.drivers, principals: [t.principal, t.principal2].filter((x) => x != null), confirmed: this.keepConfirmed.has(t.id), choice: this.keepChoices.get(t.id) || null };
+      if (this.step === "lock" && this.lockHumans.includes(t.id)) mv.keep = { drivers: t.drivers, principals: principalsOf(t), confirmed: this.keepConfirmed.has(t.id), choice: this.keepChoices.get(t.id) || null };
       if (this.step === "fa.turn" && this.faTurns[this.faIdx] === t.id) mv.faTurn = true;
       v.me = mv;
     }
     return v;
   }
 }
-
+Object.assign(Room.prototype, tradingMethods);

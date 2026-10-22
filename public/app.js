@@ -4,6 +4,7 @@ import { draftView, draftHandlers } from "./draft.js";
 import { raceUpdate, raceHandlers, raceActive, raceReset } from "./race.js";
 import { offView, offHandlers } from "./off.js";
 import { helpHandlers, maybeHelp, renderHelp } from "./help.js";
+import { tradeHandlers } from "./trade.js";
 
 const app = $("#app");
 app.innerHTML = `<div id="top"></div><div id="body"></div><div id="garage"></div><div id="hostbar"></div><div id="help"></div>`;
@@ -84,7 +85,7 @@ const A = {
   stTab(a) { st.ui.stTab = a.tab === "drivers" ? "drivers" : "teams"; render(); },
   chatSend() { const i = $("#chatin"); if (i && i.value.trim()) { send({ t: "chat", text: i.value }); i.value = ""; } },
 };
-Object.assign(A, draftHandlers, raceHandlers, offHandlers, helpHandlers);
+Object.assign(A, draftHandlers, raceHandlers, offHandlers, helpHandlers, tradeHandlers);
 
 app.addEventListener("click", (e) => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
@@ -103,7 +104,7 @@ app.addEventListener("input", (e) => { if (e.target.id === "filter") { st.ui.q =
 const PHASE = {
   lobby: () => "Lobby", "draft.pick": (S) => `First draft · round ${S.draft?.round}/7`, "draft.reveal": (S) => `First draft · round ${S.draft?.round}/7 results`, "draft.done": () => "Line-ups set",
   "season.intro": (S) => `Season ${S.seasonNo}`, "season.end": (S) => `Season ${S.seasonNo} complete`,
-  parts: () => "Off-season · parts re-draft", "parts.turn": () => "Off-season · parts re-draft", fa: () => "Off-season · free agency", "fa.turn": () => "Off-season · free agency", lock: () => "Off-season · lock-in", "offseason.done": () => "New line-ups",
+  trade: () => "Off-season · trade window", trade2: () => "Off-season · final trades", parts: () => "Off-season · parts re-draft", "parts.turn": () => "Off-season · parts re-draft", fa: () => "Off-season · free agency", "fa.turn": () => "Off-season · free agency", lock: () => "Off-season · lock-in", "offseason.done": () => "New line-ups",
 };
 function phaseLabel(S) {
   if (S.step.startsWith("race.")) return `Season ${S.seasonNo} · race ${S.race.round + 1}/18`;
@@ -198,6 +199,8 @@ function lobby(S) {
       <span class="small">Draft timer</span>${sel("draftSec", [[30, "30 s"], [45, "45 s"], [60, "60 s"], [90, "90 s"]])}
       <span class="small">Pop-up timer</span>${sel("popupSec", [[10, "10 s"], [15, "15 s"], [20, "20 s"], [30, "30 s"]])}
       <span class="small">Parts re-draft turn</span>${sel("partsSec", [[8, "8 s"], [12, "12 s"], [20, "20 s"], [30, "30 s"]])}
+      <span class="small">Off-season trading</span><label><input type="checkbox" data-set="trading" ${s.trading !== false ? "checked" : ""} ${hostOnly}> on</label>
+      <span class="small">Trade window</span>${sel("tradeSec", [[90, "90 s"], [150, "2½ min"], [240, "4 min"], [360, "6 min"]])}
       <span class="small">Re-draft order</span>${sel("redraft", [["straight", "Worst picks first"], ["snake", "Snake"]])}
       <span class="small">Pop-up decisions</span><label><input type="checkbox" data-set="decisions" ${s.decisions ? "checked" : ""} ${hostOnly}> on</label></div>
       ${S.host ? `<button class="btn pri big mt2" style="width:100%" data-act="start">Start game</button>` : `<p class="small mute mt">Waiting for the host to start.</p>`}</div>

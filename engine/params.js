@@ -17,7 +17,7 @@ export const DEFAULT_PARAMS = {
   incidents: { crash: 0.028, fail: 0.022, pit: 0.12, pitLoss: 3.0, safetyRef: 75, coolBase: 1.8, coolSlope: 0.03, mechSlope: 0.012, pitSlope: 0.015 },
   scCompress: 0.4,        // a safety car shrinks the gaps by this fraction
   randomness: { low: 0.6, normal: 1.0, high: 1.5 },
-  decisions: { scale: 0.5, popup: 0.5, bonusPerPoint: 0.5, bonusCap: 12 }, // spec: +0.5 pts per stat point over 75, capped at 12
+  decisions: { scale: 0.62, popup: 0.5, bonusPerPoint: 0.5, bonusCap: 12 }, // spec: +0.5 pts per stat point over 75, capped at 12
 };
 export function withParams(over = {}) {
   const deep = (a, b) => {

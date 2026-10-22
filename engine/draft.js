@@ -6,6 +6,9 @@ import { SLOTS } from "./race.js";
 export function needsOf(team) {
   return { driver: 2 - team.drivers.length, principal: team.principal == null ? 1 : 0, slots: SLOTS.filter((s) => team.partIds[s] == null) };
 }
+// During the off-season a team can hold several principals (its own, a free-agent signing, trades). Lock-in keeps one.
+export const principalsOf = (t) => [t.principal, t.principal2, ...(t.spare || [])].filter((x) => x != null);
+export function setPrincipals(t, list) { t.principal = list[0] ?? null; t.principal2 = list[1] ?? null; t.spare = list.slice(2); }
 const kindNeeded = (n, it) => (it.kind === "driver" ? n.driver > 0 : it.kind === "principal" ? n.principal > 0 : n.slots.includes(it.slot));
 
 // The few best items still free in each kind (enough for any sensible choice).
@@ -128,7 +131,7 @@ export function beginPartsRedraft(game, standingsWorstFirst, r, { snake = false 
   const turns = [];
   for (let round = 0; round < 4; round++) {
     const order = snake && round % 2 === 1 ? standingsWorstFirst.slice().reverse() : standingsWorstFirst;
-    for (const t of order) turns.push({ round: round + 1, team: t.id });
+    for (const t of order) turns.push({ round: round + 1, team: t.id, orig: t.id }); // team = current owner (picks can be traded)
   }
   game.rd = { turns, idx: 0, picks: [] };
   return game.rd;
@@ -167,12 +170,35 @@ export function freeAgents(game) {
 
 export function claimFA(game, t, driverItem, principalItem) {
   if (driverItem && !driverItem.taken) { driverItem.taken = true; driverItem.owner = t.id; t.drivers.push(driverItem.ref); t.claimedDriver = driverItem.ref; }
-  if (principalItem && !principalItem.taken) { principalItem.taken = true; principalItem.owner = t.id; t.principal2 = principalItem.ref; }
+  if (principalItem && !principalItem.taken) { principalItem.taken = true; principalItem.owner = t.id; setPrincipals(t, [...principalsOf(t), principalItem.ref]); }
 }
 
 export function botClaim(game, t) {
   const fa = freeAgents(game);
   claimFA(game, t, fa.drivers[0], fa.principals[0]);
+}
+
+// After trades a team can be short: parts it had no pick for, a missing second driver, no principal.
+// Whatever is left over in the pool is handed out, worst team first, so every line-up is complete.
+export function fillMissingParts(game, order = game.teams) {
+  const got = [];
+  for (const t of order) for (const s of needsOf(t).slots) {
+    const it = game.pool.parts[s].find((x) => !x.taken);
+    if (it) { takePart(game, t, it); got.push({ team: t.id, item: it }); }
+  }
+  return got;
+}
+export function ensureLineups(game, order = game.teams) {
+  for (const t of order) {
+    while (t.drivers.length < 2) {
+      const it = game.pool.drivers.find((x) => !x.taken); if (!it) break;
+      it.taken = true; it.owner = t.id; t.drivers.push(it.ref);
+    }
+    if (!principalsOf(t).length) {
+      const it = game.pool.principals.find((x) => !x.taken);
+      if (it) { it.taken = true; it.owner = t.id; setPrincipals(t, [it.ref]); }
+    }
+  }
 }
 
 // keep: Map(teamId -> { drivers: [two driver refs], principal: ref }); anything missing defaults to the best by Overall.
@@ -185,13 +211,12 @@ export function lockIn(game, keep = new Map()) {
     if (k && k.drivers && k.drivers.length === 2 && k.drivers.every((x) => t.drivers.includes(x)) && k.drivers[0] !== k.drivers[1]) stay = k.drivers;
     for (const ref of t.drivers.filter((x) => !stay.includes(x))) { const it = game.items.drivers[ref]; it.taken = false; it.owner = null; }
     t.drivers = stay;
-    if (t.principal2 != null) {
-      const a = t.principal, b = t.principal2;
-      let keepP = D.principals[a].overall >= D.principals[b].overall ? a : b;
-      if (k && (k.principal === a || k.principal === b)) keepP = k.principal;
-      const drop = keepP === a ? b : a;
-      t.principal = keepP; t.principal2 = null;
-      const it = game.items.principals[drop]; it.taken = false; it.owner = null;
+    const ps = principalsOf(t);
+    if (ps.length) {
+      let keepP = ps.slice().sort((x, y) => D.principals[y].overall - D.principals[x].overall)[0];
+      if (k && ps.includes(k.principal)) keepP = k.principal;
+      for (const ref of ps) if (ref !== keepP) { const it = game.items.principals[ref]; it.taken = false; it.owner = null; }
+      setPrincipals(t, [keepP]);
     }
     t.claimedDriver = null;
   }

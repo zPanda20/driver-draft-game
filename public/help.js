@@ -22,9 +22,11 @@ const PAGES = [
   { tab: "3 Off-season", html: `<h2>3. The off-season: improve</h2>
     <p>You keep your drivers and your principal. Your parts go back. Then:</p>
     <ul class="hl">
+      <li><b>Trades.</b> Swap with any team, even autopilot teams. Offer drivers, principals, parts picks and free-agency picks. A pick is a place in line. An early pick gets a better part. Give picks away and you take leftovers.</li>
       <li><b>Parts.</b> There are four rounds. Each team picks one part per round. The weakest team picks first. Star the parts you want, in order, or switch on auto.</li>
-      <li><b>Free drivers and principals.</b> Each team claims one free driver and one free principal. The weakest team goes first.</li>
-      <li><b>Cut.</b> You now have three drivers and two principals. Keep two drivers and one principal. If you do nothing, the game keeps the best.</li>
+      <li><b>Free drivers and principals.</b> Each free-agency pick claims one free driver and one free principal. The weakest team goes first.</li>
+      <li><b>Final trades.</b> A short window. Sell the driver or principal you do not need.</li>
+      <li><b>Cut.</b> Keep two drivers and one principal. If you do nothing, the game keeps the best. A team that is short gets the best of what is left.</li>
     </ul>
     <p>Then the next season starts.</p>` },
 ];

@@ -1,7 +1,7 @@
 # Driver Draft Game
 
 A multiplayer motorsport draft game. 10–30 teams draft 2 drivers, 4 car parts and a team principal, then run an
-18-race season (about 45–50 minutes), then re-draft parts, free-agent drivers and lock in line-ups for the next season.
+18-race season (about 45–50 minutes), then trade (drivers, principals, re-draft picks and free-agency picks, with players and autopilot teams), re-draft parts, sign free agents, make final trades and lock in line-ups for the next season.
 Everyone sees the same race at the same moment; the server decides everything.
 
 ## Run it on your own computer

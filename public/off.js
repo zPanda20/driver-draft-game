@@ -2,6 +2,7 @@
 import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME } from "./core.js";
 import { poolView, groupOf } from "./pool.js";
 import { teamBoard, lineupsScreen } from "./draft.js";
+import { tradeView, tradeList } from "./trade.js";
 
 function trackOf(id) { return st.cat.tracks.find((t) => t.id === id); }
 
@@ -11,8 +12,9 @@ function calendar(S) {
 
 function feedBox(S, kinds) {
   const rows = S.feed.filter((f) => kinds.includes(f.kind)).slice(-14).reverse().map((f) => {
-    const t = team(f.team);
+    const t = team(f.team != null ? f.team : f.from);
     if (f.kind === "part") return `<div>${chip(t, 16)} took <b>${esc(itemLabel(f.item))}</b></div>`;
+    if (f.kind === "trade") return `<div>${chip(t, 16)} traded ${tradeList(S, f.give)} to ${chip(team(f.to), 16)} for ${tradeList(S, f.get)}</div>`;
     if (f.kind === "claim") return `<div>${chip(t, 16)} signed ${f.driver ? `<b>${esc(itemLabel(f.driver))}</b>` : "no driver"}${f.principal ? ` and <b>${esc(itemLabel(f.principal))}</b>` : ""}</div>`;
     return "";
   }).join("");
@@ -58,10 +60,10 @@ function partsView(S, h) {
       ${p.upNext.length ? `<div class="col gap4"><span class="tiny mute">Up next</span><div class="row gap6 wrap">${p.upNext.map((id) => iconHTML(S.teams[id].livery, 24)).join("")}</div></div>` : ""}</div>
       <p class="small mute mt">Everyone's parts go back in the pool. Teams pick in reverse standings order, worst first. Star (★) parts to queue them: if you're on auto, or run out of time, your queue is used.</p>
       ${me ? `<label class="row gap6 mt small"><input type="checkbox" data-change="autoPick" ${me.auto ? "checked" : ""}> Auto-pick for me (queue first, then best available)</label>` : ""}</div>`;
-  if (!me) return { main: head + `<div class="card"><h3>Teams</h3>${teamBoard(S)}</div>`, side: feedBox(S, ["part"]) + h.chatCard(S) };
+  if (!me) return { main: head + `<div class="card"><h3>Teams</h3>${teamBoard(S)}</div>`, side: feedBox(S, ["part", "trade"]) + h.chatCard(S) };
   const queue = me.wish.length ? `<div class="card"><h3>My queue</h3><div class="row wrap">${me.wish.map((k) => { const [s, b] = k.split(":"); return `<span class="pill warn" data-act="wish" data-key="${k}" style="cursor:pointer">★ ${SLOTNAME[s]} +${b} ✕</span>`; }).join("")}</div></div>` : "";
   const pool = poolView(S, { mode: "parts", canAct: myTurn, tabs: ["aero", "engine", "susp", "cool"], title: myTurn ? "Take a part" : "Parts pool" });
-  return { main: head + queue + pool, side: feedBox(S, ["part"]) + h.standingsCard(S) + h.chatCard(S) };
+  return { main: head + queue + pool, side: feedBox(S, ["part", "trade"]) + h.standingsCard(S) + h.chatCard(S) };
 }
 
 function faView(S, h) {
@@ -73,9 +75,9 @@ function faView(S, h) {
     ${f.upNext.length ? `<div class="col gap4"><span class="tiny mute">Up next</span><div class="row gap6 wrap">${f.upNext.map((id) => iconHTML(S.teams[id].livery, 24)).join("")}</div></div>` : ""}</div>
     <p class="small mute mt">Worst team first, each team may sign one free-agent driver and one free-agent principal. Afterwards you keep your best two drivers and one principal; the rest go back.</p>
     ${myTurn ? `<div class="row mt wrap"><span class="pill">${dn ? "Driver: " + esc(dn) : "No driver selected"}</span><span class="pill">${pn ? "Principal: " + esc(pn) : "No principal selected"}</span><div class="grow"></div><button class="btn pri big" data-act="faClaim">Sign them</button><button class="btn" data-act="faSkip">Skip</button></div>` : ""}</div>`;
-  if (!me) return { main: head, side: feedBox(S, ["claim"]) + h.chatCard(S) };
+  if (!me) return { main: head, side: feedBox(S, ["claim", "trade"]) + h.chatCard(S) };
   const pool = poolView(S, { mode: "fa", canAct: myTurn, tabs: ["drivers", "principals"], title: "Free agents" });
-  return { main: head + pool, side: feedBox(S, ["claim"]) + h.standingsCard(S) + h.chatCard(S) };
+  return { main: head + pool, side: feedBox(S, ["claim", "trade"]) + h.standingsCard(S) + h.chatCard(S) };
 }
 
 function lockView(S, h) {
@@ -94,6 +96,7 @@ export function offView(S, h) {
   const step = S.step;
   if (step === "season.intro") return { main: `<div class="card"><div class="phase">New season</div><div class="rtitle">Season ${S.seasonNo}: the calendar</div>${S.points ? `<p class="small mute mt">Points: ${S.points.format} format. ${S.points.table.length} scoring places (${S.points.table.slice(0, 5).join(", ")}, …, ${S.points.table[S.points.table.length - 1]})</p>` : ""}</div><div class="card"><h3>18 races</h3>${calendar(S)}</div>`, side: h.teamsList(S) + h.chatCard(S) };
   if (step === "season.end") return { main: seasonEnd(S, h), side: h.chatCard(S) };
+  if (step === "trade" || step === "trade2") return tradeView(S, h);
   if (step === "parts" || step === "parts.turn") return partsView(S, h);
   if (step === "fa" || step === "fa.turn") return faView(S, h);
   if (step === "lock") return lockView(S, h);
