@@ -76,7 +76,7 @@ function builder(S) {
   u.give = u.give.filter((id) => mine.has(id)); u.get = u.get.filter((id) => theirs.has(id));
   const teams = S.teams.filter((t) => t.id !== me).map((t) => {
     const away = t.human && !t.connected, auto = !t.human;
-    return `<button class="partner ${u.to === t.id ? "on" : ""}" data-act="trPick" data-id="${t.id}" ${away ? "disabled" : ""}>${iconHTML(t.livery, 26)}<span class="pn">${esc(t.name)}</span><span class="tiny mute">${auto ? "autopilot" : away ? "offline" : esc(t.owner || "")}</span></button>`;
+    return `<button class="partner ${u.to === t.id ? "on" : ""}" data-act="trPick" data-id="${t.id}" ${away ? "disabled" : ""}>${iconHTML(t.livery, 26)}<span class="pn">${esc(t.name)}</span><span class="tiny mute">${auto ? "autopilot" : away ? "offline" : t.idle ? "idle" : esc(t.owner || "")}</span></button>`;
   }).join("");
   const target = u.to != null ? S.teams[u.to] : null;
   const ready = u.give.length && u.get.length;

@@ -24,7 +24,7 @@ export const tradingMethods = {
     this.tradeSecs = sec;
     this.step = stage === 1 ? "trade" : "trade2";
     this.setReveal({ kind: "trade", stage });
-    this.tradeQuick = false; this.tradeEndAt = Date.now() + (sec * 1000) / speed();
+    this.openWindow(); this.tradeQuick = false; this.tradeEndAt = Date.now() + (sec * 1000) / speed();
     this.after(sec * 1000, () => this.endTrade());
     // Nobody to trade with (everyone away or on auto): do not hold the room up.
     if (!this.tradeActive().length) this.after(800, () => this.endTrade());
@@ -32,6 +32,7 @@ export const tradingMethods = {
   },
   endTrade() {
     if (!this.trade) return;
+    this.closeWindow();
     for (const o of this.trade.offers) if (live(o)) { o.status = "void"; o.note = "The window closed."; }
     const stage = this.trade.stage;
     if (stage === 1) {

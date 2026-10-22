@@ -58,17 +58,21 @@ function landing() {
   st.S = null;
   el.top.innerHTML = ""; el.garage.innerHTML = ""; el.host.innerHTML = "";
   const saved = store("room");
-  el.body.innerHTML = `<div class="landing">
-    <div><div class="logo" style="margin-bottom:10px"><b>●</b> Driver Draft</div>
-    <div class="hero">Draft the drivers.<br>Build the car.<br>Win the season.</div>
-    <p class="mute mt">A game for a room full of laptops. Everyone drafts, everyone watches the same race.</p></div>
-    <div class="card box"><h3>Your name</h3><input id="nm" maxlength="24" placeholder="Name" value="${esc(store("name") || "")}"></div>
+  { const bg = $("#bg"); if (bg) { bg.dataset.slug = "start"; bg.classList.add("start"); bg.style.backgroundImage = "url(/start-wallpaper.png)"; } }
+  el.body.innerHTML = `<div class="landing start">
+    <header class="stbar"><span class="logo"><b></b> Driver Draft</span><span class="grow"></span><button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button></header>
+    <div class="stcol">
+    <div class="hero2"><span class="kick">Multiplayer motorsport draft</span>
+      <div class="hero">Draft the drivers.<br>Build the car.<br><em>Win the season.</em></div>
+      <p class="lead">A game for a room full of laptops. Everyone drafts, everyone watches the same race.</p></div>
+    <div class="panel box"><span class="no">01</span><h3>Your name</h3><input id="nm" maxlength="24" placeholder="Name" value="${esc(store("name") || "")}"></div>
     <div class="grid2">
-      <div class="card box"><h3>Host a game</h3><p class="small mute">Start a room and share the code.</p><button class="btn pri big" data-act="create">Create game</button></div>
-      <div class="card box"><h3>Join a game</h3><input class="big" id="jc" maxlength="4" placeholder="CODE" value="${esc(st.room || "")}"><button class="btn pri" data-act="join">Join</button></div>
+      <div class="panel box"><span class="no">02</span><h3>Host a game</h3><p class="small mute">Start a room and share the code.</p><button class="btn pri big" data-act="create">Create game</button></div>
+      <div class="panel box"><span class="no">03</span><h3>Join a game</h3><input class="big" id="jc" maxlength="4" placeholder="CODE" value="${esc(st.room || "")}"><button class="btn pri" data-act="join">Join</button></div>
     </div>
-    <div class="card row wrap"><div class="grow"><b>Big-screen view</b><div class="small mute">For the projector. Shows the draft and the race, no controls.</div></div><input id="wc" maxlength="4" placeholder="CODE" style="width:90px;text-transform:uppercase;text-align:center"><button class="btn" data-act="watch">Watch</button></div>
-    ${saved && !st.watch ? `<div class="card row"><div class="grow">Rejoin room <span class="code">${esc(saved)}</span></div><button class="btn pri" data-act="rejoin">Rejoin</button></div>` : ""}
+    <div class="panel row wrap"><div class="grow"><h3>Big-screen view</h3><div class="small mute">For the projector. Shows the draft and the race, no controls.</div></div><input id="wc" maxlength="4" placeholder="CODE" style="width:90px;text-transform:uppercase;text-align:center"><button class="btn" data-act="watch">Watch</button></div>
+    ${saved && !st.watch ? `<div class="panel row"><div class="grow">Rejoin room <span class="code">${esc(saved)}</span></div><button class="btn pri" data-act="rejoin">Rejoin</button></div>` : ""}
+    </div>
   </div>`;
 }
 
@@ -87,6 +91,14 @@ const A = {
   chatSend() { const i = $("#chatin"); if (i && i.value.trim()) { send({ t: "chat", text: i.value }); i.value = ""; } },
 };
 Object.assign(A, draftHandlers, raceHandlers, offHandlers, helpHandlers, tradeHandlers);
+
+// An idle player is back online with the first thing they touch.
+let lastWake = 0;
+for (const ev of ["pointerdown", "keydown", "touchstart"]) window.addEventListener(ev, () => {
+  const S = st.S, me = S && S.me;
+  if (!me || !me.idle || Date.now() - lastWake < 1500) return;
+  lastWake = Date.now(); send({ t: "active" });
+}, { passive: true, capture: true });
 
 app.addEventListener("click", (e) => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
@@ -142,6 +154,7 @@ const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 function nowLine(S) {
   const me = S.me, step = S.step; if (step === "lobby") return null;
   const pending = (p) => p && p.took !== true && p.took !== false;
+  if (me && me.idle) return { kind: "wait", text: "You are idle, so the room is moving on without you. Tap anything to jump back in." };
   if (step === "draft.intro") return { kind: "info", text: "Get ready: the draft starts in a moment." };
   if (step === "draft.pick") {
     const d = S.draft, left = d.humans.filter((id) => !d.locked.includes(id));
@@ -192,6 +205,7 @@ function nowLine(S) {
 function clockOn(S) {
   if (!S.deadline || S.paused) return false;
   if (["draft.pick", "trade", "trade2", "parts.turn", "fa.turn", "lock"].includes(S.step)) return true;
+  if (S.step === "race.finish") return true; // shows itself only in the last stretch (see tick)
   if ((S.step === "race.pre" || S.step === "race.mid") && S.me && S.me.popup) return S.me.popup.took !== true && S.me.popup.took !== false;
   return false;
 }
@@ -202,17 +216,22 @@ function renderTop() {
   const bn = bslug && !st.watch ? ` style="--banner:url(/liveries/${esc(bslug)}/banner.png)"` : "";
   const nl = nowLine(S), showClock = clockOn(S);
   const hud = nl ? `<div class="hud ${nl.kind}" id="hud"><span class="hmsg">${esc(nl.text)}</span>${showClock ? `<span class="hclock" id="hclock"></span><i class="hbar" id="hbar"></i>` : ""}</div>` : "";
-  el.top.innerHTML = `<div class="top"${bn}><span class="logo"><b>●</b> Driver Draft</span><span class="code" title="Room code">${esc(S.room)}</span>${stepper(S)}<span class="phase" title="Where we are">${esc(phaseLabel(S))}</span>${S.paused ? `<span class="paused">PAUSED</span>` : ""}<span class="grow"></span>${st.watch ? "" : `<button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button>`}</div>${hud}`;
+  el.top.innerHTML = `<div class="top"${bn}><span class="logo"><b></b> Driver Draft</span><span class="code" title="Room code">${esc(S.room)}</span>${stepper(S)}<span class="phase" title="Where we are">${esc(phaseLabel(S))}</span>${S.paused ? `<span class="paused">PAUSED</span>` : ""}<span class="grow"></span>${st.watch ? "" : `<button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button>`}</div>${hud}`;
   tick();
 }
 function tick() {
   const S = st.S, c = $("#hclock"); if (!c || !S) return;
   const r = remaining();
   if (r == null) { c.textContent = ""; return; }
+  let tot = S.dur > 0 ? S.dur : r;
+  if (S.step === "race.finish") { // the next-race countdown only appears in the last stretch, 5 s after the summary opens
+    tot = tot * (8200 / 22000);
+    if (r > tot) { c.textContent = ""; const b = $("#hbar"); if (b) b.style.transform = "scaleX(0)"; return; }
+  }
   c.textContent = fmtClock(r);
   const low = r < 6000 && r > 0;
   $("#hud")?.classList.toggle("low", low);
-  const bar = $("#hbar"), tot = S.dur > 0 ? S.dur : r;
+  const bar = $("#hbar");
   if (bar) bar.style.transform = `scaleX(${Math.max(0, Math.min(1, r / Math.max(tot, 1)))})`;
 }
 setInterval(tick, 250);
@@ -293,7 +312,7 @@ function lobby(S) {
       <div class="row wrap"><span class="mute small">Pick a livery. It sets your colours and a default team name, which you can change.</span></div>
       <div class="row mt"><input id="teamname" class="grow" maxlength="28" placeholder="Team name" value="${esc(you?.teamName || "")}"></div></div>
     <div class="card"><h3>Livery</h3><div class="livgrid">${livs}</div></div>`;
-  const side = `<div class="card"><h3>Players (${humans})</h3><div class="plist">${S.players.map((p) => `<div class="pl"><span class="dot ${p.connected ? "on" : ""}"></span>${p.livery ? iconHTML(p.livery, 26) : `<span class="ico" style="--s:26px"></span>`}<div class="grow"><b>${esc(p.name)}</b>${p.host ? ` <span class="pill acc">host</span>` : ""}<div class="small mute">${esc(p.teamName || "no livery yet")}</div></div></div>`).join("")}</div>
+  const side = `<div class="card"><h3>Players (${humans})</h3><div class="plist">${S.players.map((p) => `<div class="pl"><span class="dot ${p.connected ? (p.idle ? "idle" : "on") : ""}"></span>${p.livery ? iconHTML(p.livery, 26) : `<span class="ico" style="--s:26px"></span>`}<div class="grow"><b>${esc(p.name)}</b>${p.host ? ` <span class="pill acc">host</span>` : ""}<div class="small mute">${esc(p.teamName || "no livery yet")}</div></div></div>`).join("")}</div>
       ${fill ? `<p class="small mute mt">${fill} autopilot team${fill > 1 ? "s" : ""} will fill the grid up to ${s.minTeams}. They draft for themselves and never gamble.</p>` : ""}</div>
     <div class="card"><h3>Game settings ${S.host ? "" : `<span class="tiny">(host only)</span>`}</h3><div class="set">
       <span class="small">Minimum teams</span>${sel("minTeams", [10, 12, 14, 16, 18, 20, 24, 30].map((n) => [n, n]))}
@@ -312,7 +331,7 @@ function lobby(S) {
 
 function teamsList(S) {
   if (!S.teams) return "";
-  return `<div class="card"><h3>Teams</h3><div class="st">${S.teams.map((t) => `<div class="r ${S.me?.teamId === t.id ? "me" : ""}" style="grid-template-columns:1fr auto">${chip(t, 20)}<span class="tiny mute">${t.human ? (t.connected ? "" : "offline") : "auto"}</span></div>`).join("")}</div></div>`;
+  return `<div class="card"><h3>Teams</h3><div class="st">${S.teams.map((t) => `<div class="r ${S.me?.teamId === t.id ? "me" : ""}" style="grid-template-columns:1fr auto">${chip(t, 20)}<span class="tiny mute">${t.human ? (t.connected ? (t.idle ? "idle" : "") : "offline") : "auto"}</span></div>`).join("")}</div></div>`;
 }
 
 let lastKey = "";

@@ -9,6 +9,7 @@ import { pointsTable, pointsFormat } from "../engine/pool.js";
 export const PACES = [1.4, 1, 0.7, 0.5]; // seconds-multiplier per speed level: Relaxed, Normal, Fast, Turbo
 const DEFAULTS = { minTeams: 10, pace: 1, draftSec: 45, popupSec: 15, partsSec: 12, faSec: 25, lockSec: 30, tradeSec: 150, trading: true, redraft: "straight", decisions: true };
 const KEEP_FEED = 40;
+const IDLE_MS = 6000; // how long the room waits for idle players once nobody else is left to act
 
 export class Room {
   constructor({ code, D, liveries, hostToken, onChange, onSave }) {
@@ -26,9 +27,9 @@ export class Room {
   }
 
   // ---------- timing ----------
-  after(ms, fn, real = false) {
-    ms = real && process.env.REAL_RACE ? ms : ms / (+process.env.TEST_SPEED || 1);
-    this.clearTimer();
+  after(ms, fn, real = false) { this.afterRaw(real && process.env.REAL_RACE ? ms : ms / (+process.env.TEST_SPEED || 1), fn); }
+  afterRaw(ms, fn) {
+    this.clearTimer(); this.shortened = null;
     this.pending = fn; this.remaining = ms; this.dur = ms;
     if (this.paused) { this.deadline = null; return; }
     this.deadline = Date.now() + ms;
@@ -36,7 +37,7 @@ export class Room {
   }
   fire() { const fn = this.pending; this.clearTimer(); if (fn) fn(); }
   clearTimer() { if (this.timer) clearTimeout(this.timer); this.timer = null; this.pending = null; this.deadline = null; }
-  skip() { if (this.pending) this.fire(); }
+  skip() { if (this.pending) { this.skipping = true; this.fire(); this.skipping = false; } }
   // After a server restart a restored room waits for someone to connect, then carries on from its checkpoint.
   kick() {
     if (!this.restored) return; this.restored = false;
@@ -50,8 +51,50 @@ export class Room {
     if (this.pending) { this.deadline = Date.now() + this.remaining; this.timer = setTimeout(() => this.fire(), this.remaining); }
     this.changed();
   }
-  changed() { this.onChange(this); }
+  changed() { this.settle(); this.onChange(this); }
   p(ms) { return ms * this.settings.pace; }
+
+  // ---------- idle players ----------
+  // A player who lets three choice windows run out without touching anything goes idle. They still count as online, but the
+  // room does not wait for them: when only idle players are left to act, the running timer is cut short. Any click brings them back.
+  humanFor(id, noAuto) { const p = this.playerOfTeam(id); return p && p.connected && !(noAuto && p.auto) ? p : null; }
+  // The players the current step is waiting on (connected, and still to make their choice).
+  waitingOn() {
+    if (!this.game || this.paused) return [];
+    const g = this.game, out = [], add = (p) => { if (p) out.push(p); };
+    switch (this.step) {
+      case "draft.pick": for (const t of this.humanTeams()) { const hp = this.humanPicks.get(t.id); if (!(hp && hp.locked)) add(this.humanFor(t.id)); } break;
+      case "race.pre": case "race.mid": {
+        const set = this.step === "race.pre" ? g.race.pre : g.race.mid;
+        for (const pu of set.values()) if (g.teams[pu.team].human && pu.took === null) add(this.humanFor(pu.team));
+        break;
+      }
+      case "parts.turn": { const turn = g.rd.turns[this.turnIdx]; if (turn) add(this.humanFor(turn.team, true)); break; }
+      case "fa.turn": add(this.humanFor(this.faTurns[this.faIdx], true)); break;
+      case "lock": for (const id of this.lockHumans || []) if (!this.keepConfirmed.has(id)) add(this.humanFor(id)); break;
+      case "trade": case "trade2": if (this.trade) for (const t of this.tradeActive()) if (!this.trade.done.has(t.id)) add(this.playerOfTeam(t.id)); break;
+    }
+    return out;
+  }
+  openWindow() { for (const p of this.players.values()) p.acted = false; this.skipping = false; }
+  // Called as a choice window ends by running out of time: whoever was waited on and did nothing misses it.
+  closeWindow() {
+    if (this.skipping) return;
+    for (const p of this.waitingOn()) if (!p.acted) { p.missed = (p.missed || 0) + 1; if (p.missed >= 3) p.idle = true; }
+  }
+  touch(p) { p.acted = true; p.missed = 0; }
+  wake(p) {
+    if (!p || !p.idle) return;
+    p.idle = false; p.missed = 0;
+    if (this.shortened) { const s = this.shortened; this.afterRaw(Math.max(s.left, 8000 / (+process.env.TEST_SPEED || 1)), s.fn); }
+  }
+  shorten(ms) {
+    if (!this.pending || this.paused || this.shortened || !this.deadline) return;
+    ms = ms / (+process.env.TEST_SPEED || 1);
+    const left = this.deadline - Date.now(); if (left <= ms) return;
+    const fn = this.pending; this.afterRaw(ms, fn); this.shortened = { fn, left };
+  }
+  settle() { if (this.shortened || !this.pending || this.paused) return; const w = this.waitingOn(); if (w.length && w.every((p) => p.idle)) this.shorten(IDLE_MS); }
 
   // ---------- people ----------
   humanTeams() { return this.game ? this.game.teams.filter((t) => t.human) : []; }
@@ -163,7 +206,7 @@ export class Room {
     const dr = beginDraftRound(g, this.draftRound, g.draftRng);
     this.humanPicks = new Map();
     for (const t of dr.order) if (!t.human) dr.picks.set(t, botPicks(g, t, this.draftRound, g.draftRng));
-    this.step = "draft.pick";
+    this.step = "draft.pick"; this.openWindow();
     // Round 1 is longest, rounds 2-3 normal, rounds 4-7 half the timer plus 10 s (fewer choices left, but not rushed).
     const sec = this.draftRound === 1 ? 1.6 * this.settings.draftSec : this.draftRound <= 3 ? this.settings.draftSec : 0.5 * this.settings.draftSec + 10;
     this.after(Math.max(15, sec) * 1000, () => this.resolveDraft());
@@ -201,6 +244,7 @@ export class Room {
     return true;
   }
   resolveDraft() {
+    this.closeWindow();
     const g = this.game, dr = g.draftRound;
     const wanted = [];
     for (const t of this.humanTeams()) {
@@ -242,7 +286,7 @@ export class Room {
     this.raceIdx++;
     if (this.raceIdx >= 18) return this.endSeason();
     prepareRace(g, this.raceIdx);
-    this.step = "race.pre";
+    this.step = "race.pre"; this.openWindow();
     this.popupHumans = [...g.race.pre.keys()].filter((id) => g.teams[id].human);
     this.reveal = this.reveal && this.reveal.kind === "finish" ? { ...this.reveal, stale: true } : this.reveal;
     this.after(this.popupHumans.length ? this.settings.popupSec * 1000 : this.p(5500), () => this.firstHalf());
@@ -258,6 +302,7 @@ export class Room {
     if (!open) this.after(2600, () => (phase === "pre" ? this.firstHalf() : this.finishRace()));
   }
   firstHalf() {
+    this.closeWindow();
     const g = this.game;
     autoAnswer(g, "pre");
     const info = runFirstHalf(g);
@@ -272,13 +317,14 @@ export class Room {
     this.changed();
   }
   startMid() {
-    this.step = "race.mid";
+    this.step = "race.mid"; this.openWindow();
     const g = this.game;
     this.popupHumans = [...g.race.mid.keys()].filter((id) => g.teams[id].human);
     this.after(this.popupHumans.length ? this.settings.popupSec * 1000 : this.p(2500), () => this.finishRace());
     this.changed();
   }
   finishRace() {
+    this.closeWindow();
     const g = this.game;
     autoAnswer(g, "mid");
     const res = runSecondHalf(g), race = g.race, N = g.N, table = g.season.table;
@@ -291,7 +337,7 @@ export class Room {
       half: this.reveal && this.reveal.kind === "half" ? this.reveal.order : null,
     });
     this.step = "race.finish";
-    this.after(this.p(30000), () => this.nextRace(), true); // long enough to read the race summary
+    this.after(this.p(22000), () => this.nextRace(), true); // the summary pop-up closes itself; the next race starts behind it
     this.changed();
   }
   endSeason() {
@@ -355,7 +401,7 @@ export class Room {
       }
       const w = this.wishPick(t, p);
       if (w) { this.takeTurn(turn, t, w); this.turnIdx++; this.changed(); return void this.after(400, () => this.partsTurn()); }
-      this.step = "parts.turn";
+      this.step = "parts.turn"; this.openWindow();
       this.after(this.settings.partsSec * 1000, () => this.partsTimeout());
       return this.changed();
     }
@@ -364,6 +410,7 @@ export class Room {
     this.startFA();
   }
   partsTimeout() {
+    this.closeWindow();
     const g = this.game, turn = g.rd.turns[this.turnIdx], t = g.teams[turn.team];
     const it = t.human ? bestPartFor(g, t) : botPartChoice(g, t, g.draftRng);
     if (it) this.takeTurn(turn, t, it);
@@ -403,7 +450,7 @@ export class Room {
         botClaim(g, t); this.pushClaim(t); this.faIdx++; this.changed();
         return void this.after(t.human ? 400 : 110, () => this.faTurn());
       }
-      this.step = "fa.turn";
+      this.step = "fa.turn"; this.openWindow();
       this.after(this.settings.faSec * 1000, () => this.faTimeout());
       return this.changed();
     }
@@ -413,7 +460,7 @@ export class Room {
   pushClaim(t) {
     this.pushFeed({ kind: "claim", team: t.id, driver: t.claimedDriver != null ? `d:${t.claimedDriver}` : null, principal: t.principal2 != null ? `p:${t.principal2}` : null });
   }
-  faTimeout() { const g = this.game, t = g.teams[this.faTurns[this.faIdx]]; botClaim(g, t); this.pushClaim(t); this.faIdx++; this.faTurn(); }
+  faTimeout() { this.closeWindow(); const g = this.game, t = g.teams[this.faTurns[this.faIdx]]; botClaim(g, t); this.pushClaim(t); this.faIdx++; this.faTurn(); }
   faClaim(token, driverId, principalId) {
     const p = this.players.get(token); if (!p || this.step !== "fa.turn") return;
     const g = this.game, t = g.teams[this.faTurns[this.faIdx]]; if (t.id !== p.teamId) return;
@@ -424,7 +471,7 @@ export class Room {
 
   startLock() {
     ensureLineups(this.game, this.worstFirst); // anyone still short after trades gets the best of what is left
-    this.step = "lock"; this.keepChoices = new Map(); this.keepConfirmed = new Set();
+    this.step = "lock"; this.openWindow(); this.keepChoices = new Map(); this.keepConfirmed = new Set();
     this.lockHumans = this.humanTeams().filter((t) => t.drivers.length > 2 || principalsOf(t).length > 1).map((t) => t.id);
     if (!this.lockHumans.length) return this.finishLock();
     this.after(this.settings.lockSec * 1000, () => this.finishLock());
@@ -440,6 +487,7 @@ export class Room {
     if (this.lockHumans.every((id) => this.keepConfirmed.has(id) || !this.playerOfTeam(id)?.connected)) this.after(1000, () => this.finishLock());
   }
   finishLock() {
+    this.closeWindow();
     const g = this.game, keep = new Map();
     for (const [id, c] of this.keepChoices) keep.set(id, c);
     lockIn(g, keep);
@@ -505,7 +553,7 @@ export class Room {
   // ---------- views ----------
   teamPub(t) {
     const p = this.playerOfTeam(t.id);
-    return { id: t.id, name: t.name, owner: p ? p.name : null, livery: t.livery, human: !!t.human, connected: t.human ? !!(p && p.connected) : true, drivers: t.drivers, principal: t.principal, principal2: t.principal2 ?? null, spare: t.spare || [], parts: t.partIds, pts: t.pts, wins: t.wins, titles: t.titles, ptsBySeason: undefined };
+    return { id: t.id, name: t.name, owner: p ? p.name : null, livery: t.livery, human: !!t.human, connected: t.human ? !!(p && p.connected) : true, idle: !!(p && p.idle), drivers: t.drivers, principal: t.principal, principal2: t.principal2 ?? null, spare: t.spare || [], parts: t.partIds, pts: t.pts, wins: t.wins, titles: t.titles, ptsBySeason: undefined };
   }
 
   view(token) {
@@ -513,7 +561,7 @@ export class Room {
     const v = {
       room: this.code, phase: this.phase, step: this.step, paused: this.paused,
       deadline: this.deadline, dur: this.dur, now: Date.now(), settings: this.settings, host: this.isHost(token),
-      players: [...this.players.values()].map((p) => ({ you: p.token === token, name: p.name, teamName: p.teamName, livery: p.livery, teamId: p.teamId, connected: p.connected, host: p.token === this.hostToken, auto: p.auto })),
+      players: [...this.players.values()].map((p) => ({ you: p.token === token, name: p.name, teamName: p.teamName, livery: p.livery, teamId: p.teamId, connected: p.connected, host: p.token === this.hostToken, auto: p.auto, idle: !!p.idle })),
       chat: this.chat.slice(-30), reveal: this.reveal, feed: this.feed,
       liveriesTaken: this.phase === "lobby" ? [...this.players.values()].filter((p) => p.livery).map((p) => p.livery) : [],
     };
@@ -549,7 +597,7 @@ export class Room {
     }
     if (me && me.teamId != null) {
       const t = g.teams[me.teamId];
-      const mv = { teamId: t.id, needs: needsOf(t), auto: me.auto, wish: me.wish };
+      const mv = { teamId: t.id, needs: needsOf(t), auto: me.auto, wish: me.wish, idle: !!me.idle };
       if (this.phase === "draft") { const hp = this.humanPicks.get(t.id); mv.pick = hp ? { pri: hp.pri, alt: hp.alt, locked: hp.locked } : null; }
       if (this.phase === "season" && g.race && (this.step === "race.pre" || this.step === "race.mid")) {
         const set = this.step === "race.pre" ? g.race.pre : g.race.mid;

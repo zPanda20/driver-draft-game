@@ -111,6 +111,7 @@ function attach(ws, room, token, watch) {
   room.changed();
 }
 
+const CHOICES = new Set(["pick", "lock", "popup", "wish", "auto", "partPick", "faClaim", "tradeOffer", "tradeRespond", "tradeConfirm", "tradeCancel", "tradeDone", "keep", "continue"]);
 function handle(ws, m) {
   const tok = typeof m.token === "string" ? m.token.slice(0, 64) : null;
   switch (m.t) {
@@ -135,7 +136,15 @@ function handle(ws, m) {
   }
   const room = ws.room; if (!room || ws.watch) return;
   const t = ws.token;
+  { // any click wakes an idle player; real choices also count as having acted in the open window
+    const pl = room.players.get(t);
+    if (pl) {
+      if (pl.idle) room.wake(pl);
+      if (CHOICES.has(m.t)) room.touch(pl);
+    }
+  }
   switch (m.t) {
+    case "active": break; // sent by the browser on any click while idle; the wake-up above is all that is needed
     case "livery": room.setLivery(t, m.slug); break;
     case "teamName": room.setTeamName(t, m.name); break;
     case "settings": room.setSettings(t, m.s || {}); break;

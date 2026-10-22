@@ -73,7 +73,7 @@ export function applyTheme() {
   const bg = $("#bg"); if (!bg) return;
   const slug = l ? l.slug : null;
   if (bg.dataset.slug === String(slug)) return;
-  bg.dataset.slug = String(slug); bg.style.backgroundImage = "";
+  bg.dataset.slug = String(slug); bg.style.backgroundImage = ""; bg.classList.remove("start");
   if (slug) { const img = new Image(); img.onload = () => { if (bg.dataset.slug === slug) bg.style.backgroundImage = `url(/liveries/${slug}/wallpaper-dark.png)`; }; img.src = `/liveries/${slug}/wallpaper-dark.png`; }
 }
 

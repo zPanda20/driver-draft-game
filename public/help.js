@@ -8,7 +8,8 @@ const pages = () => [
   { tab: "Welcome", html: `<h2>Welcome to Driver Draft</h2>
     <p>You run a racing team. You build it, race it for 18 races, then improve it and race again. The team with the most points after 18 races wins the title.</p>
     <p>The game has three parts.</p>
-    <ol class="hl"><li><b>The draft:</b> build your team.</li><li><b>The season:</b> race.</li><li><b>The off-season:</b> trade, re-draft your parts and sign free agents.</li></ol>` },
+    <ol class="hl"><li><b>The draft:</b> build your team.</li><li><b>The season:</b> race.</li><li><b>The off-season:</b> trade, re-draft your parts and sign free agents.</li></ol>
+    <p><b>Stepping away?</b> If three choices in a row run out of time without you, you go <b>idle</b>. You stay in the game, but the room stops waiting for you and your timers get short. Click anything to come back.</p>` },
   { tab: "1 Draft", html: `<h2>1. The draft: build your team</h2>
     <p>You need seven things: two drivers, four car parts (aero, engine, suspension, cooling) and one team principal, who is your team's boss.</p>
     <p>The draft has seven rounds. Everyone picks at once. In each round, choose one thing you want and one backup.</p>

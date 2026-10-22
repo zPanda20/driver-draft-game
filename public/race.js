@@ -214,12 +214,17 @@ function summary(S, R) {
   }
   return `<div class="sumback"><div class="sumcard" role="dialog" aria-label="Race summary"><div class="sumhead"><span class="phase">Round ${R.round + 1} · ${esc(R.track.name || trackOf(R.track).name)}</span></div>
     ${banner}<div class="podium">${podium}</div>${mine}
-    <div class="sumact"><span class="small mute">The next race starts shortly.</span><button class="btn pri" data-act="sumClose">Continue</button></div></div></div>`;
+    <div class="sumact"><span class="small mute">The next race starts shortly.</span><i class="sumbar"></i><button class="btn pri" data-act="sumClose">Continue</button></div></div></div>`;
 }
 function showSummary(S, R) {
   const el = $("#rSum"); if (!el) return;
   if (sumClosed === R.round) { el.innerHTML = ""; return; }
-  if (!el.innerHTML) el.innerHTML = summary(S, R);
+  if (el.innerHTML) return;
+  el.innerHTML = summary(S, R);
+  // It closes itself after 8 seconds; the next race is already on its way behind it.
+  const k = S.settings.pace || 1, r = R.round;
+  const bar = el.querySelector(".sumbar"); if (bar) bar.style.animationDuration = 8 * k + "s";
+  sleep(() => { if (sumClosed !== r) { sumClosed = r; el.innerHTML = ""; } }, 8000 * k);
 }
 
 const SPEED_NAME = ["Relaxed", "Normal", "Fast", "Turbo"];
