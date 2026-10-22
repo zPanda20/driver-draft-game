@@ -38,9 +38,10 @@ export function iconHTML(slug, size = 28) {
   const c = l ? `--b:${l.body};--a:${l.accent};--sec:${l.second}` : "";
   return `<span class="ico" style="--s:${size}px;${c}">${slug ? `<img src="/liveries/${esc(slug)}/icon.png" alt="" loading="lazy" onerror="this.remove()">` : ""}</span>`;
 }
-export function chip(t, size = 24, extra = "") {
+export function chip(t, size = 24, extra = "", owner = false) {
   if (!t) return "";
-  return `<span class="tchip ${extra}">${iconHTML(t.livery, size)}<span class="n">${esc(t.name)}</span></span>`;
+  const who = owner && t.owner ? ` <span class="own">(${esc(t.owner)})</span>` : "";
+  return `<span class="tchip ${extra}">${iconHTML(t.livery, size)}<span class="n">${esc(t.name)}${who}</span></span>`;
 }
 export function statCls(v) { return v >= 90 ? "s9" : v >= 85 ? "s8" : v >= 80 ? "s7" : v >= 75 ? "s6" : v >= 70 ? "s5" : "s4"; }
 export const stat = (v) => `<span class="stat ${statCls(v)}">${Math.round(v)}</span>`;

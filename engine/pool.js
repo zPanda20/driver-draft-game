@@ -14,9 +14,17 @@ export function tierCounts(N) {
 }
 export const TIER_BONUS = [50, 30, 20, 10];
 
-// Points for finishing places 1..N. At N=30 this is the agreed table; smaller N interpolates it.
+// Points for finishing places. Small rooms use real series tables, big rooms use our scaled 50-point table:
+//   12 teams or fewer: F1 (25-18-15-12-10-8-6-4-2-1, top 10 score)
+//   13 to 15 teams:    MotoGP (25-20-16-13-11-10-9-8-7-6-5-4-3-2-1, top 15 score)
+//   16 or more teams:  scaled 50-point table, top N score (agreed table at N=30, interpolated below)
+export const F1_POINTS = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+export const MOTOGP_POINTS = [25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 const TABLE30 = [50, 46, 43, 40, 37, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 9, 8, 7, 6, 5, 4, 3, 3, 2, 2, 1, 1];
+export function pointsFormat(N) { return N <= 12 ? "F1" : N <= 15 ? "MotoGP" : "Scaled 50"; }
 export function pointsTable(N) {
+  if (N <= 12) return F1_POINTS.slice();
+  if (N <= 15) return MOTOGP_POINTS.slice();
   if (N === 30) return TABLE30.slice();
   const out = [];
   for (let p = 1; p <= N; p++) {

@@ -179,7 +179,7 @@ export function runSecondHalf(game) {
   const res = s.value;
   res.order.forEach((ci, k) => {
     const t = cars[ci].team;
-    if (k < N) t.pts += S.table[k];
+    if (k < S.table.length) t.pts += S.table[k];
     t.pos[k + 1]++;
     if (k === 0) t.wins++;
   });

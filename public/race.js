@@ -28,19 +28,31 @@ function header(S) {
     ${wet != null ? `<div class="wx">${wet ? "🌧 Wet race" : "☀ Dry race"}</div>` : ""}</div>`;
 }
 
+const resultCard = (g) => {
+  const pill = `<span class="pill">${g.phase === "pre" ? "Pre-race call" : "Mid-race call"}</span>`;
+  if (g.outcome === null || g.outcome === undefined) return `<div class="popup done pend"><div class="row">${pill}<b>${esc(g.name)}</b><div class="grow"></div><span class="verdict">⏳ Weather decides, result at lights out</span></div></div>`;
+  return `<div class="popup done ${g.outcome ? "won" : "lost"}"><div class="row">${pill}<b>${esc(g.name)}</b><div class="grow"></div><span class="verdict">${g.outcome ? "✅ It paid off!" : "❌ It backfired"}</span></div></div>`;
+};
+
 function popup(S) {
-  const p = S.me && S.me.popup; if (!p) return "";
+  const me = S.me; if (!me) return { html: "", result: false };
   const lines = (a) => (a.length ? a.map((x) => `<div>${esc(x)}</div>`).join("") : `<div class="mute">No change</div>`);
-  if (p.took !== null) return `<div class="popup done"><div class="row"><span class="pill ${p.took ? "acc" : ""}">${p.phase === "pre" ? "Pre-race call" : "Mid-race call"}</span><b>${esc(p.name)}</b><div class="grow"></div><span class="small">${p.took ? "You took the gamble. Result after the race." : "You held course."}</span></div></div>`;
-  const bonus = p.base != null ? Math.round(p.pS * 100 - p.base) : 0;
-  const statName = { strategy: "Strategy", mentality: "Mentality", mechanical: "Mechanical" }[p.stat];
-  return `<div class="popup">
+  const p = me.popup;
+  if (p && (S.step === "race.pre" || S.step === "race.mid")) {
+    if (p.took === true) return { html: resultCard(p), result: true };
+    if (p.took === false) return { html: `<div class="popup done"><div class="row"><span class="pill">${p.phase === "pre" ? "Pre-race call" : "Mid-race call"}</span><b>${esc(p.name)}</b><div class="grow"></div><span class="small">You held course.</span></div></div>`, result: false };
+    const bonus = p.base != null ? Math.round(p.pS * 100 - p.base) : 0;
+    const statName = { strategy: "Strategy", mentality: "Mentality", mechanical: "Mechanical" }[p.stat];
+    return { result: false, html: `<div class="popup">
     <div class="row"><span class="pill acc">${p.phase === "pre" ? "Pre-race call" : "Mid-race call"}</span><div class="grow"></div><span class="small mute">Your principal's ${statName} ${p.statVal}${bonus ? ` · ${bonus > 0 ? "+" : ""}${bonus}%` : ""}</span></div>
     <h2 class="mt">${esc(p.name)}</h2>
     ${p.text ? `<p class="small mute">${esc(p.text)}</p>` : ""}
     <div class="row mt"><div class="odds">${Math.round(p.pS * 100)}%</div><div class="small mute">${p.byRain ? "pays off only if it rains here" : "chance it works"}</div></div>
     <div class="eff"><div><b class="w">If it works</b>${lines(p.win)}</div><div><b class="l">If it doesn't</b>${lines(p.lose)}</div></div>
-    <div class="acts"><button class="btn good" data-act="popupYes">Take the gamble</button><button class="btn" data-act="popupNo">Hold course</button></div></div>`;
+    <div class="acts"><button class="btn good" data-act="popupYes">Take the gamble</button><button class="btn" data-act="popupNo">Hold course</button></div></div>` };
+  }
+  if (me.gambles && (S.step === "race.half" || S.step === "race.finish")) return { html: me.gambles.map((g) => resultCard(g)).join(""), result: true };
+  return { html: "", result: false };
 }
 
 // ---------- tower ----------
@@ -167,7 +179,14 @@ export function raceUpdate(S, mw) {
   }
   const R = S.reveal, round = S.race.round;
   $("#rHead").innerHTML = header(S);
-  $("#rPopup").innerHTML = popup(S);
+  { // gamble card: only touch the DOM when it changes; result cards fade out after a few seconds
+    const pp = popup(S), el = $("#rPopup"), key = S.step + "|" + pp.html;
+    if (RS.popKey !== key) {
+      RS.popKey = key; RS.popHidden = false; clearTimeout(RS.popTimer);
+      el.innerHTML = pp.html ? `<div class="popstack">${pp.html}</div>` : "";
+      if (pp.result && (S.step === "race.half" || S.step === "race.finish")) { const r = RS; RS.popTimer = setTimeout(() => { r.popHidden = true; el.innerHTML = ""; }, 9000); }
+    } else if (RS.popHidden) el.innerHTML = "";
+  }
   const fresh = RS.seq !== (R && R.seq);
   if (RS.round !== round) {
     RS.timers.forEach(clearTimeout); RS.timers = [];

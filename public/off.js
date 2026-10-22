@@ -23,15 +23,15 @@ function history(S) {
   if (!S.history.length) return "";
   const rows = S.history.slice().reverse().map((h) => {
     const w = S.teams[h.order[0]], r = S.teams[h.order[1]];
-    return `<tr><td class="l">Season ${h.season}</td><td class="l">${chip(w, 18)}</td><td>${h.pts[0]}</td><td class="l">${chip(r, 18)}</td><td>${h.pts[1]}</td></tr>`;
+    return `<tr><td class="l">Season ${h.season}</td><td class="l">${chip(w, 18, "", true)}</td><td>${h.pts[0]}</td><td class="l">${chip(r, 18, "", true)}</td><td>${h.pts[1]}</td></tr>`;
   }).join("");
   return `<div class="card hist"><h3>Champions</h3><table class="tbl"><thead><tr><th class="l">Season</th><th class="l">Champion</th><th>Pts</th><th class="l">Runner-up</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function seasonEnd(S, h) {
   const R = S.reveal, champ = S.teams[R.champion], me = S.me && S.me.teamId;
-  const rows = R.standings.map((s, i) => { const t = S.teams[s.id]; return `<tr class="${s.id === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l">${chip(t, 22)}</td><td>${s.wins}</td><td class="ovr">${s.pts}</td></tr>`; }).join("");
-  return `<div class="card champ"><div class="tr">🏆</div><div class="phase">Season ${R.season} champions</div><h2>${iconHTML(champ.livery, 56)}<br>${esc(champ.name)}</h2><p class="mute">${R.standings[0].pts} points · ${R.standings[0].wins} wins</p></div>
+  const rows = R.standings.map((s, i) => { const t = S.teams[s.id]; return `<tr class="${s.id === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l">${chip(t, 22, "", true)}</td><td>${s.wins}</td><td class="ovr">${s.pts}</td></tr>`; }).join("");
+  return `<div class="card champ"><div class="tr">🏆</div><div class="phase">Season ${R.season} champions</div><h2>${iconHTML(champ.livery, 56)}<br>${esc(champ.name)}${champ.owner ? ` <span class="own">(${esc(champ.owner)})</span>` : ""}</h2><p class="mute">${R.standings[0].pts} points · ${R.standings[0].wins} wins</p></div>
     <div class="card"><h3>Final standings</h3><div class="scroller" data-keep="fs"><table class="tbl"><thead><tr><th class="l">#</th><th class="l">Team</th><th>Wins</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table></div></div>${history(S)}
     ${S.host ? "" : `<p class="small mute c">Waiting for the host to start the off-season…</p>`}`;
 }
@@ -78,7 +78,7 @@ function lockView(S, h) {
 
 export function offView(S, h) {
   const step = S.step;
-  if (step === "season.intro") return { main: `<div class="card"><div class="phase">New season</div><div class="rtitle">Season ${S.seasonNo}: the calendar</div></div><div class="card"><h3>18 races</h3>${calendar(S)}</div>`, side: h.teamsList(S) + h.chatCard(S) };
+  if (step === "season.intro") return { main: `<div class="card"><div class="phase">New season</div><div class="rtitle">Season ${S.seasonNo}: the calendar</div>${S.points ? `<p class="small mute mt">Points: ${S.points.format} format. ${S.points.table.length} scoring places (${S.points.table.slice(0, 5).join(", ")}, …, ${S.points.table[S.points.table.length - 1]})</p>` : ""}</div><div class="card"><h3>18 races</h3>${calendar(S)}</div>`, side: h.teamsList(S) + h.chatCard(S) };
   if (step === "season.end") return { main: seasonEnd(S, h), side: h.chatCard(S) };
   if (step === "parts" || step === "parts.turn") return partsView(S, h);
   if (step === "fa" || step === "fa.turn") return faView(S, h);

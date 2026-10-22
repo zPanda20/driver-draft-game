@@ -3,6 +3,7 @@ import { makeRng, shuffle } from "../engine/rng.js";
 import { createGame, startSeason, prepareRace, autoAnswer, answer, runFirstHalf, runSecondHalf, finishSeason, standingsOf } from "../engine/season.js";
 import { makePool, beginDraftRound, botPicks, validPick, resolveDraftRound, beginPartsRedraft, botPartChoice, takePart, freeAgents, claimFA, botClaim, lockIn, needsOf } from "../engine/draft.js";
 import { describeOption } from "./describe.js";
+import { pointsTable, pointsFormat } from "../engine/pool.js";
 
 const DEFAULTS = { minTeams: 10, pace: 1, draftSec: 45, popupSec: 15, partsSec: 12, faSec: 25, lockSec: 30, redraft: "straight", decisions: true };
 const KEEP_FEED = 40;
@@ -88,7 +89,7 @@ export class Room {
   }
   addChat(token, text) {
     const p = this.players.get(token); text = String(text || "").trim().slice(0, 160); if (!p || !text) return;
-    this.chat.push({ t: Date.now(), name: p.teamName || p.name, team: p.teamId, text });
+    this.chat.push({ t: Date.now(), name: p.name, team: p.teamId, text });
     if (this.chat.length > 60) this.chat.shift();
   }
 
@@ -218,7 +219,7 @@ export class Room {
     this.changed();
     const set = phase === "pre" ? this.game.race.pre : this.game.race.mid;
     const open = [...set.values()].some((pu) => this.game.teams[pu.team].human && pu.took === null && this.playerOfTeam(pu.team)?.connected);
-    if (!open) this.after(1200, () => (phase === "pre" ? this.firstHalf() : this.finishRace()));
+    if (!open) this.after(2600, () => (phase === "pre" ? this.firstHalf() : this.finishRace()));
   }
   firstHalf() {
     const g = this.game;
@@ -245,7 +246,7 @@ export class Room {
     const g = this.game;
     autoAnswer(g, "mid");
     const res = runSecondHalf(g), race = g.race, N = g.N, table = g.season.table;
-    const points = res.order.map((ci, k) => (k < N ? table[k] : 0));
+    const points = res.order.map((ci, k) => (k < table.length ? table[k] : 0));
     const ptsByCar = new Array(res.order.length); res.order.forEach((ci, k) => (ptsByCar[ci] = points[k]));
     this.setReveal({
       kind: "finish", round: race.round, track: race.track.id, rain: res.rain, sc: res.sc,
@@ -445,10 +446,17 @@ export class Room {
     return room;
   }
 
+  // Did a taken gamble pay off? null while it is still open (not taken yet, or a weather bet before lights out).
+  gambleWin(pu, phase) {
+    if (pu.took !== true) return null;
+    if (phase === "pre" && pu.opt.byRain) { const info = this.game.race.info; return info ? !!info.rain : null; }
+    return pu.roll < pu.pS;
+  }
+
   // ---------- views ----------
   teamPub(t) {
     const p = this.playerOfTeam(t.id);
-    return { id: t.id, name: t.name, livery: t.livery, human: !!t.human, connected: t.human ? !!(p && p.connected) : true, drivers: t.drivers, principal: t.principal, principal2: t.principal2 ?? null, parts: t.partIds, pts: t.pts, wins: t.wins, titles: t.titles, ptsBySeason: undefined };
+    return { id: t.id, name: t.name, owner: p ? p.name : null, livery: t.livery, human: !!t.human, connected: t.human ? !!(p && p.connected) : true, drivers: t.drivers, principal: t.principal, principal2: t.principal2 ?? null, parts: t.partIds, pts: t.pts, wins: t.wins, titles: t.titles, ptsBySeason: undefined };
   }
 
   view(token) {
@@ -462,6 +470,7 @@ export class Room {
     };
     if (!g) return v;
     v.N = g.N; v.seasonNo = g.seasonNo; v.history = g.history;
+    v.points = { format: pointsFormat(g.N), table: g.season ? g.season.table : pointsTable(g.N) };
     v.teams = g.teams.map((t) => this.teamPub(t));
     v.standings = standingsOf(g).map((t) => t.id);
     const taken = {};
@@ -492,8 +501,16 @@ export class Room {
         const pu = set.get(t.id);
         if (pu) {
           const princ = g.D.principals[t.principal];
-          mv.popup = { phase: this.step === "race.pre" ? "pre" : "mid", ...describeOption(pu.opt, g.P.decisions.scale), pS: pu.pS, stat: pu.opt.stat, statVal: princ[pu.opt.stat], base: pu.opt.p ?? null, took: pu.took, rainChance: g.race.track.rain };
+          mv.popup = { phase: this.step === "race.pre" ? "pre" : "mid", ...describeOption(pu.opt, g.P.decisions.scale), pS: pu.pS, stat: pu.opt.stat, statVal: princ[pu.opt.stat], base: pu.opt.p ?? null, took: pu.took, rainChance: g.race.track.rain, outcome: this.gambleWin(pu, this.step === "race.pre" ? "pre" : "mid") };
         }
+      }
+      if (this.phase === "season" && g.race && (this.step === "race.half" || this.step === "race.finish")) {
+        const gam = [];
+        for (const ph of ["pre", "mid"]) {
+          const pu = (ph === "pre" ? g.race.pre : g.race.mid)?.get(t.id);
+          if (pu && pu.took === true) gam.push({ phase: ph, ...describeOption(pu.opt, g.P.decisions.scale), outcome: this.gambleWin(pu, ph) });
+        }
+        if (gam.length) mv.gambles = gam;
       }
       if (this.step === "lock" && this.lockHumans.includes(t.id)) mv.keep = { drivers: t.drivers, principals: [t.principal, t.principal2].filter((x) => x != null), confirmed: this.keepConfirmed.has(t.id), choice: this.keepChoices.get(t.id) || null };
       if (this.step === "fa.turn" && this.faTurns[this.faIdx] === t.id) mv.faTurn = true;

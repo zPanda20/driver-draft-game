@@ -215,3 +215,15 @@ h1,h2,h3{letter-spacing:.02em}
 .top{position:sticky;overflow:hidden}
 .top::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--banner,none) center/cover no-repeat;opacity:.3;pointer-events:none}
 .top>*{position:relative}
+
+/* gamble result cards */
+.popstack{position:fixed;left:50%;bottom:calc(78px + var(--safe));transform:translateX(-50%);width:min(560px,calc(100vw - 24px));z-index:40;display:flex;flex-direction:column;gap:8px}
+.popstack .popup{position:static;transform:none;width:auto;animation:fadein .3s}
+@keyframes fadein{from{opacity:0}}
+.popup.done.won{border-color:var(--good);background:linear-gradient(0deg,rgba(53,208,127,.28),rgba(53,208,127,.28)),#121826;opacity:1}
+.popup.done.lost{border-color:var(--bad);background:linear-gradient(0deg,rgba(255,90,95,.28),rgba(255,90,95,.28)),#121826;opacity:1}
+.popup.done.pend{border-color:var(--warn);opacity:1}
+.popup .verdict{font-weight:800;font-size:15px}
+.popup.won .verdict{color:var(--good)} .popup.lost .verdict{color:var(--bad)} .popup.pend .verdict{color:var(--warn);font-size:13px}
+.own{color:var(--mute);font-weight:500;font-size:.88em}
+.champ h2 .own{display:block;font-size:.55em;margin-top:2px}

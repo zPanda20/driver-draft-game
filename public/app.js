@@ -133,7 +133,7 @@ function standingsCard(S, limit = 99) {
   if (hold) { pts = (id) => S.teams[id].pts - gain(id); order = S.standings.slice().sort((a, b) => pts(b) - pts(a)); }
   const rows = order.slice(0, limit).map((id, i) => {
     const t = S.teams[id], d = hold ? 0 : gain(id);
-    return `<div class="r ${id === me ? "me" : ""}"><span class="p">${i + 1}</span>${chip(t, 20)}<span class="dl">${d ? "+" + d : ""}</span><span class="pts">${pts(id)}</span></div>`;
+    return `<div class="r ${id === me ? "me" : ""}"><span class="p">${i + 1}</span>${chip(t, 20, "", true)}<span class="dl">${d ? "+" + d : ""}</span><span class="pts">${pts(id)}</span></div>`;
   }).join("");
   return `<div class="card"><h3>Standings</h3><div class="st">${rows}</div></div>`;
 }
