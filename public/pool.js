@@ -1,5 +1,5 @@
 // The browsable pool of drivers, principals and parts, used by the draft, the re-draft and free agency.
-import { st, esc, stat, SLOTNAME, SLOTS, TIER, tierCls, chip } from "./core.js";
+import { st, esc, stat, SLOTNAME, SLOTS, TIER, tierCls, chip, drvPic } from "./core.js";
 
 export const TABS = [["drivers", "Drivers"], ["principals", "Principals"], ["aero", "Aero"], ["engine", "Engine"], ["susp", "Suspension"], ["cool", "Cooling"]];
 
@@ -68,7 +68,7 @@ function personTable(S, kind, opts) {
   if (kind === "drivers") {
     return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Driver", "l")}${th("overall", "OVR")}${th("pace", "Pace")}${th("race", "Race")}${th("craft", "Craft")}${th("wet", "Wet")}${th("tyre", "Tyre")}${th("cons", "Cons")}${th("safety", "Safe")}<th></th></tr></thead><tbody>${rows.map((d) => {
       const sel = opts.sel || {}; const cls = sel.pri === d.id ? "pri" : sel.alt === d.id ? "alt" : "";
-      return `<tr class="it ${cls} ${isTaken(S, d.id) ? "gone" : ""}"><td class="mute">${d.rank}</td><td class="l"><b>${esc(d.name)}</b> <span class="tiny mute">${esc(d.series)}</span>${S.taken[d.id] != null ? " " + owner(d.id) : ""}</td><td class="ovr">${d.overall.toFixed(1)}</td><td>${pair(d.career.pace, d.peak.pace)}</td><td>${pair(d.career.race, d.peak.race)}</td><td>${pair(d.career.craft, d.peak.craft)}</td><td>${pair(d.career.wet, d.peak.wet)}</td><td>${pair(d.career.tyre, d.peak.tyre)}</td><td>${stat(d.cons)}</td><td>${stat(d.safety)}</td>${actionCells(S, d, opts)}</tr>`;
+      return `<tr class="it ${cls} ${isTaken(S, d.id) ? "gone" : ""}"><td class="mute">${d.rank}</td><td class="l">${drvPic(d.i, 30, "inl")}<b>${esc(d.name)}</b> <span class="tiny mute">${esc(d.series)}</span>${S.taken[d.id] != null ? " " + owner(d.id) : ""}</td><td class="ovr">${d.overall.toFixed(1)}</td><td>${pair(d.career.pace, d.peak.pace)}</td><td>${pair(d.career.race, d.peak.race)}</td><td>${pair(d.career.craft, d.peak.craft)}</td><td>${pair(d.career.wet, d.peak.wet)}</td><td>${pair(d.career.tyre, d.peak.tyre)}</td><td>${stat(d.cons)}</td><td>${stat(d.safety)}</td>${actionCells(S, d, opts)}</tr>`;
     }).join("")}</tbody></table>`;
   }
   return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Principal", "l")}${th("overall", "OVR")}${th("strategy", "Strategy")}${th("mentality", "Mentality")}${th("mechanical", "Mechanical")}<th></th></tr></thead><tbody>${rows.map((p) => {

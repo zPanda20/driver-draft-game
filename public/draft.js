@@ -1,9 +1,9 @@
 // First draft screens: choosing, locking, and the round results.
-import { st, esc, send, chip, iconHTML, itemLabel, drvName, prnName, team, toast, SLOTNAME } from "./core.js";
+import { st, esc, send, chip, iconHTML, itemLabel, drvName, prnName, team, toast, SLOTNAME, drvPic } from "./core.js";
 import { poolView, groupOf } from "./pool.js";
 
 export function lineup(t) {
-  const d = t.drivers.map((r) => esc(drvName(r).split(" ").slice(-1)[0])).join(", ") || "—";
+  const d = t.drivers.map((r) => `${drvPic(r, 18, "inl", true)}${esc(drvName(r).split(" ").slice(-1)[0])}`).join(" ") || "—";
   const parts = ["aero", "engine", "susp", "cool"].map((s) => (t.parts[s] ? `<span class="tier t${st.idx[t.parts[s]].bonus}">${SLOTNAME[s][0]}+${st.idx[t.parts[s]].bonus}</span>` : `<span class="mute">${SLOTNAME[s][0]}–</span>`)).join(" ");
   return { d, p: t.principal != null ? esc(prnName(t.principal).split(" ").slice(-1)[0]) : "—", parts };
 }

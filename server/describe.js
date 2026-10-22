@@ -37,11 +37,12 @@ export function describeOption(opt, scale) {
 }
 
 import { PRE, MID } from "../engine/decisions.js";
+import { slugOf, driverPics } from "./pics.js";
 
 export function buildCatalog(game) {
   const { D, items } = game;
   return {
-    drivers: D.drivers.map((d, i) => ({ id: `d:${i}`, i, name: d.name, series: d.series, group: d.group, rank: d.rank, overall: d.overall, peak: d.peak, career: d.career, cons: d.cons, safety: d.safety, legacy: d.legacy })),
+    drivers: D.drivers.map((d, i) => ({ id: `d:${i}`, i, name: d.name, pic: driverPics().get(slugOf(d.name)) || null, series: d.series, group: d.group, rank: d.rank, overall: d.overall, peak: d.peak, career: d.career, cons: d.cons, safety: d.safety, legacy: d.legacy })),
     principals: D.principals.map((p, i) => ({ id: `p:${i}`, i, name: p.name, group: p.group, era: p.era, rank: p.rank, overall: p.overall, strategy: p.strategy, mentality: p.mentality, mechanical: p.mechanical })),
     parts: items.parts.map((p) => ({ id: p.id, slot: p.slot, bonus: p.bonus })),
     options: Object.fromEntries([...PRE, ...MID].map((o) => [o.id, o.name])),

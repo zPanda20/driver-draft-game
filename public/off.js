@@ -1,5 +1,5 @@
 // Season intro and end, the off-season parts re-draft, free agency, and the lock-in.
-import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME } from "./core.js";
+import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME, drvPic } from "./core.js";
 import { poolView, groupOf } from "./pool.js";
 import { teamBoard, lineupsScreen } from "./draft.js";
 import { tradeView, tradeList } from "./trade.js";
@@ -41,9 +41,9 @@ function seasonEnd(S, h) {
   const ds = (R.dstandings && R.dstandings.length ? R.dstandings : S.driverStandings) || [];
   const dc = ds[0], dt = dc && S.teams[dc.team];
   const tab = st.ui.fsTab === "drivers" ? "drivers" : "teams";
-  const dchamp = dc ? `<div class="card champ dch"><div class="tr">🏅</div><div class="phase">Season ${R.season} drivers' champion</div><h2>${iconHTML(dt.livery, 44)}<br>${esc(drvName(dc.ref))}</h2><p class="mute">${esc(dt.name)}${dt.owner ? ` (${esc(dt.owner)})` : ""} · ${dc.pts} points · ${dc.wins} wins</p></div>` : "";
+  const dchamp = dc ? `<div class="card champ dch"><div class="tr">🏅</div><div class="phase">Season ${R.season} drivers' champion</div><h2>${drvPic(dc.ref, 96, "big")}<br>${esc(drvName(dc.ref))}</h2><p class="mute">${esc(dt.name)}${dt.owner ? ` (${esc(dt.owner)})` : ""} · ${dc.pts} points · ${dc.wins} wins</p></div>` : "";
   const trows = R.standings.map((s, i) => { const t = S.teams[s.id]; return `<tr class="${s.id === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l">${chip(t, 22, "", true)}</td><td>${s.wins}</td><td class="ovr">${s.pts}</td></tr>`; }).join("");
-  const drows = ds.map((r, i) => { const t = S.teams[r.team]; return `<tr class="${r.team === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l"><b>${esc(drvName(r.ref))}</b> <span class="tiny mute">${esc(t.name)}</span></td><td>${r.wins}</td><td class="ovr">${r.pts}</td></tr>`; }).join("");
+  const drows = ds.map((r, i) => { const t = S.teams[r.team]; return `<tr class="${r.team === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l">${drvPic(r.ref, 24, "inl")}<b>${esc(drvName(r.ref))}</b> <span class="tiny mute">${esc(t.name)}</span></td><td>${r.wins}</td><td class="ovr">${r.pts}</td></tr>`; }).join("");
   const table = tab === "teams"
     ? `<table class="tbl"><thead><tr><th class="l">#</th><th class="l">Team</th><th>Wins</th><th>Pts</th></tr></thead><tbody>${trows}</tbody></table>`
     : `<table class="tbl"><thead><tr><th class="l">#</th><th class="l">Driver</th><th>Wins</th><th>Pts</th></tr></thead><tbody>${drows || `<tr><td colspan="4" class="mute">No driver data.</td></tr>`}</tbody></table>`;
@@ -73,7 +73,7 @@ function lockView(S, h) {
   if (!k) return { main: head + `<div class="card">${me ? "Your line-up is already set." : "Teams are choosing who to keep."} Waiting for ${S.lock.teams.length - S.lock.confirmed.length} team${S.lock.teams.length - S.lock.confirmed.length === 1 ? "" : "s"}…</div>`, side: h.chatCard(S) };
   if (!st.ui.keepD) { st.ui.keepD = (k.choice && k.choice.drivers) || k.drivers.slice().sort((a, b) => st.cat.drivers[b].overall - st.cat.drivers[a].overall).slice(0, 2); }
   if (st.ui.keepP == null) st.ui.keepP = (k.choice && k.choice.principal) ?? k.principals.slice().sort((a, b) => st.cat.principals[b].overall - st.cat.principals[a].overall)[0];
-  const dcards = k.drivers.map((r) => { const d = st.cat.drivers[r], on = st.ui.keepD.includes(r); return `<button class="liv ${on ? "sel" : ""}" data-act="keepD" data-ref="${r}"><b>${esc(d.name)}</b><span class="small mute">OVR ${d.overall.toFixed(1)}</span></button>`; }).join("");
+  const dcards = k.drivers.map((r) => { const d = st.cat.drivers[r], on = st.ui.keepD.includes(r); return `<button class="liv ${on ? "sel" : ""}" data-act="keepD" data-ref="${r}">${drvPic(r, 56)}<b>${esc(d.name)}</b><span class="small mute">OVR ${d.overall.toFixed(1)}</span></button>`; }).join("");
   const pcards = k.principals.map((r) => { const p = st.cat.principals[r], on = st.ui.keepP === r; return `<button class="liv ${on ? "sel" : ""}" data-act="keepP" data-ref="${r}"><b>${esc(p.name)}</b><span class="small mute">OVR ${p.overall.toFixed(1)}</span></button>`; }).join("");
   return { main: head + `<div class="card"><h3>Keep two drivers</h3><div class="livgrid">${dcards}</div></div>${pcards ? `<div class="card"><h3>Keep one principal</h3><div class="livgrid">${pcards}</div></div>` : ""}
     <div class="card row">${k.confirmed ? `<span class="locked-note">✓ Confirmed</span><div class="grow"></div><button class="btn" data-act="keepEdit">Change</button>` : `<span class="small mute">${st.ui.keepD.length === 2 ? "" : "Pick exactly two drivers."}</span><div class="grow"></div><button class="btn pri big" data-act="keepOk" ${st.ui.keepD.length === 2 ? "" : "disabled"}>Confirm</button>`}</div>`, side: h.chatCard(S) };

@@ -1,5 +1,5 @@
 // The race screen: track card, pop-up decisions, and the shared animated timing tower.
-import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast, themeOf } from "./core.js";
+import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast, themeOf, drvPic } from "./core.js";
 
 let RS = null; // persistent race-screen state: rows, last seen reveal, timers
 const RH = 30;
@@ -100,7 +100,7 @@ function mycars(opts = {}) {
   const html = [me * 2, me * 2 + 1].map((ci) => {
     const i = RS.cur.order.indexOf(ci), outp = RS.cur.out.includes(ci);
     const t = S.teams[me];
-    return `<div class="mycar" data-act="jump" data-car="${ci}" style="cursor:pointer"><div class="big">${i >= 0 ? "P" + (i + 1) : outp ? "OUT" : "–"}</div><div><b>${esc(lastName(drvName(t.drivers[ci & 1])))}</b><div class="small mute">${esc(opts.caption || "")}</div></div></div>`;
+    return `<div class="mycar" data-act="jump" data-car="${ci}" style="cursor:pointer"><div class="big">${i >= 0 ? "P" + (i + 1) : outp ? "OUT" : "–"}</div>${drvPic(t.drivers[ci & 1], 38)}<div><b>${esc(lastName(drvName(t.drivers[ci & 1])))}</b><div class="small mute">${esc(opts.caption || "")}</div></div></div>`;
   }).join("");
   box.innerHTML = html;
 }
