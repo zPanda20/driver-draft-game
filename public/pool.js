@@ -29,13 +29,13 @@ export function poolView(S, opts) {
   };
   // In the parts re-draft each slot tab shows the best grade still in the pool, so you can see at a glance where the Elite part is.
   const best = (k) => { const b = [50, 30, 20, 10].find((x) => freeParts(S, k, x).length); return b ? `best +${b}` : "none left"; };
-  const head = `<div class="row wrap"><div class="tabs">${tabs.map(([k, l]) => `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}">${l}${needs ? `<span class="k">${need(k) ? (k === "drivers" || k === "principals" ? "need " + need(k) : opts.mode === "parts" ? best(k) : "need") : "✓"}</span>` : ""}</button>`).join("")}</div>
-    <div class="grow"></div>${cur === "drivers" || cur === "principals" ? `<input id="filter" placeholder="Search" value="${esc(st.ui.q)}" style="width:150px">` : ""}
-    ${cur === "drivers" || cur === "principals" ? `<label class="small mute row gap6"><input type="checkbox" data-change="hideTaken" ${st.ui.hide ? "checked" : ""}> hide taken</label>` : ""}</div>`;
+  const people = cur === "drivers" || cur === "principals";
+  const tools = people ? `<input id="filter" placeholder="Search" value="${esc(st.ui.q)}" style="width:130px"><label class="small mute row gap6"><input type="checkbox" data-change="hideTaken" ${st.ui.hide ? "checked" : ""}> hide taken</label>` : "";
+  const tabsRow = `<div class="tabs">${tabs.map(([k, l]) => `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}">${l}${needs ? `<span class="k">${need(k) ? (k === "drivers" || k === "principals" ? "need " + need(k) : opts.mode === "parts" ? best(k) : "need") : "✓"}</span>` : ""}</button>`).join("")}</div>`;
   let body = "";
   if (cur === "drivers" || cur === "principals") body = personTable(S, cur, opts);
   else body = partTable(S, cur, opts);
-  return `<div class="card"><h3>${opts.title || "Pool"}</h3>${head}${opts.hint ? `<p class="small mute mt">${opts.hint}</p>` : ""}<div class="scroller mt" data-keep="pool">${body}</div></div>`;
+  return `<div class="card poolcard"><div class="row poolhead"><h3>${opts.title || "Pool"}</h3><div class="grow"></div>${tools}</div>${tabsRow}${opts.hint ? `<p class="small mute mt">${opts.hint}</p>` : ""}<div class="scroller mt" data-keep="pool"${opts.fit ? " data-fit" : ""}>${body}</div></div>`;
 }
 
 function actionCells(S, it, opts) {
@@ -81,17 +81,20 @@ function partTable(S, slot, opts) {
   const me = S.me, ownSlot = me && !me.needs.slots.includes(slot);
   const wish = (me && me.wish) || [];
   const sel = opts.sel || {};
+  const gone = [];
   const rows = [50, 30, 20, 10].map((b) => {
     const free = freeParts(S, slot, b), total = st.cat.parts.filter((p) => p.slot === slot && p.bonus === b).length;
+    if (!free.length) { gone.push(`+${b} ${TIER[b]}`); return ""; } // sold-out grades are not listed; a line under the table says which are gone
     const key = `${slot}:${b}`, selP = groupOf(sel.pri) === key, selA = groupOf(sel.alt) === key;
     let act = "";
-    if (!free.length) act = `<span class="mute small">gone</span>`;
-    else if (ownSlot) act = `<span class="mute small">slot filled</span>`;
+    if (ownSlot) act = `<span class="mute small">slot filled</span>`;
     else if (opts.mode === "draft" && opts.canAct) act = `<button class="btn sm ${selP ? "pri" : ""}" data-act="setPick" data-slot="pri" data-id="${free[0].id}">1st</button> <button class="btn sm ${selA ? "pri" : ""}" data-act="setPick" data-slot="alt" data-id="${free[0].id}">Alt</button>`;
     else if (opts.mode === "parts" && opts.canAct) act = `<button class="btn sm pri" data-act="partTake" data-id="${free[0].id}">Take</button>`;
-    const star = me && !ownSlot && free.length && opts.mode !== "draft" ? `<span class="queue ${wish.includes(key) ? "on" : ""}" title="Queue: auto-pick this on my turn" data-act="wish" data-key="${key}">★</span>` : "";
-    return `<tr class="it ${selP ? "pri" : selA ? "alt" : ""} ${free.length ? "" : "gone"}"><td class="l"><span class="tier ${tierCls(b)}">+${b}</span> ${TIER[b]}</td><td>${SLOTNAME[slot]} +${b}</td><td>${free.length} of ${total} left</td><td>${star}${act}</td></tr>`;
+    const star = me && !ownSlot && opts.mode !== "draft" ? `<span class="queue ${wish.includes(key) ? "on" : ""}" title="Queue: auto-pick this on my turn" data-act="wish" data-key="${key}">★</span>` : "";
+    return `<tr class="it ${selP ? "pri" : selA ? "alt" : ""}"><td class="l"><span class="tier ${tierCls(b)}">+${b}</span> ${TIER[b]}</td><td>${SLOTNAME[slot]} +${b}</td><td>${free.length} of ${total} left</td><td>${star}${act}</td></tr>`;
   }).join("");
-  return `<table class="tbl"><thead><tr><th class="l">Tier</th><th>Part</th><th>Available</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+  const table = rows ? `<table class="tbl"><thead><tr><th class="l">Tier</th><th>Part</th><th>Available</th><th></th></tr></thead><tbody>${rows}</tbody></table>` : `<p class="small mute">Every ${SLOTNAME[slot].toLowerCase()} part has been taken.</p>`;
+  return `${table}
+    ${gone.length && rows ? `<p class="tiny mute mt">Sold out: ${gone.join(", ")}.</p>` : ""}
     <p class="small mute mt">A part adds its bonus to your car in that area. Identical parts are interchangeable.</p>`;
 }

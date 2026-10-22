@@ -32,7 +32,8 @@ h1,h2,h3{letter-spacing:.02em}
 
 /* layout */
 #app{min-height:100%;display:flex;flex-direction:column}
-.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(11,14,20,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+#top{position:sticky;top:0;z-index:20}
+.top{position:relative;isolation:isolate;display:flex;align-items:center;gap:14px;padding:8px 16px;background:rgba(11,14,20,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .logo{font-weight:900;letter-spacing:.14em;font-size:14px;text-transform:uppercase}
 .logo b{color:var(--acc)}
 .code{font-family:ui-monospace,Menlo,monospace;font-weight:800;letter-spacing:.18em;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:4px 10px}
@@ -212,7 +213,7 @@ h1,h2,h3{letter-spacing:.02em}
 @media (max-width:700px){.timer{font-size:19px}.top{gap:8px;padding:8px 10px}.logo{display:none}.hostbar{bottom:calc(64px + var(--safe))}}
 
 /* team banner (optional /liveries/<slug>/banner.png) sits faintly behind the top bar */
-.top{position:sticky;overflow:hidden}
+.top{position:relative;overflow:hidden}
 .top::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--banner,none) center/cover no-repeat;opacity:.3;pointer-events:none}
 .top>*{position:relative}
 
@@ -233,11 +234,13 @@ h1,h2,h3{letter-spacing:.02em}
 .helpbtn:hover{border-color:var(--acc);color:var(--acc)}
 #help{position:relative;z-index:80}
 .helpback{position:fixed;inset:0;background:rgba(5,8,14,.72);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:14px;animation:fadein .2s}
-.helpcard{width:min(560px,100%);max-height:calc(100vh - 28px);display:flex;flex-direction:column;background:#121826;border:2px solid var(--acc);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.65);overflow:hidden}
-.helptabs{display:flex;gap:4px;padding:10px 10px 0;border-bottom:1px solid var(--line);overflow-x:auto}
-.helptabs button{flex:none;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font-weight:700;font-size:13px;padding:8px 10px;cursor:pointer;white-space:nowrap}
+.helpcard{width:min(680px,100%);max-height:calc(100vh - 28px);display:flex;flex-direction:column;background:#121826;border:2px solid var(--acc);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.65);overflow:hidden}
+.helphead{display:flex;align-items:flex-start;gap:6px;padding:8px 8px 0 10px;border-bottom:1px solid var(--line)}
+.helptabs{display:flex;flex-wrap:wrap;gap:0 2px;flex:1;min-width:0}
+.helptabs button{flex:none;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font-weight:700;font-size:13px;padding:8px 9px;cursor:pointer;white-space:nowrap}
 .helptabs button.on{color:#fff;border-bottom-color:var(--acc)}
-.helptabs button.x{margin-left:auto;font-size:15px}
+.helpx{flex:none;width:32px;height:32px;margin-top:2px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-size:15px;cursor:pointer;line-height:1;padding:0}
+.helpx:hover{border-color:var(--acc);color:var(--acc)}
 .helpbody{padding:18px 20px;overflow-y:auto;font-size:15.5px;line-height:1.5}
 .helpbody h2{font-size:22px;margin-bottom:10px}
 .helpbody p{margin:0 0 11px}
@@ -359,3 +362,59 @@ h1,h2,h3{letter-spacing:.02em}
 @keyframes introBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 @keyframes introIn{from{opacity:0}to{opacity:1}}
 @media (max-width:520px){.introcard{padding:16px 14px 26px}.irow{gap:12px}}
+
+/* ---- top bar path, action line and countdown ---- */
+.stepper{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden;white-space:nowrap}
+.stepper s{text-decoration:none;color:var(--mute);opacity:.55}
+.sg{display:inline-flex;align-items:center;gap:6px;color:var(--mute);font-size:13px;font-weight:600}
+.sg i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;background:var(--panel2);border:1px solid var(--line);flex:none}
+.sg b{font-weight:700}
+.sg.done{color:var(--text);opacity:.8}
+.sg.done i{background:var(--good);border-color:var(--good);color:#06210f}
+.sg.on{color:var(--text)}
+.sg.on i{background:var(--acc);border-color:var(--acc);color:var(--ink)}
+.sg em{font-style:normal;font-weight:500;color:var(--mute);font-size:12px}
+.subs{display:inline-flex;gap:4px;margin-left:4px}
+.ss{padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);color:var(--mute)}
+.ss.done{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.ss.on{background:var(--acc);border-color:var(--acc);color:var(--ink);font-weight:800}
+.top .phase{display:none}
+@media (max-width:1180px){.sg.done b,.sg.done em,.sg.done+s{display:none}}
+@media (max-width:1000px){.top .logo{display:none}}
+@media (max-width:760px){.stepper{display:none}.top .phase{display:inline}}
+.hud{position:relative;display:flex;align-items:center;gap:12px;padding:6px 16px;min-height:34px;font-size:14px;font-weight:600;background:rgba(11,14,20,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);overflow:hidden}
+.hud.wait,.hud.info{color:var(--mute)}
+.hud.you{background:color-mix(in srgb,var(--acc) 24%,#0b0e14);color:#fff}
+.hud.you .hmsg::before{content:"\25B6";color:var(--acc);margin-right:8px}
+.hmsg{min-width:0;flex:1}
+.hclock{font-weight:900;font-size:20px;font-variant-numeric:tabular-nums;color:var(--text);min-width:48px;text-align:right}
+.hbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--acc);transform-origin:left;transition:transform .25s linear}
+.hud.low .hclock{color:var(--bad)} .hud.low .hbar{background:var(--bad)}
+.hud.low .hclock{animation:pulse 1s infinite}
+
+/* ---- draft: one compact pick bar, pool uses the rest of the screen ---- */
+.pickbar{padding:10px 14px}
+.pbtop{display:flex;align-items:center;gap:12px}
+.rtitle.sm{font-size:clamp(20px,2.2vw,26px)}
+.pbhint{flex:1;min-width:0;font-size:13px;display:flex;align-items:center}
+.pbhow{margin-top:8px}
+.pbmid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px;align-items:stretch}
+.pbmid .pickcard{min-height:60px;padding:8px 12px}
+.pbbtn{display:flex;align-items:center}
+@media (max-width:760px){.pbmid{grid-template-columns:1fr}.pbhint{display:none}}
+.linkbtn{background:none;border:0;color:var(--mute);text-decoration:underline;font-size:12.5px;padding:2px 4px;white-space:nowrap}
+.linkbtn:hover{color:var(--text)}
+.poolhead{margin-bottom:10px;flex-wrap:wrap;gap:8px 12px}
+.poolhead h3{margin:0}
+.tab{padding:6px 11px}
+
+/* ---- race: slimmer header, banner and speed vote on one row ---- */
+#rHead{padding:8px 14px}
+.rhead .rtitle{font-size:clamp(20px,2.3vw,28px)}
+.rline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rline #rBanner{flex:1 1 280px;min-width:0}
+.rline .banner{padding:6px 12px;font-size:14px}
+.rline .speedbar{display:flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--panel) 84%,transparent);flex-wrap:nowrap}
+.mycar{padding:6px 10px;min-width:180px}
+.mycar .big{font-size:22px}
+.tscroll.mt{margin-top:8px}

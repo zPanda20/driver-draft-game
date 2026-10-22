@@ -112,20 +112,121 @@ function phaseLabel(S) {
   return (PHASE[S.step] || (() => S.step))(S);
 }
 
+// ---------- where are we, what do I do, how long is left ----------
+// The top bar shows the whole game as a short path (Draft > Season > Off-season, with the off-season steps spelled out),
+// and the strip under it says in one line what this player should do right now, with the countdown when there is one.
+const OFF_STEPS = [["trade", "Trade"], ["parts", "Re-draft"], ["fa", "Free agents"], ["trade2", "Final trades"], ["lock", "Cut"]];
+function offIndex(step) { return step === "trade" ? 0 : step.startsWith("parts") ? 1 : step.startsWith("fa") ? 2 : step === "trade2" ? 3 : step === "lock" ? 4 : 5; }
+function stepper(S) {
+  if (S.step === "lobby") return "";
+  const ph = S.phase, sn = S.seasonNo || 1;
+  const g = (n, label, state, extra = "") => `<span class="sg ${state}"><i>${state === "done" ? "✓" : n}</i><b>${label}</b>${extra}</span>`;
+  let dExtra = "", sExtra = "", oExtra = "";
+  if (ph === "draft") dExtra = S.step === "draft.intro" ? `<em>get ready</em>` : S.step === "draft.done" ? `<em>line-ups set</em>` : `<em>round ${S.draft?.round || 1}/7</em>`;
+  if (ph === "season") sExtra = S.step.startsWith("race.") ? `<em>race ${S.race.round + 1}/18</em>` : S.step === "season.end" ? `<em>complete</em>` : `<em>calendar</em>`;
+  if (ph === "offseason") {
+    const at = offIndex(S.step);
+    oExtra = `<span class="subs">${OFF_STEPS.map(([k, l], i) => `<span class="ss ${i < at ? "done" : i === at ? "on" : ""}">${l}</span>`).join("")}</span>`;
+    if (S.step === "offseason.done") oExtra = `<em>new line-ups</em>`;
+  }
+  const draft = g(1, "Draft", ph === "draft" ? "on" : "done", dExtra);
+  const season = g(2, `Season ${sn}`, ph === "season" ? "on" : ph === "offseason" ? "done" : "", sExtra);
+  const off = g(3, "Off-season", ph === "offseason" ? "on" : "", oExtra);
+  const sep = `<s>›</s>`;
+  return `<nav class="stepper" aria-label="Game progress">${draft}${sep}${season}${sep}${off}</nav>`;
+}
+
+const who = (S, ids) => { const n = ids.map((id) => { const t = S.teams[id]; return (t && (t.owner || t.name)) || "?"; }); return n.length > 3 ? n.slice(0, 3).join(", ") + ` +${n.length - 3}` : n.join(", "); };
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+// One line: what is happening and what (if anything) this player has to do. kind: "you" = your move, "wait" = waiting on others, "info" = just so you know.
+function nowLine(S) {
+  const me = S.me, step = S.step; if (step === "lobby") return null;
+  const pending = (p) => p && p.took !== true && p.took !== false;
+  if (step === "draft.intro") return { kind: "info", text: "Get ready: the draft starts in a moment." };
+  if (step === "draft.pick") {
+    const d = S.draft, left = d.humans.filter((id) => !d.locked.includes(id));
+    if (!me) return { kind: "info", text: `Round ${d.round} of 7: ${d.locked.length}/${d.humans.length} locked in.` };
+    const pk = me.pick || {};
+    if (pk.locked) return { kind: "wait", text: left.length ? `Locked in. Waiting for ${who(S, left)}.` : "Locked in. Everyone is ready." };
+    return { kind: "you", text: pk.pri ? (pk.alt ? "Both picks set. Press Lock in." : "Add a backup pick, then press Lock in.") : "Your pick: choose what you want most and a backup, then lock in." };
+  }
+  if (step === "draft.reveal") return { kind: "info", text: `Round ${S.draft?.round || ""} results.` };
+  if (step === "draft.done") return { kind: "info", text: "Line-ups are set. The season starts soon." };
+  if (step === "season.intro") return { kind: "info", text: `Season ${S.seasonNo}: the calendar. The first race starts soon.` };
+  if (step === "race.pre") return me && pending(me.popup) ? { kind: "you", text: "Pre-race call: take the gamble or hold course." } : { kind: "info", text: "Pre-race briefing." };
+  if (step === "race.half") return { kind: "info", text: "First half of the race." };
+  if (step === "race.mid") return me && pending(me.popup) ? { kind: "you", text: "Mid-race call: take the gamble or hold course." } : { kind: "info", text: "Half distance. Mid-race calls are open." };
+  if (step === "race.finish") return { kind: "info", text: "Chequered flag." };
+  if (step === "season.end") return S.host ? { kind: "you", text: "Season over. Press Start off-season when everyone is ready." } : { kind: "wait", text: "Season over. Waiting for the host to start the off-season." };
+  if (step === "trade" || step === "trade2") {
+    const tr = S.trade; if (!tr) return { kind: "info", text: "Trade window." };
+    if (!me) return { kind: "info", text: "Teams are trading." };
+    const left = tr.active.filter((id) => !tr.done.includes(id) && id !== me.teamId);
+    if (tr.done.includes(me.teamId)) return { kind: "wait", text: left.length ? `You are done. Waiting for ${who(S, left)}.` : "Everyone is done." };
+    const offers = tr.offers.filter((o) => (o.to === me.teamId && o.status === "open") || (o.from === me.teamId && o.status === "agreed")).length;
+    return { kind: "you", text: offers ? `You have ${plural(offers, "deal")} waiting for your answer.` : "Trade window: make an offer, or press I'm done trading." };
+  }
+  if (step === "parts") return { kind: "info", text: "All parts go back in the pool." };
+  if (step === "parts.turn") {
+    const P = S.parts, cur = P.team != null ? S.teams[P.team] : null;
+    if (!me) return { kind: "info", text: `${cur ? cur.name : "A team"} is picking a part.` };
+    if (P.team === me.teamId) return { kind: "you", text: "Your pick: take a part from the pool." };
+    const next = P.turns.map((x, i) => ({ x, i })).find(({ x, i }) => x.t === me.teamId && !x.s && !x.p && i >= P.idx);
+    const ahead = next ? P.turns.slice(Math.max(P.idx, 0), next.i).filter((x) => !x.s && !x.p).length : 0;
+    return { kind: "wait", text: `${cur ? cur.name : "A team"} is picking.${next ? ` You pick in round ${next.x.r}${ahead ? `, after ${plural(ahead, "other pick")}` : ", next"}.` : me.needs.slots.length ? " You have no picks left; leftovers come at the end." : ""}` };
+  }
+  if (step === "fa" || step === "fa.turn") {
+    const f = S.fa, cur = f && f.team != null ? S.teams[f.team] : null;
+    if (me && me.faTurn) return { kind: "you", text: "Your turn: choose a free driver and a free principal, then confirm (or skip)." };
+    return { kind: me ? "wait" : "info", text: cur ? `${cur.name} is signing free agents.` : "Free agency." };
+  }
+  if (step === "lock") {
+    const L = S.lock, n = L ? L.teams.length - L.confirmed.length : 0;
+    if (me && me.keep && !me.keep.confirmed) return { kind: "you", text: "Choose two drivers and one principal to keep, then confirm." };
+    return { kind: me ? "wait" : "info", text: n ? `Waiting for ${plural(n, "team")} to choose who stays.` : "Everyone has chosen." };
+  }
+  if (step === "offseason.done") return { kind: "info", text: `Ready for season ${S.seasonNo + 1}.` };
+  return null;
+}
+// The countdown only matters where somebody has to decide before it runs out.
+function clockOn(S) {
+  if (!S.deadline || S.paused) return false;
+  if (["draft.pick", "trade", "trade2", "parts.turn", "fa.turn", "lock"].includes(S.step)) return true;
+  if ((S.step === "race.pre" || S.step === "race.mid") && S.me && S.me.popup) return S.me.popup.took !== true && S.me.popup.took !== false;
+  return false;
+}
+
 function renderTop() {
   const S = st.S;
   const mt = myTeam(); const bslug = mt && mt.livery ? mt.livery : (S.players && (S.players.find((q) => q.you) || {}).livery);
   const bn = bslug && !st.watch ? ` style="--banner:url(/liveries/${esc(bslug)}/banner.png)"` : "";
-  el.top.innerHTML = `<div class="top"${bn}><span class="logo"><b>●</b> Driver Draft</span><span class="code" title="Room code">${esc(S.room)}</span><span class="phase">${esc(phaseLabel(S))}</span>${S.paused ? `<span class="paused">PAUSED</span>` : ""}<span class="timer" id="timer"></span>${st.watch ? "" : `<button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button>`}</div>`;
+  const nl = nowLine(S), showClock = clockOn(S);
+  const hud = nl ? `<div class="hud ${nl.kind}" id="hud"><span class="hmsg">${esc(nl.text)}</span>${showClock ? `<span class="hclock" id="hclock"></span><i class="hbar" id="hbar"></i>` : ""}</div>` : "";
+  el.top.innerHTML = `<div class="top"${bn}><span class="logo"><b>●</b> Driver Draft</span><span class="code" title="Room code">${esc(S.room)}</span>${stepper(S)}<span class="phase" title="Where we are">${esc(phaseLabel(S))}</span>${S.paused ? `<span class="paused">PAUSED</span>` : ""}<span class="grow"></span>${st.watch ? "" : `<button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button>`}</div>${hud}`;
   tick();
 }
 function tick() {
-  const t = $("#timer"); if (!t || !st.S) return;
+  const S = st.S, c = $("#hclock"); if (!c || !S) return;
   const r = remaining();
-  if (r == null || ["season.end", "lobby"].includes(st.S.step)) { t.textContent = ""; return; }
-  t.textContent = fmtClock(r); t.classList.toggle("low", r < 6000 && r > 0);
+  if (r == null) { c.textContent = ""; return; }
+  c.textContent = fmtClock(r);
+  const low = r < 6000 && r > 0;
+  $("#hud")?.classList.toggle("low", low);
+  const bar = $("#hbar"), tot = S.dur > 0 ? S.dur : r;
+  if (bar) bar.style.transform = `scaleX(${Math.max(0, Math.min(1, r / Math.max(tot, 1)))})`;
 }
 setInterval(tick, 250);
+
+// Lists that should use the rest of the screen (the draft pool, the race tower) are sized from where they start, so the page itself does not have to scroll on a laptop.
+function fitScrollers() {
+  const wide = window.innerWidth >= 981, gar = (el.garage.firstElementChild && el.garage.firstElementChild.offsetHeight) || 0;
+  for (const n of $$("[data-fit]")) {
+    if (!wide) { n.style.maxHeight = ""; continue; }
+    const top = n.getBoundingClientRect().top + window.scrollY;
+    n.style.maxHeight = Math.max(230, Math.floor(window.innerHeight - top - gar - 22)) + "px";
+  }
+}
+window.addEventListener("resize", fitScrollers);
 
 function standingsCard(S, limit = 99) {
   if (!S.teams || (!S.history.length && S.phase === "draft")) return "";
@@ -253,6 +354,11 @@ function render() {
   for (const [id, val] of typed) { const n = document.getElementById(id); if (n && n.value !== val) n.value = val; } // what you are typing stays put
   if (fo && $("#" + fo)) { const n = $("#" + fo); if (document.activeElement !== n) { n.focus(); if (fsel && n.setSelectionRange) try { n.setSelectionRange(fsel[0], fsel[1]); } catch (e) {} } }
   const log = $("#chatlog"); if (log) log.scrollTop = log.scrollHeight;
+  if (st.ui.lastStep !== S.step) { // a new step starts at the top of the page (the lobby is long; a draft or trade screen should not open half-scrolled)
+    const was = st.ui.lastStep; st.ui.lastStep = S.step;
+    if (!(was && was.startsWith("race.") && S.step.startsWith("race."))) window.scrollTo(0, 0);
+  }
+  fitScrollers();
   lastKey = key;
 }
 st.render = render;

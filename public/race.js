@@ -23,7 +23,7 @@ function header(S) {
   const rain = Math.round(t.rain * 100);
   const wet = R && (R.kind === "half" || R.kind === "finish") && R.round === S.race.round ? R.rain : null;
   const ov = t.ovt >= 8 ? "very hard" : t.ovt >= 6 ? "hard" : t.ovt >= 4 ? "medium" : "easy";
-  return `<div class="rhead">${trkPic(t, 78)}<div><div class="phase">Round ${S.race.round + 1} of 18 · ${esc(t.region)}</div><div class="rtitle">${esc(t.name)}</div></div>
+  return `<div class="rhead">${trkPic(t, 54)}<div><div class="phase">Round ${S.race.round + 1} of 18 · ${esc(t.region)}</div><div class="rtitle">${esc(t.name)}</div></div>
     <div class="tags">${tag(t.street, "Street")}${tag(t.power, "Power")}${tag(t.down, "Downforce")}${tag(t.highrain, "Wet-prone")}<span class="pill">${esc(t.type)}</span><span class="pill">Overtaking: ${ov}</span></div>
     <div class="grow"></div>
     <div class="col gap4" style="align-items:flex-end"><span class="small mute">Chance of rain ${rain}%</span><div class="rainbar"><i style="width:${rain}%"></i></div></div>
@@ -177,15 +177,15 @@ function speedBar(S) {
   const lvl = sp.levels.indexOf(sp.pace);
   const vb = (dir, label, n) => `<button class="btn sm ${sp.mine === dir ? "voted" : ""}" data-act="speedVote" data-dir="${dir}" ${(dir === "up" ? lvl >= sp.levels.length - 1 : lvl <= 0) ? "disabled" : ""}>${label} <span class="vc">${n}/${sp.need}</span></button>`;
   const host = S.host ? `<select class="sm" data-change="speedSet">${sp.levels.map((p, i) => `<option value="${p}" ${p === sp.pace ? "selected" : ""}>${SPEED_NAME[i]}</option>`).join("")}</select>` : "";
-  return `<div class="card speedbar"><span class="small mute">Race speed</span><b>${SPEED_NAME[lvl]}</b><div class="grow"></div><span class="small mute hide-s">Vote:</span>${vb("down", "⏪ Slower", sp.votes.down)}${vb("up", "Faster ⏩", sp.votes.up)}${host}</div>`;
+  return `<div class="speedbar"><span class="small mute">Race speed</span><b>${SPEED_NAME[lvl]}</b><span class="small mute hide-s">Vote:</span>${vb("down", "⏪ Slower", sp.votes.down)}${vb("up", "Faster ⏩", sp.votes.up)}${host}</div>`;
 }
 
 export function raceUpdate(S, mw) {
   if (!RS || !$("#raceRoot")) {
     if (RS) RS.timers.forEach(clearTimeout);
     RS = { rows: new Map(), timers: [], seq: null, round: -1, step: "", cur: null, boot: true };
-    mw.innerHTML = `<div id="raceRoot" class="col"><div class="card" id="rHead"></div><div id="rBanner"></div><div id="rSpeed"></div>
-      <div class="card"><div id="rMine" class="mycars"></div><div class="tscroll mt" id="tscroll" data-keep="tower"><div class="tower" id="tower"></div></div></div><div id="rExtra"></div><div id="rPopup"></div></div>`;
+    mw.innerHTML = `<div id="raceRoot" class="col"><div class="card" id="rHead"></div><div class="rline"><div id="rBanner"></div><div id="rSpeed"></div></div>
+      <div class="card"><div id="rMine" class="mycars"></div><div class="tscroll mt" id="tscroll" data-keep="tower" data-fit><div class="tower" id="tower"></div></div></div><div id="rExtra"></div><div id="rPopup"></div></div>`;
     buildRows(S);
   }
   const R = S.reveal, round = S.race.round;

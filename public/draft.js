@@ -38,14 +38,19 @@ export function draftView(S, h) {
   if (S.step === "draft.done") return { main: lineupsScreen(S, "First draft complete"), side: h.standingsCard(S) + h.chatCard(S) };
   const me = S.me, d = S.draft;
   const lockedN = d.locked.length, humans = d.humans.length;
-  const intro = `<div class="card"><div class="row wrap"><div><div class="phase">Round ${d.round} of 7</div><div class="rtitle">${me ? "Make your pick" : "Teams are choosing"}</div></div><div class="grow"></div><span class="pill ${lockedN === humans ? "good" : ""}">${lockedN}/${humans} locked in</span></div>
-    ${me ? `<p class="small mute mt">Pick one item this round. Your <b>priority</b> goes into a draw if other teams want it too; teams that have drafted less value so far are slightly favoured. If you lose, your <b>alternate</b> is tried. If both are lost you get the best leftover of the type you asked for.</p>` : ""}</div>`;
-  if (!me) return { main: intro + `<div class="card"><h3>Teams</h3>${teamBoard(S, { locked: d.locked })}</div>`, side: h.chatCard(S) };
+  const howOpen = st.ui.pickHow != null ? st.ui.pickHow : d.round === 1; // the explanation is open in round 1, then folds away
+  const how = `<p class="small mute pbhow">Pick one item this round. Your <b>priority</b> goes into a draw if other teams want it too; teams that have drafted less value so far are slightly favoured. If you lose, your <b>alternate</b> is tried. If both are lost you get the best leftover of the type you asked for.</p>`;
+  const left = `<span class="small mute">Still needed: ${me && me.needs.driver ? me.needs.driver + " driver" + (me.needs.driver > 1 ? "s" : "") + ", " : ""}${me && me.needs.principal ? "principal, " : ""}${me && me.needs.slots.length ? me.needs.slots.map((s) => SLOTNAME[s].toLowerCase()).join(", ") : ""}</span>`;
+  const head = (mid, right) => `<div class="pbtop"><div><div class="phase">Round ${d.round} of 7</div><div class="rtitle sm">${me ? "Make your pick" : "Teams are choosing"}</div></div><div class="pbhint">${mid || ""}</div><span class="pill ${lockedN === humans ? "good" : ""}">${lockedN}/${humans} locked in</span>${right || ""}</div>`;
+  const howBtn = me ? `<button class="linkbtn" data-act="pickHow">${howOpen ? "Hide help" : "How picks work"}</button>` : "";
+  if (!me) return { main: `<div class="card pickbar">${head()}</div><div class="card"><h3>Teams</h3>${teamBoard(S, { locked: d.locked })}</div>`, side: h.chatCard(S) };
   const pk = me.pick || {}, locked = !!pk.locked;
-  const picks = `<div class="card"><div class="mine">${pickCard("pri", pk.pri)}${pickCard("alt", pk.alt)}</div>
-    <div class="row mt">${locked ? `<span class="locked-note">✓ Locked in. Waiting for the others.</span><div class="grow"></div><button class="btn" data-act="unlock">Change my pick</button>` : `${pk.pri && pk.alt ? `<span class="lockhint">Both picks set. Press Lock in.</span>` : pk.pri ? `<span class="lockhint soft">Add a backup pick, then lock in.</span>` : ""}<span class="small mute">Still needed: ${me.needs.driver ? me.needs.driver + " driver" + (me.needs.driver > 1 ? "s" : "") + ", " : ""}${me.needs.principal ? "principal, " : ""}${me.needs.slots.length ? me.needs.slots.map((s) => SLOTNAME[s].toLowerCase()).join(", ") : ""}</span><div class="grow"></div><button class="btn pri big ${pk.pri && pk.alt ? "lockready" : ""}" data-act="lock" ${pk.pri ? "" : "disabled"}>${pk.pri && pk.alt ? "🔒 LOCK IN NOW" : "Lock in"}</button>`}</div></div>`;
-  const pool = poolView(S, { mode: "draft", sel: pk, canAct: !locked, title: "Pool" });
-  return { main: intro + picks + pool, side: h.teamsList(S).replace('class="card"', 'class="card" data-keep="tl"') + h.chatCard(S) };
+  const hint = locked ? `<span class="locked-note">✓ Locked in. Waiting for the others.</span>` : pk.pri && pk.alt ? `<span class="lockhint">Both picks set. Press Lock in.</span>` : pk.pri ? `<span class="lockhint soft">Add a backup pick, then lock in.</span>` : left;
+  const btn = locked ? `<button class="btn" data-act="unlock">Change my pick</button>` : `<button class="btn pri big ${pk.pri && pk.alt ? "lockready" : ""}" data-act="lock" ${pk.pri ? "" : "disabled"}>${pk.pri && pk.alt ? "🔒 LOCK IN NOW" : "Lock in"}</button>`;
+  const bar = `<div class="card pickbar">${head(hint, howBtn)}${howOpen ? how : ""}
+    <div class="pbmid">${pickCard("pri", pk.pri)}${pickCard("alt", pk.alt)}<div class="pbbtn">${btn}</div></div></div>`;
+  const pool = poolView(S, { mode: "draft", sel: pk, canAct: !locked, title: "Pool", fit: true });
+  return { main: bar + pool, side: h.teamsList(S).replace('class="card"', 'class="card" data-keep="tl"') + h.chatCard(S) };
 }
 
 function viaText(r, wanted) {
@@ -75,6 +80,7 @@ export function lineupsScreen(S, title) {
 }
 
 export const draftHandlers = {
+  pickHow() { const open = st.ui.pickHow != null ? st.ui.pickHow : (st.S.draft && st.S.draft.round === 1); st.ui.pickHow = !open; st.render(); },
   tab(a) { st.ui.tab = a.tab; st.render(); },
   sort(a) { st.ui.sort[a.kind] = a.k; st.render(); },
   hideTaken(a) { st.ui.hide = !!a.value; st.render(); },

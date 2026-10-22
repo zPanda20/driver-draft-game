@@ -19,7 +19,7 @@ export class Room {
     this.settings = { ...DEFAULTS };
     this.phase = "lobby"; this.step = "lobby";
     this.game = null; this.paused = false;
-    this.deadline = null; this.timer = null; this.remaining = null; this.pending = null;
+    this.deadline = null; this.timer = null; this.remaining = null; this.pending = null; this.dur = null;
     this.reveal = null; this.revealSeq = 0; this.feed = []; this.chat = [];
     this.humanPicks = new Map(); this.raceIdx = -1; this.turnIdx = 0; this.lastStandings = null;
     this.keepChoices = new Map(); this.keepConfirmed = new Set(); this.faPicks = new Map();
@@ -29,7 +29,7 @@ export class Room {
   after(ms, fn, real = false) {
     ms = real && process.env.REAL_RACE ? ms : ms / (+process.env.TEST_SPEED || 1);
     this.clearTimer();
-    this.pending = fn; this.remaining = ms;
+    this.pending = fn; this.remaining = ms; this.dur = ms;
     if (this.paused) { this.deadline = null; return; }
     this.deadline = Date.now() + ms;
     this.timer = setTimeout(() => this.fire(), ms);
@@ -512,7 +512,7 @@ export class Room {
     const g = this.game, me = this.players.get(token);
     const v = {
       room: this.code, phase: this.phase, step: this.step, paused: this.paused,
-      deadline: this.deadline, now: Date.now(), settings: this.settings, host: this.isHost(token),
+      deadline: this.deadline, dur: this.dur, now: Date.now(), settings: this.settings, host: this.isHost(token),
       players: [...this.players.values()].map((p) => ({ you: p.token === token, name: p.name, teamName: p.teamName, livery: p.livery, teamId: p.teamId, connected: p.connected, host: p.token === this.hostToken, auto: p.auto })),
       chat: this.chat.slice(-30), reveal: this.reveal, feed: this.feed,
       liveriesTaken: this.phase === "lobby" ? [...this.players.values()].filter((p) => p.livery).map((p) => p.livery) : [],

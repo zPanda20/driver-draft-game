@@ -78,7 +78,7 @@ export function renderHelp() {
   if (!H.open) { el.innerHTML = ""; return; }
   const last = H.page === pages().length - 1;
   el.innerHTML = `<div class="helpback"><div class="helpcard" role="dialog" aria-label="How to play">
-    <div class="helptabs">${pages().map((p, i) => `<button class="${i === H.page ? "on" : ""}" data-act="helpGo" data-p="${i}">${p.tab}</button>`).join("")}<button class="x" data-act="helpClose" aria-label="Close">✕</button></div>
+    <div class="helphead"><div class="helptabs">${pages().map((p, i) => `<button class="${i === H.page ? "on" : ""}" data-act="helpGo" data-p="${i}">${p.tab}</button>`).join("")}</div><button class="helpx" data-act="helpClose" aria-label="Close">✕</button></div>
     <div class="helpbody">${pages()[H.page].html}</div>
     <div class="helpnav"><button class="btn" data-act="helpBack" ${H.page ? "" : "disabled"}>Back</button><div class="grow"></div><button class="btn pri" data-act="${last ? "helpClose" : "helpNext"}">${last ? "Got it" : "Next"}</button></div></div></div>`;
 }
