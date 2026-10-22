@@ -8,7 +8,9 @@ const SORTS = {
   principals: { rank: (p) => p.rank, overall: (p) => -p.overall, strategy: (p) => -p.strategy, mentality: (p) => -p.mentality, mechanical: (p) => -p.mechanical, name: (p) => p.name },
 };
 
-export function freeParts(S, slot, bonus) { return st.cat.parts.filter((p) => p.slot === slot && p.bonus === bonus && !S.taken[p.id]); }
+// Owners are team numbers and team 0 is a real owner, so never test S.taken[id] for truthiness.
+export const isTaken = (S, id) => S.taken[id] != null;
+export function freeParts(S, slot, bonus) { return st.cat.parts.filter((p) => p.slot === slot && p.bonus === bonus && !isTaken(S, p.id)); }
 export const groupOf = (id) => { const p = st.idx[id]; return p && p.kind === "part" ? `${p.slot}:${p.bonus}` : null; };
 
 function pair(c, p) { return c === p ? `${stat(c)}` : `${stat(c)}<small class="mute">/${Math.round(p)}</small>`; }
@@ -35,16 +37,19 @@ export function poolView(S, opts) {
 }
 
 function actionCells(S, it, opts) {
-  const taken = !!S.taken[it.id];
+  const isDriver = it.id[0] === "d"; // catalogue rows carry no `kind`
+  const taken = isTaken(S, it.id);
   if (opts.mode === "draft") {
     const sel = opts.sel || {};
     const mine = sel.pri === it.id ? "pri" : sel.alt === it.id ? "alt" : "";
     if (taken || !opts.canAct) return `<td></td>`;
+    const nd = S.me && S.me.needs;
+    if (nd && !(isDriver ? nd.driver : nd.principal)) return `<td><span class="mute small">${isDriver ? "drivers full" : "principal set"}</span></td>`;
     return `<td><button class="btn sm ${mine === "pri" ? "pri" : ""}" data-act="setPick" data-slot="pri" data-id="${it.id}">1st</button> <button class="btn sm ${mine === "alt" ? "pri" : ""}" data-act="setPick" data-slot="alt" data-id="${it.id}">Alt</button></td>`;
   }
   if (opts.mode === "fa") {
     if (taken || !opts.canAct) return `<td></td>`;
-    const on = (it.kind === "driver" ? st.ui.faD : st.ui.faP) === it.id;
+    const on = (isDriver ? st.ui.faD : st.ui.faP) === it.id;
     return `<td><button class="btn sm ${on ? "pri" : ""}" data-act="faSel" data-id="${it.id}">${on ? "Selected" : "Select"}</button></td>`;
   }
   return `<td></td>`;
@@ -54,19 +59,19 @@ function personTable(S, kind, opts) {
   const list = kind === "drivers" ? st.cat.drivers : st.cat.principals;
   const sortKey = st.ui.sort[kind], f = SORTS[kind][sortKey] || SORTS[kind].overall;
   const q = st.ui.q.trim().toLowerCase();
-  let rows = list.filter((x) => (!st.ui.hide || !S.taken[x.id]) && (!q || x.name.toLowerCase().includes(q)));
+  let rows = list.filter((x) => (!st.ui.hide || !isTaken(S, x.id)) && (!q || x.name.toLowerCase().includes(q)));
   rows = rows.slice().sort((a, b) => { const A = f(a), B = f(b); return A < B ? -1 : A > B ? 1 : a.rank - b.rank; });
   const th = (k, l, cls = "") => `<th class="${cls}" data-act="sort" data-kind="${kind}" data-k="${k}">${l}${sortKey === k ? " ▾" : ""}</th>`;
   const owner = (id) => { const t = S.taken[id]; return t == null ? "" : chip(S.teams[t], 16); };
   if (kind === "drivers") {
     return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Driver", "l")}${th("overall", "OVR")}${th("pace", "Pace")}${th("race", "Race")}${th("craft", "Craft")}${th("wet", "Wet")}${th("tyre", "Tyre")}${th("cons", "Cons")}${th("safety", "Safe")}<th></th></tr></thead><tbody>${rows.map((d) => {
       const sel = opts.sel || {}; const cls = sel.pri === d.id ? "pri" : sel.alt === d.id ? "alt" : "";
-      return `<tr class="it ${cls} ${S.taken[d.id] != null ? "gone" : ""}"><td class="mute">${d.rank}</td><td class="l"><b>${esc(d.name)}</b> <span class="tiny mute">${esc(d.series)}</span>${S.taken[d.id] != null ? " " + owner(d.id) : ""}</td><td class="ovr">${d.overall.toFixed(1)}</td><td>${pair(d.career.pace, d.peak.pace)}</td><td>${pair(d.career.race, d.peak.race)}</td><td>${pair(d.career.craft, d.peak.craft)}</td><td>${pair(d.career.wet, d.peak.wet)}</td><td>${pair(d.career.tyre, d.peak.tyre)}</td><td>${stat(d.cons)}</td><td>${stat(d.safety)}</td>${actionCells(S, d, opts)}</tr>`;
+      return `<tr class="it ${cls} ${isTaken(S, d.id) ? "gone" : ""}"><td class="mute">${d.rank}</td><td class="l"><b>${esc(d.name)}</b> <span class="tiny mute">${esc(d.series)}</span>${S.taken[d.id] != null ? " " + owner(d.id) : ""}</td><td class="ovr">${d.overall.toFixed(1)}</td><td>${pair(d.career.pace, d.peak.pace)}</td><td>${pair(d.career.race, d.peak.race)}</td><td>${pair(d.career.craft, d.peak.craft)}</td><td>${pair(d.career.wet, d.peak.wet)}</td><td>${pair(d.career.tyre, d.peak.tyre)}</td><td>${stat(d.cons)}</td><td>${stat(d.safety)}</td>${actionCells(S, d, opts)}</tr>`;
     }).join("")}</tbody></table>`;
   }
   return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Principal", "l")}${th("overall", "OVR")}${th("strategy", "Strategy")}${th("mentality", "Mentality")}${th("mechanical", "Mechanical")}<th></th></tr></thead><tbody>${rows.map((p) => {
     const sel = opts.sel || {}; const cls = sel.pri === p.id ? "pri" : sel.alt === p.id ? "alt" : "";
-    return `<tr class="it ${cls} ${S.taken[p.id] != null ? "gone" : ""}"><td class="mute">${p.rank}</td><td class="l"><b>${esc(p.name)}</b> <span class="tiny mute">${esc(p.era || p.group || "")}</span>${S.taken[p.id] != null ? " " + owner(p.id) : ""}</td><td class="ovr">${p.overall.toFixed(1)}</td><td>${stat(p.strategy)}</td><td>${stat(p.mentality)}</td><td>${stat(p.mechanical)}</td>${actionCells(S, p, opts)}</tr>`;
+    return `<tr class="it ${cls} ${isTaken(S, p.id) ? "gone" : ""}"><td class="mute">${p.rank}</td><td class="l"><b>${esc(p.name)}</b> <span class="tiny mute">${esc(p.era || p.group || "")}</span>${S.taken[p.id] != null ? " " + owner(p.id) : ""}</td><td class="ovr">${p.overall.toFixed(1)}</td><td>${stat(p.strategy)}</td><td>${stat(p.mentality)}</td><td>${stat(p.mechanical)}</td>${actionCells(S, p, opts)}</tr>`;
   }).join("")}</tbody></table>`;
 }
 

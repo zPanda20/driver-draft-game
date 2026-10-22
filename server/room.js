@@ -159,8 +159,9 @@ export class Room {
     this.humanPicks = new Map();
     for (const t of dr.order) if (!t.human) dr.picks.set(t, botPicks(g, t, this.draftRound, g.draftRng));
     this.step = "draft.pick";
-    const f = this.draftRound === 1 ? 1.6 : this.draftRound <= 3 ? 1 : 0.5; // later rounds need less time
-    this.after(Math.max(15, f * this.settings.draftSec) * 1000, () => this.resolveDraft());
+    // Round 1 is longest, rounds 2-3 normal, rounds 4-7 half the timer plus 10 s (fewer choices left, but not rushed).
+    const sec = this.draftRound === 1 ? 1.6 * this.settings.draftSec : this.draftRound <= 3 ? this.settings.draftSec : 0.5 * this.settings.draftSec + 10;
+    this.after(Math.max(15, sec) * 1000, () => this.resolveDraft());
     this.changed();
   }
   submitPick(token, pri, alt) {
@@ -291,7 +292,7 @@ export class Room {
     const g = this.game, out = finishSeason(g);
     this.lastStandings = out.standings;
     this.step = "season.end";
-    this.setReveal({ kind: "season", season: out.season, standings: out.standings.map((t) => ({ id: t.id, pts: t.pts, wins: t.wins })), champion: out.champion.id });
+    this.setReveal({ kind: "season", season: out.season, standings: out.standings.map((t) => ({ id: t.id, pts: t.pts, wins: t.wins })), champion: out.champion.id, dstandings: out.dstandings.map((r) => ({ ref: r.ref, team: r.team, pts: r.pts, wins: r.wins })) });
     this.save("seasonEnd");
     this.after(120000, () => this.startOffseason());
     this.changed();

@@ -22,19 +22,31 @@ function feedBox(S, kinds) {
 function history(S) {
   if (!S.history.length) return "";
   const rows = S.history.slice().reverse().map((h) => {
-    const w = S.teams[h.order[0]], r = S.teams[h.order[1]];
-    return `<tr><td class="l">Season ${h.season}</td><td class="l">${chip(w, 18, "", true)}</td><td>${h.pts[0]}</td><td class="l">${chip(r, 18, "", true)}</td><td>${h.pts[1]}</td></tr>`;
+    const w = S.teams[h.order[0]], r = S.teams[h.order[1]], dc = h.dchamp, dt = dc && S.teams[dc.team];
+    return `<tr><td class="l">Season ${h.season}</td><td class="l">${chip(w, 18, "", true)}<div class="tiny mute">2nd: ${esc(r.name)} · ${h.pts[1]}</div></td><td>${h.pts[0]}</td>
+      <td class="l">${dc ? `<b>${esc(drvName(dc.ref))}</b><div class="tiny mute">${esc(dt.name)}${dt.owner ? " (" + esc(dt.owner) + ")" : ""}</div>` : `<span class="mute">–</span>`}</td><td>${dc ? dc.pts : ""}</td></tr>`;
   }).join("");
-  return `<div class="card hist"><h3>Champions</h3><table class="tbl"><thead><tr><th class="l">Season</th><th class="l">Champion</th><th>Pts</th><th class="l">Runner-up</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  // Drivers' titles so far, most first.
+  const tally = new Map();
+  for (const h of S.history) if (h.dchamp) tally.set(h.dchamp.ref, (tally.get(h.dchamp.ref) || 0) + 1);
+  const titles = [...tally].sort((a, b) => b[1] - a[1]).map(([ref, n]) => `${esc(drvName(ref))}${n > 1 ? " ×" + n : ""}`).join(" · ");
+  return `<div class="card hist"><h3>Champions, season by season</h3><div class="scroller" data-keep="hist"><table class="tbl"><thead><tr><th class="l">Season</th><th class="l">Teams' champion</th><th>Pts</th><th class="l">Drivers' champion</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table></div>${titles ? `<p class="small mute mt">Drivers' titles: ${titles}</p>` : ""}</div>`;
 }
 
 function seasonEnd(S, h) {
   const R = S.reveal, champ = S.teams[R.champion], me = S.me && S.me.teamId;
-  const dc = (S.driverStandings || [])[0], dt = dc && S.teams[dc.team];
-  const dchamp = dc ? `<p class="small" style="margin-top:8px">🏅 Drivers' champion: <b>${esc(drvName(dc.ref))}</b> <span class="mute">(${esc(dt.name)}) · ${dc.pts} points · ${dc.wins} wins</span></p>` : "";
-  const rows = R.standings.map((s, i) => { const t = S.teams[s.id]; return `<tr class="${s.id === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l">${chip(t, 22, "", true)}</td><td>${s.wins}</td><td class="ovr">${s.pts}</td></tr>`; }).join("");
-  return `<div class="card champ"><div class="tr">🏆</div><div class="phase">Season ${R.season} champions</div><h2>${iconHTML(champ.livery, 56)}<br>${esc(champ.name)}${champ.owner ? ` <span class="own">(${esc(champ.owner)})</span>` : ""}</h2><p class="mute">${R.standings[0].pts} points · ${R.standings[0].wins} wins</p>${dchamp}</div>
-    <div class="card"><h3>Final standings</h3><div class="scroller" data-keep="fs"><table class="tbl"><thead><tr><th class="l">#</th><th class="l">Team</th><th>Wins</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table></div></div>${history(S)}
+  const ds = (R.dstandings && R.dstandings.length ? R.dstandings : S.driverStandings) || [];
+  const dc = ds[0], dt = dc && S.teams[dc.team];
+  const tab = st.ui.fsTab === "drivers" ? "drivers" : "teams";
+  const dchamp = dc ? `<div class="card champ dch"><div class="tr">🏅</div><div class="phase">Season ${R.season} drivers' champion</div><h2>${iconHTML(dt.livery, 44)}<br>${esc(drvName(dc.ref))}</h2><p class="mute">${esc(dt.name)}${dt.owner ? ` (${esc(dt.owner)})` : ""} · ${dc.pts} points · ${dc.wins} wins</p></div>` : "";
+  const trows = R.standings.map((s, i) => { const t = S.teams[s.id]; return `<tr class="${s.id === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l">${chip(t, 22, "", true)}</td><td>${s.wins}</td><td class="ovr">${s.pts}</td></tr>`; }).join("");
+  const drows = ds.map((r, i) => { const t = S.teams[r.team]; return `<tr class="${r.team === me ? "pri" : ""}"><td class="l mute">${i + 1}</td><td class="l"><b>${esc(drvName(r.ref))}</b> <span class="tiny mute">${esc(t.name)}</span></td><td>${r.wins}</td><td class="ovr">${r.pts}</td></tr>`; }).join("");
+  const table = tab === "teams"
+    ? `<table class="tbl"><thead><tr><th class="l">#</th><th class="l">Team</th><th>Wins</th><th>Pts</th></tr></thead><tbody>${trows}</tbody></table>`
+    : `<table class="tbl"><thead><tr><th class="l">#</th><th class="l">Driver</th><th>Wins</th><th>Pts</th></tr></thead><tbody>${drows || `<tr><td colspan="4" class="mute">No driver data.</td></tr>`}</tbody></table>`;
+  return `<div class="champrow"><div class="card champ"><div class="tr">🏆</div><div class="phase">Season ${R.season} teams' champions</div><h2>${iconHTML(champ.livery, 56)}<br>${esc(champ.name)}${champ.owner ? ` <span class="own">(${esc(champ.owner)})</span>` : ""}</h2><p class="mute">${R.standings[0].pts} points · ${R.standings[0].wins} wins</p></div>
+    ${dchamp}</div>
+    <div class="card"><div class="sttabs"><h3>Final standings</h3><div class="grow"></div><button class="${tab === "teams" ? "on" : ""}" data-act="fsTab" data-tab="teams">Teams</button><button class="${tab === "drivers" ? "on" : ""}" data-act="fsTab" data-tab="drivers">Drivers</button></div><div class="scroller" data-keep="fs">${table}</div></div>${history(S)}
     ${S.host ? "" : `<p class="small mute c">Waiting for the host to start the off-season…</p>`}`;
 }
 
@@ -90,6 +102,7 @@ export function offView(S, h) {
 }
 
 export const offHandlers = {
+  fsTab(a) { st.ui.fsTab = a.tab === "drivers" ? "drivers" : "teams"; st.render(); },
   wish(a) {
     const me = st.S.me; if (!me) return;
     const key = a.key, set = me.wish.includes(key) ? me.wish.filter((k) => k !== key) : [...me.wish, key];

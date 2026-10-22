@@ -220,8 +220,10 @@ export function finishSeason(game) {
   const S = game.season;
   const standings = standingsOf(game);
   standings[0].titles++;
-  game.history.push({ season: S.no, order: standings.map((t) => t.id), pts: standings.map((t) => t.pts), champion: standings[0].id });
-  return { season: S.no, standings, champion: standings[0], calendar: game.cal, dnfRate: S.dnfs / S.starts, raceLog: S.raceLog };
+  const dstandings = driverStandingsOf(game), dtop = dstandings.slice(0, 3);
+  game.history.push({ season: S.no, order: standings.map((t) => t.id), pts: standings.map((t) => t.pts), champion: standings[0].id,
+    dchamp: dtop[0] ? { ref: dtop[0].ref, team: dtop[0].team, pts: dtop[0].pts, wins: dtop[0].wins } : null, dtop });
+  return { season: S.no, standings, dstandings, champion: standings[0], calendar: game.cal, dnfRate: S.dnfs / S.starts, raceLog: S.raceLog };
 }
 
 export function playSeason(game, { decisions = "play", collect = false } = {}) {
