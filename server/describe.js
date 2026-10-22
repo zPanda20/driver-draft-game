@@ -37,13 +37,13 @@ export function describeOption(opt, scale) {
 }
 
 import { PRE, MID } from "../engine/decisions.js";
-import { slugOf, driverPics } from "./pics.js";
+import { slugOf, driverPics, principalPics } from "./pics.js";
 
 export function buildCatalog(game) {
   const { D, items } = game;
   return {
     drivers: D.drivers.map((d, i) => ({ id: `d:${i}`, i, name: d.name, pic: driverPics().get(slugOf(d.name)) || null, series: d.series, group: d.group, rank: d.rank, overall: d.overall, peak: d.peak, career: d.career, cons: d.cons, safety: d.safety, legacy: d.legacy })),
-    principals: D.principals.map((p, i) => ({ id: `p:${i}`, i, name: p.name, group: p.group, era: p.era, rank: p.rank, overall: p.overall, strategy: p.strategy, mentality: p.mentality, mechanical: p.mechanical })),
+    principals: D.principals.map((p, i) => ({ id: `p:${i}`, i, name: p.name, pic: principalPics().get(slugOf(p.name)) || null, group: p.group, era: p.era, rank: p.rank, overall: p.overall, strategy: p.strategy, mentality: p.mentality, mechanical: p.mechanical })),
     parts: items.parts.map((p) => ({ id: p.id, slot: p.slot, bonus: p.bonus })),
     options: Object.fromEntries([...PRE, ...MID].map((o) => [o.id, o.name])),
     tracks: D.tracks.map((t) => ({ id: t.id, name: t.name, region: t.region, type: t.type, rain: t.rain, sc: t.sc, ovt: t.ovt, wear: t.wear, street: t.street, power: t.power, down: t.down, highrain: t.highrain, w: t.w, c: t.c })),

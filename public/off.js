@@ -1,5 +1,5 @@
 // Season intro and end, the off-season parts re-draft, free agency, and the lock-in.
-import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME, drvPic } from "./core.js";
+import { st, $, esc, send, chip, iconHTML, team, itemLabel, drvName, prnName, toast, SLOTNAME, drvPic, prnPic } from "./core.js";
 import { poolView, groupOf } from "./pool.js";
 import { teamBoard, lineupsScreen } from "./draft.js";
 import { tradeView, tradeList } from "./trade.js";
@@ -74,7 +74,7 @@ function lockView(S, h) {
   if (!st.ui.keepD) { st.ui.keepD = (k.choice && k.choice.drivers) || k.drivers.slice().sort((a, b) => st.cat.drivers[b].overall - st.cat.drivers[a].overall).slice(0, 2); }
   if (st.ui.keepP == null) st.ui.keepP = (k.choice && k.choice.principal) ?? k.principals.slice().sort((a, b) => st.cat.principals[b].overall - st.cat.principals[a].overall)[0];
   const dcards = k.drivers.map((r) => { const d = st.cat.drivers[r], on = st.ui.keepD.includes(r); return `<button class="liv ${on ? "sel" : ""}" data-act="keepD" data-ref="${r}">${drvPic(r, 56)}<b>${esc(d.name)}</b><span class="small mute">OVR ${d.overall.toFixed(1)}</span></button>`; }).join("");
-  const pcards = k.principals.map((r) => { const p = st.cat.principals[r], on = st.ui.keepP === r; return `<button class="liv ${on ? "sel" : ""}" data-act="keepP" data-ref="${r}"><b>${esc(p.name)}</b><span class="small mute">OVR ${p.overall.toFixed(1)}</span></button>`; }).join("");
+  const pcards = k.principals.map((r) => { const p = st.cat.principals[r], on = st.ui.keepP === r; return `<button class="liv ${on ? "sel" : ""}" data-act="keepP" data-ref="${r}">${prnPic(r, 56)}<b>${esc(p.name)}</b><span class="small mute">OVR ${p.overall.toFixed(1)}</span></button>`; }).join("");
   return { main: head + `<div class="card"><h3>Keep two drivers</h3><div class="livgrid">${dcards}</div></div>${pcards ? `<div class="card"><h3>Keep one principal</h3><div class="livgrid">${pcards}</div></div>` : ""}
     <div class="card row">${k.confirmed ? `<span class="locked-note">✓ Confirmed</span><div class="grow"></div><button class="btn" data-act="keepEdit">Change</button>` : `<span class="small mute">${st.ui.keepD.length === 2 ? "" : "Pick exactly two drivers."}</span><div class="grow"></div><button class="btn pri big" data-act="keepOk" ${st.ui.keepD.length === 2 ? "" : "disabled"}>Confirm</button>`}</div>`, side: h.chatCard(S) };
 }

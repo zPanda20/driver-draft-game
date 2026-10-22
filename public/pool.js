@@ -1,5 +1,5 @@
 // The browsable pool of drivers, principals and parts, used by the draft, the re-draft and free agency.
-import { st, esc, stat, SLOTNAME, SLOTS, TIER, tierCls, chip, drvPic } from "./core.js";
+import { st, esc, stat, SLOTNAME, SLOTS, TIER, tierCls, chip, drvPic, prnPic } from "./core.js";
 
 export const TABS = [["drivers", "Drivers"], ["principals", "Principals"], ["aero", "Aero"], ["engine", "Engine"], ["susp", "Suspension"], ["cool", "Cooling"]];
 
@@ -73,7 +73,7 @@ function personTable(S, kind, opts) {
   }
   return `<table class="tbl"><thead><tr>${th("rank", "#", "l")}${th("name", "Principal", "l")}${th("overall", "OVR")}${th("strategy", "Strategy")}${th("mentality", "Mentality")}${th("mechanical", "Mechanical")}<th></th></tr></thead><tbody>${rows.map((p) => {
     const sel = opts.sel || {}; const cls = sel.pri === p.id ? "pri" : sel.alt === p.id ? "alt" : "";
-    return `<tr class="it ${cls} ${isTaken(S, p.id) ? "gone" : ""}"><td class="mute">${p.rank}</td><td class="l"><b>${esc(p.name)}</b> <span class="tiny mute">${esc(p.era || p.group || "")}</span>${S.taken[p.id] != null ? " " + owner(p.id) : ""}</td><td class="ovr">${p.overall.toFixed(1)}</td><td>${stat(p.strategy)}</td><td>${stat(p.mentality)}</td><td>${stat(p.mechanical)}</td>${actionCells(S, p, opts)}</tr>`;
+    return `<tr class="it ${cls} ${isTaken(S, p.id) ? "gone" : ""}"><td class="mute">${p.rank}</td><td class="l">${prnPic(p.i, 30, "inl")}<b>${esc(p.name)}</b> <span class="tiny mute">${esc(p.era || p.group || "")}</span>${S.taken[p.id] != null ? " " + owner(p.id) : ""}</td><td class="ovr">${p.overall.toFixed(1)}</td><td>${stat(p.strategy)}</td><td>${stat(p.mentality)}</td><td>${stat(p.mechanical)}</td>${actionCells(S, p, opts)}</tr>`;
   }).join("")}</tbody></table>`;
 }
 

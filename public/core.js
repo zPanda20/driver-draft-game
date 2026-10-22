@@ -32,11 +32,13 @@ export function itemLabel(id) {
   return it.name;
 }
 // A driver's photo in a round frame; drivers without a photo get their initials. size is in px.
-export function drvPic(ref, size = 32, cls = "", photoOnly = false) { // photoOnly: draw nothing when there is no photo (for tiny spots)
-  const d = ref == null ? null : st.cat.drivers[ref]; if (!d || (photoOnly && !d.pic)) return "";
+function personPic(list, folder, ref, size, cls, photoOnly) { // photoOnly: draw nothing when there is no photo (for tiny spots)
+  const d = ref == null ? null : list[ref]; if (!d || (photoOnly && !d.pic)) return "";
   const w = d.name.split(/\s+/).filter(Boolean), ini = ((w[0] || "")[0] || "") + (w.length > 1 ? w[w.length - 1][0] : "");
-  return `<span class="dpic ${d.pic ? "" : "none"} ${cls}" style="--s:${size}px">${d.pic ? `<img src="/drivers/${esc(d.pic)}" alt="" loading="lazy">` : `<b>${esc(ini.toUpperCase())}</b>`}</span>`;
+  return `<span class="dpic ${d.pic ? "" : "none"} ${cls}" style="--s:${size}px">${d.pic ? `<img src="/${folder}/${esc(d.pic)}" alt="" loading="lazy">` : `<b>${esc(ini.toUpperCase())}</b>`}</span>`;
 }
+export const drvPic = (ref, size = 32, cls = "", photoOnly = false) => personPic(st.cat.drivers, "drivers", ref, size, cls, photoOnly);
+export const prnPic = (ref, size = 32, cls = "", photoOnly = false) => personPic(st.cat.principals, "principals", ref, size, cls, photoOnly);
 export const drvName = (ref) => (ref == null ? "—" : st.cat.drivers[ref].name);
 export const prnName = (ref) => (ref == null ? "—" : st.cat.principals[ref].name);
 export const lastName = (n) => { const p = String(n).split(" "); return p.length > 1 ? p.slice(1).join(" ") : n; };
