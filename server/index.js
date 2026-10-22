@@ -139,6 +139,8 @@ function handle(ws, m) {
     case "livery": room.setLivery(t, m.slug); break;
     case "teamName": room.setTeamName(t, m.name); break;
     case "settings": room.setSettings(t, m.s || {}); break;
+    case "pace": room.setPace(t, m.pace); break;
+    case "speedVote": room.voteSpeed(t, m.dir); break;
     case "start": room.start(t); break;
     case "pick": room.submitPick(t, m.pri, m.alt); break;
     case "lock": room.lockPick(t, m.on !== false); break;

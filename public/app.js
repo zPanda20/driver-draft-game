@@ -36,6 +36,7 @@ function connect(first) {
     } else if (m.t === "state") {
       const first = !st.S, prevSeq = st.S && st.S.reveal ? st.S.reveal.seq : null;
       st.S = m.s; st.off = m.s.now - Date.now();
+      { const nt = m.s.speed && m.s.speed.note; if (nt && nt.id !== st.ui.paceNoteId) { if (st.ui.paceNoteId !== undefined) toast(nt.text); st.ui.paceNoteId = nt.id; } else if (st.ui.paceNoteId === undefined) st.ui.paceNoteId = 0; }
       const R = m.s.reveal;
       if (R && R.kind === "finish" && R.seq !== st.ui.finSeq) {
         st.ui.finSeq = R.seq;
@@ -80,6 +81,7 @@ const A = {
   pause() { send({ t: "pause" }); }, resume() { send({ t: "resume" }); }, skip() { send({ t: "skip" }); }, cont() { send({ t: "continue" }); },
   copy() { navigator.clipboard?.writeText(`${location.origin}/?room=${st.S.room}`); toast("Link copied"); },
   leave() { store("room", null); intent = null; st.ws?.close(); landing(); history.replaceState(null, "", "/"); },
+  stTab(a) { st.ui.stTab = a.tab === "drivers" ? "drivers" : "teams"; render(); },
   chatSend() { const i = $("#chatin"); if (i && i.value.trim()) { send({ t: "chat", text: i.value }); i.value = ""; } },
 };
 Object.assign(A, draftHandlers, raceHandlers, offHandlers, helpHandlers);
@@ -127,16 +129,28 @@ function standingsCard(S, limit = 99) {
   if (!S.teams || (!S.history.length && S.phase === "draft")) return "";
   const me = S.me?.teamId;
   const last = S.reveal?.kind === "finish" ? S.reveal.points : null;
-  const gain = (id) => (last ? (last[id * 2] || 0) + (last[id * 2 + 1] || 0) : 0);
+  const tab = st.ui.stTab === "drivers" ? "drivers" : "teams";
   // While the race animation plays, hold the standings back so the result is not spoiled.
   const hold = S.step === "race.finish" && Date.now() < (st.ui.holdUntil || 0);
-  let order = S.standings, pts = (id) => S.teams[id].pts;
-  if (hold) { pts = (id) => S.teams[id].pts - gain(id); order = S.standings.slice().sort((a, b) => pts(b) - pts(a)); }
-  const rows = order.slice(0, limit).map((id, i) => {
-    const t = S.teams[id], d = hold ? 0 : gain(id);
-    return `<div class="r ${id === me ? "me" : ""}"><span class="p">${i + 1}</span>${chip(t, 20, "", true)}<span class="dl">${d ? "+" + d : ""}</span><span class="pts">${pts(id)}</span></div>`;
-  }).join("");
-  return `<div class="card"><h3>Standings</h3><div class="st">${rows}</div></div>`;
+  let rows;
+  if (tab === "teams") {
+    const gain = (id) => (last ? (last[id * 2] || 0) + (last[id * 2 + 1] || 0) : 0);
+    let order = S.standings, pts = (id) => S.teams[id].pts;
+    if (hold) { pts = (id) => S.teams[id].pts - gain(id); order = S.standings.slice().sort((a, b) => pts(b) - pts(a)); }
+    rows = order.slice(0, limit).map((id, i) => {
+      const t = S.teams[id], d = hold ? 0 : gain(id);
+      return `<div class="r ${id === me ? "me" : ""}"><span class="p">${i + 1}</span>${chip(t, 20, "", true)}<span class="dl">${d ? "+" + d : ""}</span><span class="pts">${pts(id)}</span></div>`;
+    }).join("");
+  } else {
+    const gain = (r) => (last ? last[r.car] || 0 : 0);
+    let list = S.driverStandings || [], pts = (r) => r.pts;
+    if (hold) { pts = (r) => r.pts - gain(r); list = list.slice().sort((a, b) => pts(b) - pts(a) || b.wins - a.wins || a.car - b.car); }
+    rows = list.map((r, i) => {
+      const t = S.teams[r.team], d = hold ? 0 : gain(r);
+      return `<div class="r ${r.team === me ? "me" : ""}"><span class="p">${i + 1}</span><span class="tchip">${iconHTML(t.livery, 20)}<span class="n">${esc(drvName(r.ref))} <span class="own">${esc(t.name)}</span></span></span><span class="dl">${d ? "+" + d : ""}</span><span class="pts">${pts(r)}</span></div>`;
+    }).join("") || `<div class="mute small" style="padding:8px">No races yet.</div>`;
+  }
+  return `<div class="card"><div class="sttabs"><h3>Standings</h3><div class="grow"></div><button class="${tab === "teams" ? "on" : ""}" data-act="stTab" data-tab="teams">Teams</button><button class="${tab === "drivers" ? "on" : ""}" data-act="stTab" data-tab="drivers">Drivers</button></div><div class="st ${tab === "drivers" ? "scrolly" : ""}" data-keep="stlist">${rows}</div></div>`;
 }
 function chatCard(S) {
   if (st.watch) return "";
@@ -180,7 +194,7 @@ function lobby(S) {
       ${fill ? `<p class="small mute mt">${fill} autopilot team${fill > 1 ? "s" : ""} will fill the grid up to ${s.minTeams}. They draft for themselves and never gamble.</p>` : ""}</div>
     <div class="card"><h3>Game settings ${S.host ? "" : `<span class="tiny">(host only)</span>`}</h3><div class="set">
       <span class="small">Minimum teams</span>${sel("minTeams", [10, 12, 14, 16, 18, 20, 24, 30].map((n) => [n, n]))}
-      <span class="small">Show pace</span>${sel("pace", [[1.4, "Relaxed"], [1, "Normal"], [0.7, "Fast"]])}
+      <span class="small">Show pace</span>${sel("pace", [[1.4, "Relaxed"], [1, "Normal"], [0.7, "Fast"], [0.5, "Turbo"]])}
       <span class="small">Draft timer</span>${sel("draftSec", [[30, "30 s"], [45, "45 s"], [60, "60 s"], [90, "90 s"]])}
       <span class="small">Pop-up timer</span>${sel("popupSec", [[10, "10 s"], [15, "15 s"], [20, "20 s"], [30, "30 s"]])}
       <span class="small">Parts re-draft turn</span>${sel("partsSec", [[8, "8 s"], [12, "12 s"], [20, "20 s"], [30, "30 s"]])}
@@ -217,6 +231,7 @@ function render() {
   page.classList.toggle("full", st.watch && S.step.startsWith("draft") && false);
   const mw = $("#mainwrap"), sw = $("#sidewrap");
   const keepScroll = $$("[data-keep]").map((n) => [n.dataset.keep, n.scrollTop, n.scrollLeft]);
+  const typed = $$("input[id], textarea[id]").filter((n) => n.type !== "checkbox" && n.type !== "radio").map((n) => [n.id, n.value]);
   const fo = document.activeElement && document.activeElement.id;
   const fsel = fo && document.activeElement.selectionStart != null ? [document.activeElement.selectionStart, document.activeElement.selectionEnd] : null;
   if (isRace) {
@@ -230,6 +245,7 @@ function render() {
   el.garage.innerHTML = st.watch ? "" : garage(S);
   el.host.innerHTML = hostBar(S);
   for (const [k, top, left] of keepScroll) { const n = $(`[data-keep="${k}"]`); if (n) { n.scrollTop = top; n.scrollLeft = left; } }
+  for (const [id, val] of typed) { const n = document.getElementById(id); if (n && n.value !== val) n.value = val; } // what you are typing stays put
   if (fo && $("#" + fo)) { const n = $("#" + fo); if (document.activeElement !== n) { n.focus(); if (fsel && n.setSelectionRange) try { n.setSelectionRange(fsel[0], fsel[1]); } catch (e) {} } }
   const log = $("#chatlog"); if (log) log.scrollTop = log.scrollHeight;
   lastKey = key;

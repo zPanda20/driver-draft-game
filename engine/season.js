@@ -95,16 +95,19 @@ export function startSeason(game, { decisions = true } = {}) {
   game.season = { no: sNo, table: pointsTable(N), decisions, round: -1, dnfs: 0, starts: 0, raceLog: [], results: [] };
   game.cars = [];
   for (const t of teams) for (const s of [0, 1]) game.cars.push({ team: t, d: D.drivers[t.drivers[s]], parts: t.parts, princ: D.principals[t.principal], teamCars: [t.id * 2, t.id * 2 + 1] });
+  // Per-driver championship: one entry per car this season.
+  game.season.dstat = game.cars.map((c, ci) => ({ car: ci, team: c.team.id, ref: c.team.drivers[ci & 1], pts: 0, wins: 0, pos: new Array(2 * N + 1).fill(0) }));
   return cal;
 }
 
 // Which teams get a pop-up this moment, and which option. Rolls are drawn now so replays stay identical.
-function popups(game, phase, track, ctx, dr, lastKey) {
+function popups(game, phase, track, ctx, dr, lastKey, force = false) {
   const { P, D, teams } = game, out = new Map();
   if (!game.season.decisions) return out;
   for (const t of teams) {
     if (t.autopilot) continue;
-    if (dr() >= P.decisions.popup) continue;
+    const draw = dr();
+    if (!(force && phase === "pre") && draw >= P.decisions.popup) continue;
     const elig = eligible(phase === "pre" ? PRE : MID, phase, track, ctx, t[lastKey]);
     const opt = elig[Math.floor(dr() * elig.length)];
     const pS = successChance(opt, D.principals[t.principal], P, track);
@@ -121,7 +124,7 @@ export function prepareRace(game, round) {
   const track = game.cal[round];
   const dr = makeRng(game.seed, "dec", S.no, round);
   const race = { round, track, rr: makeRng(game.seed, "race", S.no, round), dr, botRng: makeRng(game.seed, "bot", S.no, round), stage: "pre", rec: [], info: null, res: null };
-  race.pre = popups(game, "pre", track, { rain: false, sc: false }, dr, "lastPre");
+  race.pre = popups(game, "pre", track, { rain: false, sc: false }, dr, "lastPre", round === 0); // the first race always offers every human team a pre-race call
   game.race = race;
   return race;
 }
@@ -182,11 +185,25 @@ export function runSecondHalf(game) {
     if (k < S.table.length) t.pts += S.table[k];
     t.pos[k + 1]++;
     if (k === 0) t.wins++;
+    const ds = S.dstat[ci];
+    if (k < S.table.length) ds.pts += S.table[k];
+    ds.pos[k + 1]++;
+    if (k === 0) ds.wins++;
   });
   for (let ci = 0; ci < cars.length; ci++) { S.starts++; if (res.dnf[ci]) S.dnfs++; }
   race.res = res; race.stage = "done";
   S.raceLog.push({ round: race.round, track: race.track.name, res, rec: race.rec, cars });
   return res;
+}
+
+export function driverStandingsOf(game) {
+  const rows = (game.season && game.season.dstat) || [];
+  return rows.slice().sort((a, b) => {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    if (b.wins !== a.wins) return b.wins - a.wins;
+    for (let k = 2; k < a.pos.length; k++) if (b.pos[k] !== a.pos[k]) return b.pos[k] - a.pos[k];
+    return a.car - b.car;
+  }).map((r) => ({ car: r.car, team: r.team, ref: r.ref, pts: r.pts, wins: r.wins }));
 }
 
 export function standingsOf(game) {

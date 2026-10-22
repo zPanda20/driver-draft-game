@@ -10,6 +10,8 @@ export function raceReset() { if (RS) RS.timers.forEach(clearTimeout); RS = null
 export const raceHandlers = {
   popupYes() { send({ t: "popup", take: true }); },
   popupNo() { send({ t: "popup", take: false }); },
+  speedVote(a) { send({ t: "speedVote", dir: a.dir }); },
+  speedSet(a) { send({ t: "pace", pace: +a.value }); },
   jump(a) { const r = $(`#cr${a.car}`), s = $("#tscroll"); if (r && s) s.scrollTo({ top: Math.max(0, r.offsetTop - 80), behavior: "smooth" }); },
 };
 
@@ -169,16 +171,26 @@ function extras(S, R) {
     <div class="card"><h3>Gambles</h3><div class="ticker">${dec.join("") || "<div class='mute'>Nobody took a gamble.</div>"}</div></div></div>`;
 }
 
+const SPEED_NAME = ["Relaxed", "Normal", "Fast", "Turbo"];
+function speedBar(S) {
+  const sp = S.speed; if (!sp || !S.me) return "";
+  const lvl = sp.levels.indexOf(sp.pace);
+  const vb = (dir, label, n) => `<button class="btn sm ${sp.mine === dir ? "voted" : ""}" data-act="speedVote" data-dir="${dir}" ${(dir === "up" ? lvl >= sp.levels.length - 1 : lvl <= 0) ? "disabled" : ""}>${label} <span class="vc">${n}/${sp.need}</span></button>`;
+  const host = S.host ? `<select class="sm" data-change="speedSet">${sp.levels.map((p, i) => `<option value="${p}" ${p === sp.pace ? "selected" : ""}>${SPEED_NAME[i]}</option>`).join("")}</select>` : "";
+  return `<div class="card speedbar"><span class="small mute">Race speed</span><b>${SPEED_NAME[lvl]}</b><div class="grow"></div><span class="small mute hide-s">Vote:</span>${vb("down", "⏪ Slower", sp.votes.down)}${vb("up", "Faster ⏩", sp.votes.up)}${host}</div>`;
+}
+
 export function raceUpdate(S, mw) {
   if (!RS || !$("#raceRoot")) {
     if (RS) RS.timers.forEach(clearTimeout);
     RS = { rows: new Map(), timers: [], seq: null, round: -1, step: "", cur: null, boot: true };
-    mw.innerHTML = `<div id="raceRoot" class="col"><div class="card" id="rHead"></div><div id="rBanner"></div>
+    mw.innerHTML = `<div id="raceRoot" class="col"><div class="card" id="rHead"></div><div id="rBanner"></div><div id="rSpeed"></div>
       <div class="card"><div id="rMine" class="mycars"></div><div class="tscroll mt" id="tscroll" data-keep="tower"><div class="tower" id="tower"></div></div></div><div id="rExtra"></div><div id="rPopup"></div></div>`;
     buildRows(S);
   }
   const R = S.reveal, round = S.race.round;
   $("#rHead").innerHTML = header(S);
+  { const sh = speedBar(S); if (RS.speedHTML !== sh) { RS.speedHTML = sh; $("#rSpeed").innerHTML = sh; } }
   { // gamble card: only touch the DOM when it changes; result cards fade out after a few seconds
     const pp = popup(S), el = $("#rPopup"), key = S.step + "|" + pp.html;
     if (RS.popKey !== key) {

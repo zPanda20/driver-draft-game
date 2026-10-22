@@ -244,3 +244,21 @@ h1,h2,h3{letter-spacing:.02em}
 .helpbody ul.hl,.helpbody ol.hl{margin:0 0 11px;padding-left:20px}
 .helpbody li{margin-bottom:8px}
 .helpnav{display:flex;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}
+
+/* lock-in button: impossible to miss once both picks are set */
+.btn.lockready{background:var(--good);border-color:var(--good);color:#06210f;font-size:19px;font-weight:900;padding:16px 28px;animation:lockglow 1s ease-in-out infinite}
+@keyframes lockglow{0%,100%{box-shadow:0 0 0 0 rgba(53,208,127,.65),0 0 18px 2px rgba(53,208,127,.5);transform:scale(1)}50%{box-shadow:0 0 0 12px rgba(53,208,127,0),0 0 34px 8px rgba(53,208,127,.8);transform:scale(1.05)}}
+.lockhint{font-weight:800;color:var(--good);margin-right:10px}
+.lockhint.soft{color:var(--warn);font-weight:700}
+/* standings tabs and list */
+.sttabs{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.sttabs h3{margin:0}
+.sttabs button{background:var(--panel2);border:1px solid var(--line);color:var(--mute);font-weight:700;font-size:12px;padding:5px 10px;border-radius:8px;cursor:pointer}
+.sttabs button.on{color:#fff;border-color:var(--acc)}
+.st.scrolly{max-height:430px;overflow-y:auto}
+/* race speed bar */
+.speedbar{display:flex;align-items:center;gap:8px;padding:8px 12px;flex-wrap:wrap}
+.speedbar select.sm{padding:5px 8px}
+.speedbar .btn.voted{border-color:var(--good);color:var(--good)}
+.speedbar .vc{opacity:.75;font-size:11px;margin-left:3px}
+@media (max-width:700px){.hide-s{display:none}}

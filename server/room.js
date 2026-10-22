@@ -1,10 +1,11 @@
 // One game room: lobby, draft, season, off-season. The server is the referee; browsers only send choices.
 import { makeRng, shuffle } from "../engine/rng.js";
-import { createGame, startSeason, prepareRace, autoAnswer, answer, runFirstHalf, runSecondHalf, finishSeason, standingsOf } from "../engine/season.js";
+import { createGame, startSeason, prepareRace, autoAnswer, answer, runFirstHalf, runSecondHalf, finishSeason, standingsOf, driverStandingsOf } from "../engine/season.js";
 import { makePool, beginDraftRound, botPicks, validPick, resolveDraftRound, beginPartsRedraft, botPartChoice, takePart, freeAgents, claimFA, botClaim, lockIn, needsOf } from "../engine/draft.js";
 import { describeOption } from "./describe.js";
 import { pointsTable, pointsFormat } from "../engine/pool.js";
 
+export const PACES = [1.4, 1, 0.7, 0.5]; // seconds-multiplier per speed level: Relaxed, Normal, Fast, Turbo
 const DEFAULTS = { minTeams: 10, pace: 1, draftSec: 45, popupSec: 15, partsSec: 12, faSec: 25, lockSec: 30, redraft: "straight", decisions: true };
 const KEEP_FEED = 40;
 
@@ -83,9 +84,36 @@ export class Room {
   setSettings(token, s) {
     if (!this.isHost(token) || this.phase !== "lobby") return;
     const num = (k, lo, hi) => { if (s[k] != null && isFinite(+s[k])) this.settings[k] = Math.max(lo, Math.min(hi, +s[k])); };
-    num("minTeams", 10, 30); num("pace", 0.4, 2); num("draftSec", 15, 120); num("popupSec", 8, 40); num("partsSec", 5, 40); num("faSec", 10, 60); num("lockSec", 10, 90);
+    if (s.pace != null) this.settings.pace = this.nearestPace(+s.pace);
+    num("minTeams", 10, 30); num("draftSec", 15, 120); num("popupSec", 8, 40); num("partsSec", 5, 40); num("faSec", 10, 60); num("lockSec", 10, 90);
     if (s.redraft === "straight" || s.redraft === "snake") this.settings.redraft = s.redraft;
     if (typeof s.decisions === "boolean") this.settings.decisions = s.decisions;
+  }
+  nearestPace(v) { return PACES.reduce((b, x) => (Math.abs(x - v) < Math.abs(b - v) ? x : b), PACES[1]); }
+  // Host sets the speed directly, at any time after the lobby.
+  setPace(token, v) {
+    if (!this.isHost(token) || !isFinite(+v)) return;
+    this.applyPace(this.nearestPace(+v), "The host set the speed");
+  }
+  applyPace(pace, who) {
+    if (pace === this.settings.pace) return;
+    this.settings.pace = pace; this.speedVotes = new Map();
+    const names = { 1.4: "Relaxed", 1: "Normal", 0.7: "Fast", 0.5: "Turbo" };
+    this.paceNote = { id: (this.paceNote ? this.paceNote.id : 0) + 1, text: `${who}: speed is now ${names[pace]}` };
+    this.changed();
+  }
+  voteSpeed(token, dir) {
+    const p = this.players.get(token); if (!p || p.teamId == null || this.phase === "lobby") return;
+    if (dir !== "up" && dir !== "down") return;
+    if (!this.speedVotes) this.speedVotes = new Map();
+    if (this.speedVotes.get(token) === dir) this.speedVotes.delete(token); else this.speedVotes.set(token, dir);
+    const humans = [...this.players.values()].filter((q) => q.teamId != null && q.connected);
+    const need = Math.floor(humans.length / 2) + 1, tally = { up: 0, down: 0 };
+    for (const [tk, d] of this.speedVotes) { const q = this.players.get(tk); if (q && q.connected) tally[d]++; }
+    const i = PACES.indexOf(this.settings.pace);
+    if (tally.up >= need && i < PACES.length - 1) return this.applyPace(PACES[i + 1], "The room voted");
+    if (tally.down >= need && i > 0) return this.applyPace(PACES[i - 1], "The room voted");
+    this.changed();
   }
   addChat(token, text) {
     const p = this.players.get(token); text = String(text || "").trim().slice(0, 160); if (!p || !text) return;
@@ -131,7 +159,8 @@ export class Room {
     this.humanPicks = new Map();
     for (const t of dr.order) if (!t.human) dr.picks.set(t, botPicks(g, t, this.draftRound, g.draftRng));
     this.step = "draft.pick";
-    this.after((this.draftRound === 1 ? 1.6 : 1) * this.settings.draftSec * 1000, () => this.resolveDraft());
+    const f = this.draftRound === 1 ? 1.6 : this.draftRound <= 3 ? 1 : 0.5; // later rounds need less time
+    this.after(Math.max(15, f * this.settings.draftSec) * 1000, () => this.resolveDraft());
     this.changed();
   }
   submitPick(token, pri, alt) {
@@ -468,11 +497,15 @@ export class Room {
       chat: this.chat.slice(-30), reveal: this.reveal, feed: this.feed,
       liveriesTaken: this.phase === "lobby" ? [...this.players.values()].filter((p) => p.livery).map((p) => p.livery) : [],
     };
+    { const humans = [...this.players.values()].filter((q) => q.teamId != null && q.connected), votes = { up: 0, down: 0 };
+      for (const [tk, d] of this.speedVotes || []) { const q = this.players.get(tk); if (q && q.connected) votes[d]++; }
+      v.speed = { pace: this.settings.pace, levels: PACES, votes, need: Math.floor(humans.length / 2) + 1, mine: (this.speedVotes && this.speedVotes.get(token)) || null, note: this.paceNote || null }; }
     if (!g) return v;
     v.N = g.N; v.seasonNo = g.seasonNo; v.history = g.history;
     v.points = { format: pointsFormat(g.N), table: g.season ? g.season.table : pointsTable(g.N) };
     v.teams = g.teams.map((t) => this.teamPub(t));
     v.standings = standingsOf(g).map((t) => t.id);
+    v.driverStandings = driverStandingsOf(g);
     const taken = {};
     for (const arr of [g.items.drivers, g.items.principals, g.items.parts]) for (const it of arr) if (it.taken && it.owner >= 0) taken[it.id] = it.owner;
     v.taken = taken;
