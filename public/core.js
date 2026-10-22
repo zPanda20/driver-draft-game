@@ -1,4 +1,6 @@
 // Shared state and helpers for every screen.
+import { themeOf } from "./theme.js";
+export { themeOf, contrast, lum } from "./theme.js";
 export const st = { S: null, cat: null, liv: [], livBy: {}, idx: {}, token: "", watch: false, room: null, off: 0, ui: { tab: "drivers", partTab: "aero", sort: { drivers: "overall", principals: "overall" }, hide: true, q: "" }, ws: null, render: () => {} };
 
 export const $ = (s, r = document) => r.querySelector(s);
@@ -47,12 +49,13 @@ export function statCls(v) { return v >= 90 ? "s9" : v >= 85 ? "s8" : v >= 80 ? 
 export const stat = (v) => `<span class="stat ${statCls(v)}">${Math.round(v)}</span>`;
 export const tierCls = (b) => `t${b}`;
 
+
 export function applyTheme() {
   const t = myTeam(); let l = live(t) || null;
   if (!l && st.S && st.S.players) { const y = st.S.players.find((p) => p.you); if (y && y.livery) l = st.livBy[y.livery]; }
   const r = document.documentElement.style;
-  if (l) { r.setProperty("--acc", l.body === "#111214" ? l.accent : l.body); r.setProperty("--acc2", l.accent); r.setProperty("--ink", "#0b0e14"); }
-  else { r.setProperty("--acc", "#ff8000"); r.setProperty("--acc2", "#47c7fc"); }
+  const th = l ? themeOf(l) : { acc: "#ff8000", acc2: "#47c7fc", ink: "#0b0e14" };
+  r.setProperty("--acc", th.acc); r.setProperty("--acc2", th.acc2); r.setProperty("--ink", th.ink);
   const bg = $("#bg"); if (!bg) return;
   const slug = l ? l.slug : null;
   if (bg.dataset.slug === String(slug)) return;

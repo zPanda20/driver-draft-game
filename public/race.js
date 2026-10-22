@@ -1,5 +1,5 @@
 // The race screen: track card, pop-up decisions, and the shared animated timing tower.
-import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast } from "./core.js";
+import { st, $, esc, send, iconHTML, chip, team, lastName, drvName, toast, themeOf } from "./core.js";
 
 let RS = null; // persistent race-screen state: rows, last seen reveal, timers
 const RH = 30;
@@ -66,7 +66,7 @@ function buildRows(S) {
     const t = S.teams[ci >> 1], l = st.livBy[t.livery];
     const r = document.createElement("div");
     r.className = "cr hide" + (S.me && S.me.teamId === t.id ? " me" : ""); r.id = "cr" + ci;
-    r.style.setProperty("--cb", l ? l.body : "#888"); r.style.top = ci * RH + "px";
+    r.style.setProperty("--cb", l ? themeOf(l).acc : "#888"); r.style.top = ci * RH + "px";
     r.innerHTML = `<span class="pos"></span>${iconHTML(t.livery, 20)}<span class="dn">${esc(lastName(drvName(t.drivers[ci & 1])))}<small>${esc(t.name)}</small></span><span class="rt"></span>`;
     tw.appendChild(r); RS.rows.set(ci, r);
   }
