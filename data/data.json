@@ -42,35 +42,11 @@
     "wet": 97,
     "tyre": 95
    },
-   "cons": 96,
+   "cons": 98,
    "safety": 80,
    "legacy": 99,
-   "overall": 95.7,
+   "overall": 96,
    "rank": 2
-  },
-  {
-   "name": "Sébastien Loeb",
-   "series": "Rally",
-   "group": "All-time",
-   "peak": {
-    "pace": 99,
-    "race": 99,
-    "craft": 90,
-    "wet": 98,
-    "tyre": 96
-   },
-   "career": {
-    "pace": 97,
-    "race": 98,
-    "craft": 88,
-    "wet": 96,
-    "tyre": 94
-   },
-   "cons": 94,
-   "safety": 90,
-   "legacy": 97,
-   "overall": 95.2,
-   "rank": 3
   },
   {
    "name": "Fernando Alonso",
@@ -94,7 +70,7 @@
    "safety": 90,
    "legacy": 92,
    "overall": 94.8,
-   "rank": 4
+   "rank": 3
   },
   {
    "name": "Valentino Rossi",
@@ -118,7 +94,7 @@
    "safety": 82,
    "legacy": 97,
    "overall": 94.5,
-   "rank": 5
+   "rank": 4
   },
   {
    "name": "Max Verstappen",
@@ -142,31 +118,31 @@
    "safety": 72,
    "legacy": 94,
    "overall": 94.4,
-   "rank": 6
+   "rank": 5
   },
   {
-   "name": "Juan Manuel Fangio",
+   "name": "Ayrton Senna",
    "series": "F1",
    "group": "All-time",
    "peak": {
-    "pace": 96,
-    "race": 98,
-    "craft": 96,
-    "wet": 95,
-    "tyre": 97
+    "pace": 99,
+    "race": 99,
+    "craft": 99,
+    "wet": 99,
+    "tyre": 92
    },
    "career": {
-    "pace": 95,
-    "race": 97,
-    "craft": 94,
-    "wet": 94,
-    "tyre": 96
+    "pace": 99,
+    "race": 99,
+    "craft": 99,
+    "wet": 99,
+    "tyre": 90
    },
-   "cons": 88,
-   "safety": 85,
-   "legacy": 94,
-   "overall": 93.9,
-   "rank": 7
+   "cons": 80,
+   "safety": 68,
+   "legacy": 96,
+   "overall": 93.4,
+   "rank": 6
   },
   {
    "name": "Richard Petty",
@@ -190,7 +166,7 @@
    "safety": 85,
    "legacy": 97,
    "overall": 93.3,
-   "rank": 8
+   "rank": 7
   },
   {
    "name": "Alain Prost",
@@ -214,55 +190,7 @@
    "safety": 90,
    "legacy": 94,
    "overall": 93.1,
-   "rank": 9
-  },
-  {
-   "name": "Sébastien Ogier",
-   "series": "Rally",
-   "group": "All-time",
-   "peak": {
-    "pace": 95,
-    "race": 96,
-    "craft": 88,
-    "wet": 95,
-    "tyre": 94
-   },
-   "career": {
-    "pace": 94,
-    "race": 95,
-    "craft": 86,
-    "wet": 93,
-    "tyre": 92
-   },
-   "cons": 92,
-   "safety": 92,
-   "legacy": 92,
-   "overall": 92.6,
-   "rank": 10
-  },
-  {
-   "name": "Jim Clark",
-   "series": "F1",
-   "group": "All-time",
-   "peak": {
-    "pace": 99,
-    "race": 98,
-    "craft": 94,
-    "wet": 97,
-    "tyre": 93
-   },
-   "career": {
-    "pace": 98,
-    "race": 96,
-    "craft": 92,
-    "wet": 96,
-    "tyre": 92
-   },
-   "cons": 85,
-   "safety": 82,
-   "legacy": 88,
-   "overall": 92.4,
-   "rank": 11
+   "rank": 8
   },
   {
    "name": "Scott Dixon",
@@ -286,7 +214,31 @@
    "safety": 90,
    "legacy": 90,
    "overall": 92,
-   "rank": 12
+   "rank": 9
+  },
+  {
+   "name": "Juan Manuel Fangio",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 93,
+    "race": 95,
+    "craft": 93,
+    "wet": 92,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 92,
+    "race": 94,
+    "craft": 91,
+    "wet": 91,
+    "tyre": 93
+   },
+   "cons": 88,
+   "safety": 85,
+   "legacy": 93,
+   "overall": 91.8,
+   "rank": 10
   },
   {
    "name": "Tom Kristensen",
@@ -310,7 +262,31 @@
    "safety": 94,
    "legacy": 90,
    "overall": 91.5,
-   "rank": 13
+   "rank": 11
+  },
+  {
+   "name": "Jim Clark",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 97,
+    "race": 96,
+    "craft": 92,
+    "wet": 95,
+    "tyre": 91
+   },
+   "career": {
+    "pace": 96,
+    "race": 94,
+    "craft": 90,
+    "wet": 94,
+    "tyre": 90
+   },
+   "cons": 85,
+   "safety": 82,
+   "legacy": 89,
+   "overall": 91.3,
+   "rank": 12
   },
   {
    "name": "Jackie Stewart",
@@ -334,31 +310,31 @@
    "safety": 86,
    "legacy": 88,
    "overall": 91.1,
-   "rank": 14
+   "rank": 13
   },
   {
-   "name": "Ayrton Senna",
-   "series": "F1",
+   "name": "Jimmie Johnson",
+   "series": "NASCAR",
    "group": "All-time",
    "peak": {
-    "pace": 99,
+    "pace": 91,
     "race": 96,
-    "craft": 96,
-    "wet": 99,
-    "tyre": 82
+    "craft": 91,
+    "wet": 81,
+    "tyre": 97
    },
    "career": {
-    "pace": 98,
+    "pace": 89,
     "race": 94,
-    "craft": 94,
-    "wet": 98,
-    "tyre": 80
+    "craft": 89,
+    "wet": 79,
+    "tyre": 95
    },
-   "cons": 80,
-   "safety": 68,
-   "legacy": 95,
+   "cons": 90,
+   "safety": 88,
+   "legacy": 92,
    "overall": 91,
-   "rank": 15
+   "rank": 14
   },
   {
    "name": "Jeff Gordon",
@@ -382,6 +358,30 @@
    "safety": 84,
    "legacy": 90,
    "overall": 90.9,
+   "rank": 15
+  },
+  {
+   "name": "Sébastien Loeb",
+   "series": "Rally",
+   "group": "All-time",
+   "peak": {
+    "pace": 92,
+    "race": 92,
+    "craft": 83,
+    "wet": 91,
+    "tyre": 89
+   },
+   "career": {
+    "pace": 90,
+    "race": 91,
+    "craft": 81,
+    "wet": 89,
+    "tyre": 87
+   },
+   "cons": 94,
+   "safety": 90,
+   "legacy": 97,
+   "overall": 90.6,
    "rank": 16
   },
   {
@@ -433,28 +433,28 @@
    "rank": 18
   },
   {
-   "name": "Jimmie Johnson",
-   "series": "NASCAR",
+   "name": "Sébastien Ogier",
+   "series": "Rally",
    "group": "All-time",
    "peak": {
     "pace": 90,
-    "race": 95,
-    "craft": 90,
-    "wet": 80,
-    "tyre": 96
+    "race": 91,
+    "craft": 83,
+    "wet": 90,
+    "tyre": 89
    },
    "career": {
-    "pace": 88,
-    "race": 93,
-    "craft": 88,
-    "wet": 78,
-    "tyre": 94
+    "pace": 89,
+    "race": 90,
+    "craft": 81,
+    "wet": 88,
+    "tyre": 87
    },
-   "cons": 90,
-   "safety": 88,
-   "legacy": 92,
-   "overall": 90.3,
-   "rank": 18
+   "cons": 92,
+   "safety": 92,
+   "legacy": 94,
+   "overall": 89.6,
+   "rank": 19
   },
   {
    "name": "A.J. Foyt",
@@ -529,30 +529,6 @@
    "rank": 22
   },
   {
-   "name": "Lando Norris",
-   "series": "F1",
-   "group": "Recent F1 (2015-26)",
-   "peak": {
-    "pace": 94,
-    "race": 94,
-    "craft": 88,
-    "wet": 90,
-    "tyre": 90
-   },
-   "career": {
-    "pace": 91,
-    "race": 91,
-    "craft": 86,
-    "wet": 88,
-    "tyre": 88
-   },
-   "cons": 80,
-   "safety": 82,
-   "legacy": 80,
-   "overall": 87.1,
-   "rank": 23
-  },
-  {
    "name": "Mario Andretti",
    "series": "F1/IndyCar",
    "group": "All-time",
@@ -574,7 +550,7 @@
    "safety": 80,
    "legacy": 90,
    "overall": 87,
-   "rank": 24
+   "rank": 23
   },
   {
    "name": "Mika Häkkinen",
@@ -598,7 +574,7 @@
    "safety": 82,
    "legacy": 80,
    "overall": 87,
-   "rank": 24
+   "rank": 23
   },
   {
    "name": "Al Unser",
@@ -622,7 +598,7 @@
    "safety": 86,
    "legacy": 86,
    "overall": 86.7,
-   "rank": 26
+   "rank": 25
   },
   {
    "name": "Derek Bell",
@@ -646,7 +622,7 @@
    "safety": 85,
    "legacy": 78,
    "overall": 86.4,
-   "rank": 27
+   "rank": 26
   },
   {
    "name": "Jack Brabham",
@@ -670,7 +646,7 @@
    "safety": 82,
    "legacy": 85,
    "overall": 86,
-   "rank": 28
+   "rank": 27
   },
   {
    "name": "Nelson Piquet",
@@ -694,7 +670,7 @@
    "safety": 78,
    "legacy": 85,
    "overall": 85.8,
-   "rank": 29
+   "rank": 28
   },
   {
    "name": "Graham Hill",
@@ -718,7 +694,7 @@
    "safety": 80,
    "legacy": 85,
    "overall": 85.5,
-   "rank": 30
+   "rank": 29
   },
   {
    "name": "Kimi Räikkönen",
@@ -742,7 +718,7 @@
    "safety": 80,
    "legacy": 80,
    "overall": 85.3,
-   "rank": 31
+   "rank": 30
   },
   {
    "name": "Hélio Castroneves",
@@ -766,7 +742,7 @@
    "safety": 80,
    "legacy": 80,
    "overall": 84.5,
-   "rank": 32
+   "rank": 31
   },
   {
    "name": "Nigel Mansell",
@@ -790,7 +766,79 @@
    "safety": 70,
    "legacy": 78,
    "overall": 84.3,
+   "rank": 32
+  },
+  {
+   "name": "Nico Rosberg",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 96,
+    "race": 95,
+    "craft": 87,
+    "wet": 85,
+    "tyre": 90
+   },
+   "career": {
+    "pace": 92,
+    "race": 92,
+    "craft": 84,
+    "wet": 83,
+    "tyre": 88
+   },
+   "cons": 62,
+   "safety": 85,
+   "legacy": 75,
+   "overall": 84.22,
    "rank": 33
+  },
+  {
+   "name": "Jenson Button",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 86,
+    "race": 91,
+    "craft": 86,
+    "wet": 93,
+    "tyre": 95
+   },
+   "career": {
+    "pace": 83,
+    "race": 88,
+    "craft": 83,
+    "wet": 90,
+    "tyre": 92
+   },
+   "cons": 74,
+   "safety": 90,
+   "legacy": 73,
+   "overall": 84.18,
+   "rank": 34
+  },
+  {
+   "name": "Lando Norris",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 89,
+    "race": 89,
+    "craft": 83,
+    "wet": 85,
+    "tyre": 85
+   },
+   "career": {
+    "pace": 86,
+    "race": 86,
+    "craft": 81,
+    "wet": 83,
+    "tyre": 83
+   },
+   "cons": 80,
+   "safety": 82,
+   "legacy": 81,
+   "overall": 84.12,
+   "rank": 35
   },
   {
    "name": "Oscar Piastri",
@@ -814,7 +862,7 @@
    "safety": 88,
    "legacy": 62,
    "overall": 84.1,
-   "rank": 34
+   "rank": 36
   },
   {
    "name": "George Russell",
@@ -838,7 +886,31 @@
    "safety": 82,
    "legacy": 65,
    "overall": 83.9,
-   "rank": 35
+   "rank": 37
+  },
+  {
+   "name": "Daniel Ricciardo",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 90,
+    "race": 94,
+    "craft": 98,
+    "wet": 88,
+    "tyre": 87
+   },
+   "career": {
+    "pace": 87,
+    "race": 88,
+    "craft": 94,
+    "wet": 84,
+    "tyre": 84
+   },
+   "cons": 66,
+   "safety": 82,
+   "legacy": 68,
+   "overall": 83.8,
+   "rank": 38
   },
   {
    "name": "Charles Leclerc",
@@ -862,31 +934,7 @@
    "safety": 68,
    "legacy": 70,
    "overall": 83.6,
-   "rank": 36
-  },
-  {
-   "name": "Jenson Button",
-   "series": "F1",
-   "group": "Recent F1 (2015-26)",
-   "peak": {
-    "pace": 85,
-    "race": 90,
-    "craft": 85,
-    "wet": 92,
-    "tyre": 94
-   },
-   "career": {
-    "pace": 82,
-    "race": 87,
-    "craft": 82,
-    "wet": 89,
-    "tyre": 91
-   },
-   "cons": 74,
-   "safety": 90,
-   "legacy": 72,
-   "overall": 83.4,
-   "rank": 37
+   "rank": 39
   },
   {
    "name": "Emerson Fittipaldi",
@@ -910,7 +958,7 @@
    "safety": 82,
    "legacy": 80,
    "overall": 83.4,
-   "rank": 37
+   "rank": 40
   },
   {
    "name": "Carlos Sainz",
@@ -934,31 +982,7 @@
    "safety": 86,
    "legacy": 62,
    "overall": 83.3,
-   "rank": 39
-  },
-  {
-   "name": "Daniel Ricciardo",
-   "series": "F1",
-   "group": "Recent F1 (2015-26)",
-   "peak": {
-    "pace": 88,
-    "race": 92,
-    "craft": 96,
-    "wet": 86,
-    "tyre": 85
-   },
-   "career": {
-    "pace": 85,
-    "race": 86,
-    "craft": 92,
-    "wet": 82,
-    "tyre": 82
-   },
-   "cons": 66,
-   "safety": 82,
-   "legacy": 66,
-   "overall": 82.2,
-   "rank": 40
+   "rank": 41
   },
   {
    "name": "Ken Miles",
@@ -982,31 +1006,31 @@
    "safety": 82,
    "legacy": 62,
    "overall": 82,
-   "rank": 41
+   "rank": 42
   },
   {
-   "name": "Nico Rosberg",
+   "name": "Kimi Antonelli",
    "series": "F1",
    "group": "Recent F1 (2015-26)",
    "peak": {
-    "pace": 91,
-    "race": 90,
-    "craft": 82,
-    "wet": 80,
-    "tyre": 85
+    "pace": 99,
+    "race": 99,
+    "craft": 98,
+    "wet": 98,
+    "tyre": 94
    },
    "career": {
-    "pace": 87,
-    "race": 87,
-    "craft": 79,
-    "wet": 78,
-    "tyre": 83
+    "pace": 99,
+    "race": 96,
+    "craft": 94,
+    "wet": 94,
+    "tyre": 90
    },
-   "cons": 62,
-   "safety": 85,
-   "legacy": 75,
-   "overall": 81.1,
-   "rank": 42
+   "cons": 55,
+   "safety": 70,
+   "legacy": 41,
+   "overall": 81.5,
+   "rank": 43
   },
   {
    "name": "Sergio Pérez",
@@ -1030,7 +1054,7 @@
    "safety": 72,
    "legacy": 62,
    "overall": 79.9,
-   "rank": 43
+   "rank": 44
   },
   {
    "name": "Valtteri Bottas",
@@ -1054,7 +1078,7 @@
    "safety": 86,
    "legacy": 60,
    "overall": 79.2,
-   "rank": 44
+   "rank": 45
   },
   {
    "name": "Felipe Massa",
@@ -1078,7 +1102,7 @@
    "safety": 80,
    "legacy": 68,
    "overall": 79,
-   "rank": 45
+   "rank": 46
   },
   {
    "name": "James Hunt",
@@ -1102,7 +1126,7 @@
    "safety": 62,
    "legacy": 70,
    "overall": 77.5,
-   "rank": 46
+   "rank": 47
   },
   {
    "name": "Juan Pablo Montoya",
@@ -1126,7 +1150,7 @@
    "safety": 55,
    "legacy": 68,
    "overall": 77.5,
-   "rank": 46
+   "rank": 47
   },
   {
    "name": "Nico Hülkenberg",
@@ -1150,7 +1174,7 @@
    "safety": 76,
    "legacy": 48,
    "overall": 77.2,
-   "rank": 48
+   "rank": 49
   },
   {
    "name": "Pierre Gasly",
@@ -1174,7 +1198,7 @@
    "safety": 82,
    "legacy": 52,
    "overall": 76.9,
-   "rank": 49
+   "rank": 50
   },
   {
    "name": "Robert Kubica",
@@ -1198,7 +1222,7 @@
    "safety": 78,
    "legacy": 52,
    "overall": 76,
-   "rank": 50
+   "rank": 51
   },
   {
    "name": "Alexander Albon",
@@ -1222,7 +1246,7 @@
    "safety": 78,
    "legacy": 42,
    "overall": 75.6,
-   "rank": 51
+   "rank": 52
   },
   {
    "name": "Mark Webber",
@@ -1246,7 +1270,7 @@
    "safety": 76,
    "legacy": 55,
    "overall": 75.6,
-   "rank": 51
+   "rank": 52
   },
   {
    "name": "Esteban Ocon",
@@ -1270,30 +1294,6 @@
    "safety": 70,
    "legacy": 50,
    "overall": 74.9,
-   "rank": 53
-  },
-  {
-   "name": "Kimi Antonelli",
-   "series": "F1",
-   "group": "Recent F1 (2015-26)",
-   "peak": {
-    "pace": 90,
-    "race": 86,
-    "craft": 84,
-    "wet": 84,
-    "tyre": 80
-   },
-   "career": {
-    "pace": 86,
-    "race": 82,
-    "craft": 80,
-    "wet": 80,
-    "tyre": 76
-   },
-   "cons": 55,
-   "safety": 70,
-   "legacy": 40,
-   "overall": 72.9,
    "rank": 54
   },
   {
@@ -1417,30 +1417,6 @@
    "rank": 59
   },
   {
-   "name": "Lance Stroll",
-   "series": "F1",
-   "group": "Recent F1 (2015-26)",
-   "peak": {
-    "pace": 80,
-    "race": 77,
-    "craft": 76,
-    "wet": 88,
-    "tyre": 74
-   },
-   "career": {
-    "pace": 76,
-    "race": 74,
-    "craft": 74,
-    "wet": 85,
-    "tyre": 71
-   },
-   "cons": 58,
-   "safety": 70,
-   "legacy": 36,
-   "overall": 68.1,
-   "rank": 60
-  },
-  {
    "name": "Liam Lawson",
    "series": "F1",
    "group": "Recent F1 (2015-26)",
@@ -1462,7 +1438,7 @@
    "safety": 70,
    "legacy": 28,
    "overall": 67.6,
-   "rank": 61
+   "rank": 60
   },
   {
    "name": "Gabriel Bortoleto",
@@ -1486,7 +1462,7 @@
    "safety": 72,
    "legacy": 28,
    "overall": 67.2,
-   "rank": 62
+   "rank": 61
   },
   {
    "name": "Pastor Maldonado",
@@ -1510,7 +1486,7 @@
    "safety": 38,
    "legacy": 45,
    "overall": 66.5,
-   "rank": 63
+   "rank": 62
   },
   {
    "name": "Daniil Kvyat",
@@ -1534,7 +1510,7 @@
    "safety": 58,
    "legacy": 38,
    "overall": 66.5,
-   "rank": 63
+   "rank": 62
   },
   {
    "name": "Stoffel Vandoorne",
@@ -1558,7 +1534,7 @@
    "safety": 78,
    "legacy": 22,
    "overall": 64.9,
-   "rank": 65
+   "rank": 64
   },
   {
    "name": "Franco Colapinto",
@@ -1582,7 +1558,7 @@
    "safety": 65,
    "legacy": 25,
    "overall": 64.6,
-   "rank": 66
+   "rank": 65
   },
   {
    "name": "Pascal Wehrlein",
@@ -1606,7 +1582,7 @@
    "safety": 74,
    "legacy": 20,
    "overall": 63.3,
-   "rank": 67
+   "rank": 66
   },
   {
    "name": "Brendon Hartley",
@@ -1630,7 +1606,7 @@
    "safety": 68,
    "legacy": 26,
    "overall": 62.9,
-   "rank": 68
+   "rank": 67
   },
   {
    "name": "Antonio Giovinazzi",
@@ -1654,7 +1630,7 @@
    "safety": 68,
    "legacy": 15,
    "overall": 62.6,
-   "rank": 69
+   "rank": 68
   },
   {
    "name": "Alexander Rossi",
@@ -1678,7 +1654,7 @@
    "safety": 70,
    "legacy": 30,
    "overall": 62.4,
-   "rank": 70
+   "rank": 69
   },
   {
    "name": "Arvid Lindblad",
@@ -1702,7 +1678,7 @@
    "safety": 70,
    "legacy": 20,
    "overall": 62.3,
-   "rank": 71
+   "rank": 70
   },
   {
    "name": "Zhou Guanyu",
@@ -1726,7 +1702,7 @@
    "safety": 72,
    "legacy": 15,
    "overall": 62.2,
-   "rank": 72
+   "rank": 71
   },
   {
    "name": "Nyck de Vries",
@@ -1750,7 +1726,7 @@
    "safety": 62,
    "legacy": 20,
    "overall": 61.8,
-   "rank": 73
+   "rank": 72
   },
   {
    "name": "Rafael Camara",
@@ -1774,7 +1750,7 @@
    "safety": 72,
    "legacy": 15,
    "overall": 61.3,
-   "rank": 74
+   "rank": 73
   },
   {
    "name": "Marcus Ericsson",
@@ -1798,7 +1774,7 @@
    "safety": 68,
    "legacy": 22,
    "overall": 61.2,
-   "rank": 75
+   "rank": 74
   },
   {
    "name": "Paul di Resta",
@@ -1822,7 +1798,7 @@
    "safety": 74,
    "legacy": 10,
    "overall": 60.8,
-   "rank": 76
+   "rank": 75
   },
   {
    "name": "Sergey Sirotkin",
@@ -1846,7 +1822,7 @@
    "safety": 70,
    "legacy": 15,
    "overall": 60,
-   "rank": 77
+   "rank": 76
   },
   {
    "name": "Felipe Nasr",
@@ -1870,7 +1846,7 @@
    "safety": 70,
    "legacy": 14,
    "overall": 59.7,
-   "rank": 78
+   "rank": 77
   },
   {
    "name": "Mick Schumacher",
@@ -1894,7 +1870,7 @@
    "safety": 52,
    "legacy": 12,
    "overall": 59.1,
-   "rank": 79
+   "rank": 78
   },
   {
    "name": "Esteban Gutiérrez",
@@ -1918,7 +1894,7 @@
    "safety": 68,
    "legacy": 12,
    "overall": 58.6,
-   "rank": 80
+   "rank": 79
   },
   {
    "name": "Nicholas Latifi",
@@ -1942,7 +1918,7 @@
    "safety": 60,
    "legacy": 15,
    "overall": 58.5,
-   "rank": 81
+   "rank": 80
   },
   {
    "name": "Jolyon Palmer",
@@ -1966,7 +1942,7 @@
    "safety": 70,
    "legacy": 12,
    "overall": 58.4,
-   "rank": 82
+   "rank": 81
   },
   {
    "name": "Jack Aitken",
@@ -1990,7 +1966,7 @@
    "safety": 70,
    "legacy": 5,
    "overall": 55.4,
-   "rank": 83
+   "rank": 82
   },
   {
    "name": "Jack Doohan",
@@ -2014,7 +1990,7 @@
    "safety": 60,
    "legacy": 8,
    "overall": 54.5,
-   "rank": 84
+   "rank": 83
   },
   {
    "name": "Pietro Fittipaldi",
@@ -2038,7 +2014,7 @@
    "safety": 66,
    "legacy": 6,
    "overall": 54.5,
-   "rank": 84
+   "rank": 83
   },
   {
    "name": "Will Stevens",
@@ -2062,7 +2038,7 @@
    "safety": 66,
    "legacy": 6,
    "overall": 54.3,
-   "rank": 86
+   "rank": 85
   },
   {
    "name": "Roberto Merhi",
@@ -2086,7 +2062,7 @@
    "safety": 64,
    "legacy": 6,
    "overall": 54.1,
-   "rank": 87
+   "rank": 86
   },
   {
    "name": "Logan Sargeant",
@@ -2110,6 +2086,30 @@
    "safety": 52,
    "legacy": 8,
    "overall": 53.9,
+   "rank": 87
+  },
+  {
+   "name": "Lance Stroll",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 58,
+    "race": 55,
+    "craft": 54,
+    "wet": 66,
+    "tyre": 52
+   },
+   "career": {
+    "pace": 54,
+    "race": 52,
+    "craft": 52,
+    "wet": 63,
+    "tyre": 49
+   },
+   "cons": 58,
+   "safety": 70,
+   "legacy": 35,
+   "overall": 53.6,
    "rank": 88
   },
   {
