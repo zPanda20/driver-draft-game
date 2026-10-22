@@ -96,8 +96,8 @@ h1,h2,h3{letter-spacing:.02em}
 .landing .code{font-family:var(--disp);font-size:20px}
 .landing .helpbtn{background:rgba(10,16,27,.7);backdrop-filter:blur(6px)}
 #bg.start{background-size:cover;background-position:left center}
-#bg.start::after{background:linear-gradient(90deg,rgba(7,11,19,0) 35%,rgba(7,11,19,.55) 100%)}
-@media (max-width:1000px){#bg.start{background-position:12% center}#bg.start::after{background:rgba(7,11,19,.62)}}
+#bg.start::after{background:linear-gradient(90deg,rgba(7,11,19,0) 30%,rgba(7,11,19,.62) 58%,rgba(7,11,19,.86) 100%)}
+@media (max-width:1000px){#bg.start{background-position:22% center}#bg.start::after{background:rgba(7,11,19,.7)}}
 .logo{display:inline-flex;align-items:center;gap:9px;font:800 italic 21px var(--disp);letter-spacing:.1em}
 .logo b{width:16px;height:16px;flex:none;background:conic-gradient(#e8ecf2 0 25%,#0b0d12 0 50%,#e8ecf2 0 75%,#0b0d12 0) 0 0/8px 8px;border:2px solid var(--acc);transform:skewX(-12deg)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -516,3 +516,8 @@ h1,h2,h3{letter-spacing:.02em}
 
 .landing .panel.row .grow{min-width:190px}
 @media (max-height:800px){.stbar{padding:10px 0}.landing .panel{padding-top:11px;padding-bottom:12px}}
+
+.stcol{position:relative;isolation:isolate}
+.stcol::before{content:"";position:absolute;inset:-24px -4vw -24px -70px;z-index:-1;background:linear-gradient(90deg,transparent,rgba(7,11,19,.72) 18%);pointer-events:none}
+@media (max-width:1000px){.stcol::before{display:none}}
+.landing .lead{text-shadow:0 1px 10px rgba(0,0,0,.7)}

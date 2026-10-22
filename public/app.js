@@ -58,7 +58,7 @@ function landing() {
   st.S = null;
   el.top.innerHTML = ""; el.garage.innerHTML = ""; el.host.innerHTML = "";
   const saved = store("room");
-  { const bg = $("#bg"); if (bg) { bg.dataset.slug = "start"; bg.classList.add("start"); bg.style.backgroundImage = "url(/start-wallpaper.png)"; } }
+  { const bg = $("#bg"); if (bg) { bg.dataset.slug = "start"; bg.classList.add("start"); bg.style.backgroundImage = "url(/start-wallpaper.jpg)"; } }
   el.body.innerHTML = `<div class="landing start">
     <header class="stbar"><span class="logo"><b></b> Driver Draft</span><span class="grow"></span><button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button></header>
     <div class="stcol">
