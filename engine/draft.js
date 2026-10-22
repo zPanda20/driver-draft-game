@@ -148,6 +148,14 @@ export function botPartChoice(game, t, r) {
   return pool.parts[slot].find((x) => !x.taken);
 }
 
+// For a person who is away, on auto or out of time: the highest-grade part among the slots they still need.
+export function bestPartFor(game, t) {
+  const { pool } = game, n = needsOf(t);
+  let best = null;
+  for (const s of n.slots) { const c = pool.parts[s].find((x) => !x.taken); if (c && (!best || c.bonus > best.bonus)) best = c; }
+  return best;
+}
+
 export function takePart(game, t, it) {
   award(t, it, game);
   game.rd.picks.push({ team: t.id, item: it });

@@ -1,7 +1,7 @@
 // One game room: lobby, draft, season, off-season. The server is the referee; browsers only send choices.
 import { makeRng, shuffle } from "../engine/rng.js";
 import { createGame, startSeason, prepareRace, autoAnswer, answer, runFirstHalf, runSecondHalf, finishSeason, standingsOf, driverStandingsOf } from "../engine/season.js";
-import { makePool, beginDraftRound, botPicks, validPick, resolveDraftRound, beginPartsRedraft, botPartChoice, takePart, freeAgents, claimFA, botClaim, lockIn, needsOf, fillMissingParts, ensureLineups, principalsOf } from "../engine/draft.js";
+import { makePool, beginDraftRound, botPicks, validPick, resolveDraftRound, beginPartsRedraft, botPartChoice, bestPartFor, takePart, freeAgents, claimFA, botClaim, lockIn, needsOf, fillMissingParts, ensureLineups, principalsOf } from "../engine/draft.js";
 import { tradingMethods } from "./trading.js";
 import { describeOption } from "./describe.js";
 import { pointsTable, pointsFormat } from "../engine/pool.js";
@@ -331,22 +331,27 @@ export class Room {
     }
     return null;
   }
+  // One place that records a re-draft pick: on the team, on the turn (so every screen can show who took what) and in the feed.
+  takeTurn(turn, t, it) {
+    takePart(this.game, t, it); turn.pick = it.id;
+    this.pushFeed({ kind: "part", team: t.id, item: it.id, round: turn.round });
+  }
   partsTurn() {
     const g = this.game, rd = g.rd;
     while (this.turnIdx < rd.turns.length) {
       const turn = rd.turns[this.turnIdx], t = g.teams[turn.team];
       const p = this.playerOfTeam(t.id);
-      if (!needsOf(t).slots.length) { this.turnIdx++; continue; } // a team holding more picks than it has slots to fill passes
+      if (!needsOf(t).slots.length) { turn.skip = true; this.turnIdx++; continue; } // a team holding more picks than it has slots to fill passes
       if (!t.human || !p || !p.connected || p.auto) {
         // automatic turn: bots, absent players, or players on auto
-        const it = (p && this.wishPick(t, p)) || botPartChoice(g, t, g.draftRng);
-        if (it) { takePart(g, t, it); this.pushFeed({ kind: "part", team: t.id, item: it.id, round: turn.round }); }
+        const it = (p && this.wishPick(t, p)) || (t.human ? bestPartFor(g, t) : botPartChoice(g, t, g.draftRng));
+        if (it) this.takeTurn(turn, t, it);
         this.turnIdx++;
         this.step = "parts"; this.changed();
         return void this.after(t.human ? 500 : 130, () => this.partsTurn());
       }
       const w = this.wishPick(t, p);
-      if (w) { takePart(g, t, w); this.pushFeed({ kind: "part", team: t.id, item: w.id, round: turn.round }); this.turnIdx++; this.changed(); return void this.after(400, () => this.partsTurn()); }
+      if (w) { this.takeTurn(turn, t, w); this.turnIdx++; this.changed(); return void this.after(400, () => this.partsTurn()); }
       this.step = "parts.turn";
       this.after(this.settings.partsSec * 1000, () => this.partsTimeout());
       return this.changed();
@@ -357,8 +362,8 @@ export class Room {
   }
   partsTimeout() {
     const g = this.game, turn = g.rd.turns[this.turnIdx], t = g.teams[turn.team];
-    const it = botPartChoice(g, t, g.draftRng);
-    if (it) { takePart(g, t, it); this.pushFeed({ kind: "part", team: t.id, item: it.id, round: turn.round }); }
+    const it = t.human ? bestPartFor(g, t) : botPartChoice(g, t, g.draftRng);
+    if (it) this.takeTurn(turn, t, it);
     this.turnIdx++; this.partsTurn();
   }
   pickPart(token, itemId) {
@@ -367,7 +372,7 @@ export class Room {
     if (!turn || turn.team !== p.teamId) return;
     const t = g.teams[turn.team], it = g.itemById.get(itemId), n = needsOf(t);
     if (!it || it.kind !== "part" || it.taken || !n.slots.includes(it.slot)) return;
-    takePart(g, t, it); this.pushFeed({ kind: "part", team: t.id, item: it.id, round: turn.round });
+    this.takeTurn(turn, t, it);
     this.turnIdx++; this.partsTurn();
   }
   setWish(token, list) {
@@ -531,7 +536,8 @@ export class Room {
     }
     if (this.phase === "offseason" && g.rd) {
       const turns = g.rd.turns, cur = this.step.startsWith("parts") ? turns[this.turnIdx] : null;
-      v.parts = { idx: this.turnIdx, total: turns.length, team: cur ? cur.team : null, round: cur ? cur.round : null, upNext: turns.slice(this.turnIdx + 1, this.turnIdx + 6).map((x) => x.team) };
+      v.parts = { idx: this.turnIdx, total: turns.length, team: cur ? cur.team : null, round: cur ? cur.round : null, upNext: turns.slice(this.turnIdx + 1, this.turnIdx + 6).map((x) => x.team),
+        turns: turns.map((x) => ({ r: x.round, t: x.team, o: x.orig, p: x.pick || null, s: x.skip ? 1 : 0 })), snake: this.settings.redraft === "snake" };
       if (this.step.startsWith("fa") || this.step === "lock" || this.step === "trade2") {
         v.fa = { idx: this.faIdx, total: this.faTurns.length, team: this.step === "fa.turn" ? this.faTurns[this.faIdx] : null, upNext: this.faTurns.slice(this.faIdx + 1, this.faIdx + 6) };
       }

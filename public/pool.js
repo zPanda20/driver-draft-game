@@ -27,13 +27,15 @@ export function poolView(S, opts) {
     if (k === "drivers") return needs.driver; if (k === "principals") return needs.principal;
     return needs.slots.includes(k) ? 1 : 0;
   };
-  const head = `<div class="row wrap"><div class="tabs">${tabs.map(([k, l]) => `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}">${l}${needs ? `<span class="k">${need(k) ? (k === "drivers" || k === "principals" ? "need " + need(k) : "need") : "✓"}</span>` : ""}</button>`).join("")}</div>
+  // In the parts re-draft each slot tab shows the best grade still in the pool, so you can see at a glance where the Elite part is.
+  const best = (k) => { const b = [50, 30, 20, 10].find((x) => freeParts(S, k, x).length); return b ? `best +${b}` : "none left"; };
+  const head = `<div class="row wrap"><div class="tabs">${tabs.map(([k, l]) => `<button class="tab ${k === cur ? "on" : ""}" data-act="tab" data-tab="${k}">${l}${needs ? `<span class="k">${need(k) ? (k === "drivers" || k === "principals" ? "need " + need(k) : opts.mode === "parts" ? best(k) : "need") : "✓"}</span>` : ""}</button>`).join("")}</div>
     <div class="grow"></div>${cur === "drivers" || cur === "principals" ? `<input id="filter" placeholder="Search" value="${esc(st.ui.q)}" style="width:150px">` : ""}
     ${cur === "drivers" || cur === "principals" ? `<label class="small mute row gap6"><input type="checkbox" data-change="hideTaken" ${st.ui.hide ? "checked" : ""}> hide taken</label>` : ""}</div>`;
   let body = "";
   if (cur === "drivers" || cur === "principals") body = personTable(S, cur, opts);
   else body = partTable(S, cur, opts);
-  return `<div class="card"><h3>${opts.title || "Pool"}</h3>${head}<div class="scroller mt" data-keep="pool">${body}</div></div>`;
+  return `<div class="card"><h3>${opts.title || "Pool"}</h3>${head}${opts.hint ? `<p class="small mute mt">${opts.hint}</p>` : ""}<div class="scroller mt" data-keep="pool">${body}</div></div>`;
 }
 
 function actionCells(S, it, opts) {
