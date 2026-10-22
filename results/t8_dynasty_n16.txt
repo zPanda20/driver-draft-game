@@ -1,0 +1,6 @@
+300 games x 10 seasons, N=16
+Re-draft  Any season repeats  Games with a back-to-back  Games with a three-peat  Most titles by one team  Games where one team wins 4+  Different champions
+--------  ------------------  -------------------------  -----------------------  -----------------------  ----------------------------  -------------------
+straight  26%                 74%                        39%                      4.9                      68%                           4.6                
+snake     33%                 85%                        53%                      5.4                      79%                           4.1                
+none      32%                 91%                        49%                      5.1                      78%                           4.3                

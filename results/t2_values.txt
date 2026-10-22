@@ -1,0 +1,40 @@
+Subject: a mid-table team in a 30-team field; 40 fields x 40 seasons per variant.
+Baseline mean season points: 319.9
+
+One driver swapped in (replaces the team's first driver), change in season points:
+Variant         Driver           Δ points
+--------------  ---------------  --------
+driver rank 1   Lewis Hamilton   205.1   
+driver rank 5   Valentino Rossi  143.1   
+driver rank 10  Sébastien Ogier  7.8     
+driver rank 20  A.J. Foyt        -111.0  
+driver rank 30  Graham Hill      -217.0  
+driver rank 45  Felipe Massa     -251.5  
+driver rank 60  Lance Stroll     -274.0  
+driver rank 75  Marcus Ericsson  -275.3  
+
+One part set to a tier (absolute mean season points; compare within a slot):
+Slot    +10    +20    +30    +50  
+------  -----  -----  -----  -----
+aero    211.0  334.8  468.2  640.2
+engine  235.6  322.0  423.5  652.5
+susp    253.1  337.5  434.8  649.5
+cool    258.9  341.5  436.1  651.3
+
+Part value of going +10 to +50, in season points:
+Slot    Δ points
+------  --------
+aero    429.2   
+engine  416.9   
+susp    396.4   
+cool    392.5   
+
+Principal swapped in, change in season points:
+Variant  Principal        Δ points
+-------  ---------------  --------
+rank 1   Toto Wolff       170.7   
+rank 5   Ray Evernham     108.4   
+rank 10  Dale Inman       67.0    
+rank 20  Flavio Briatore  18.1    
+rank 30  Adrian Newey     -160.1  
+rank 40  Claire Williams  -184.7  

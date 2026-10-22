@@ -1,0 +1,3568 @@
+{
+ "drivers": [
+  {
+   "name": "Lewis Hamilton",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 99,
+    "race": 97,
+    "craft": 96,
+    "wet": 96,
+    "tyre": 95
+   },
+   "career": {
+    "pace": 97,
+    "race": 96,
+    "craft": 95,
+    "wet": 95,
+    "tyre": 94
+   },
+   "cons": 98,
+   "safety": 88,
+   "legacy": 99,
+   "overall": 96.3,
+   "rank": 1
+  },
+  {
+   "name": "Michael Schumacher",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 97,
+    "race": 99,
+    "craft": 97,
+    "wet": 98,
+    "tyre": 96
+   },
+   "career": {
+    "pace": 94,
+    "race": 97,
+    "craft": 95,
+    "wet": 97,
+    "tyre": 95
+   },
+   "cons": 96,
+   "safety": 80,
+   "legacy": 99,
+   "overall": 95.7,
+   "rank": 2
+  },
+  {
+   "name": "Sébastien Loeb",
+   "series": "Rally",
+   "group": "All-time",
+   "peak": {
+    "pace": 99,
+    "race": 99,
+    "craft": 90,
+    "wet": 98,
+    "tyre": 96
+   },
+   "career": {
+    "pace": 97,
+    "race": 98,
+    "craft": 88,
+    "wet": 96,
+    "tyre": 94
+   },
+   "cons": 94,
+   "safety": 90,
+   "legacy": 97,
+   "overall": 95.2,
+   "rank": 3
+  },
+  {
+   "name": "Fernando Alonso",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 96,
+    "race": 98,
+    "craft": 98,
+    "wet": 94,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 93,
+    "race": 96,
+    "craft": 96,
+    "wet": 92,
+    "tyre": 92
+   },
+   "cons": 96,
+   "safety": 90,
+   "legacy": 92,
+   "overall": 94.8,
+   "rank": 4
+  },
+  {
+   "name": "Valentino Rossi",
+   "series": "MotoGP",
+   "group": "All-time",
+   "peak": {
+    "pace": 96,
+    "race": 97,
+    "craft": 98,
+    "wet": 94,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 93,
+    "race": 95,
+    "craft": 96,
+    "wet": 92,
+    "tyre": 93
+   },
+   "cons": 94,
+   "safety": 82,
+   "legacy": 97,
+   "overall": 94.5,
+   "rank": 5
+  },
+  {
+   "name": "Max Verstappen",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 98,
+    "race": 99,
+    "craft": 98,
+    "wet": 98,
+    "tyre": 93
+   },
+   "career": {
+    "pace": 96,
+    "race": 98,
+    "craft": 97,
+    "wet": 97,
+    "tyre": 92
+   },
+   "cons": 94,
+   "safety": 72,
+   "legacy": 94,
+   "overall": 94.4,
+   "rank": 6
+  },
+  {
+   "name": "Juan Manuel Fangio",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 96,
+    "race": 98,
+    "craft": 96,
+    "wet": 95,
+    "tyre": 97
+   },
+   "career": {
+    "pace": 95,
+    "race": 97,
+    "craft": 94,
+    "wet": 94,
+    "tyre": 96
+   },
+   "cons": 88,
+   "safety": 85,
+   "legacy": 94,
+   "overall": 93.9,
+   "rank": 7
+  },
+  {
+   "name": "Richard Petty",
+   "series": "NASCAR",
+   "group": "All-time",
+   "peak": {
+    "pace": 93,
+    "race": 98,
+    "craft": 97,
+    "wet": 78,
+    "tyre": 95
+   },
+   "career": {
+    "pace": 91,
+    "race": 96,
+    "craft": 95,
+    "wet": 76,
+    "tyre": 93
+   },
+   "cons": 94,
+   "safety": 85,
+   "legacy": 97,
+   "overall": 93.3,
+   "rank": 8
+  },
+  {
+   "name": "Alain Prost",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 93,
+    "race": 97,
+    "craft": 92,
+    "wet": 90,
+    "tyre": 99
+   },
+   "career": {
+    "pace": 91,
+    "race": 95,
+    "craft": 90,
+    "wet": 89,
+    "tyre": 98
+   },
+   "cons": 92,
+   "safety": 90,
+   "legacy": 94,
+   "overall": 93.1,
+   "rank": 9
+  },
+  {
+   "name": "Sébastien Ogier",
+   "series": "Rally",
+   "group": "All-time",
+   "peak": {
+    "pace": 95,
+    "race": 96,
+    "craft": 88,
+    "wet": 95,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 94,
+    "race": 95,
+    "craft": 86,
+    "wet": 93,
+    "tyre": 92
+   },
+   "cons": 92,
+   "safety": 92,
+   "legacy": 92,
+   "overall": 92.6,
+   "rank": 10
+  },
+  {
+   "name": "Jim Clark",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 99,
+    "race": 98,
+    "craft": 94,
+    "wet": 97,
+    "tyre": 93
+   },
+   "career": {
+    "pace": 98,
+    "race": 96,
+    "craft": 92,
+    "wet": 96,
+    "tyre": 92
+   },
+   "cons": 85,
+   "safety": 82,
+   "legacy": 88,
+   "overall": 92.4,
+   "rank": 11
+  },
+  {
+   "name": "Scott Dixon",
+   "series": "IndyCar",
+   "group": "All-time",
+   "peak": {
+    "pace": 92,
+    "race": 95,
+    "craft": 90,
+    "wet": 90,
+    "tyre": 98
+   },
+   "career": {
+    "pace": 90,
+    "race": 93,
+    "craft": 88,
+    "wet": 88,
+    "tyre": 96
+   },
+   "cons": 96,
+   "safety": 90,
+   "legacy": 90,
+   "overall": 92,
+   "rank": 12
+  },
+  {
+   "name": "Tom Kristensen",
+   "series": "Endurance",
+   "group": "All-time",
+   "peak": {
+    "pace": 88,
+    "race": 94,
+    "craft": 90,
+    "wet": 94,
+    "tyre": 97
+   },
+   "career": {
+    "pace": 86,
+    "race": 92,
+    "craft": 88,
+    "wet": 92,
+    "tyre": 96
+   },
+   "cons": 94,
+   "safety": 94,
+   "legacy": 90,
+   "overall": 91.5,
+   "rank": 13
+  },
+  {
+   "name": "Jackie Stewart",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 93,
+    "race": 95,
+    "craft": 92,
+    "wet": 98,
+    "tyre": 92
+   },
+   "career": {
+    "pace": 91,
+    "race": 93,
+    "craft": 90,
+    "wet": 97,
+    "tyre": 90
+   },
+   "cons": 88,
+   "safety": 86,
+   "legacy": 88,
+   "overall": 91.1,
+   "rank": 14
+  },
+  {
+   "name": "Ayrton Senna",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 99,
+    "race": 96,
+    "craft": 96,
+    "wet": 99,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 98,
+    "race": 94,
+    "craft": 94,
+    "wet": 98,
+    "tyre": 80
+   },
+   "cons": 80,
+   "safety": 68,
+   "legacy": 95,
+   "overall": 91,
+   "rank": 15
+  },
+  {
+   "name": "Jeff Gordon",
+   "series": "NASCAR",
+   "group": "All-time",
+   "peak": {
+    "pace": 95,
+    "race": 94,
+    "craft": 92,
+    "wet": 88,
+    "tyre": 92
+   },
+   "career": {
+    "pace": 93,
+    "race": 92,
+    "craft": 90,
+    "wet": 86,
+    "tyre": 90
+   },
+   "cons": 90,
+   "safety": 84,
+   "legacy": 90,
+   "overall": 90.9,
+   "rank": 16
+  },
+  {
+   "name": "Dale Earnhardt",
+   "series": "NASCAR",
+   "group": "All-time",
+   "peak": {
+    "pace": 94,
+    "race": 96,
+    "craft": 99,
+    "wet": 78,
+    "tyre": 90
+   },
+   "career": {
+    "pace": 92,
+    "race": 94,
+    "craft": 98,
+    "wet": 76,
+    "tyre": 88
+   },
+   "cons": 92,
+   "safety": 62,
+   "legacy": 93,
+   "overall": 90.5,
+   "rank": 17
+  },
+  {
+   "name": "Marc Marquez",
+   "series": "MotoGP",
+   "group": "All-time",
+   "peak": {
+    "pace": 99,
+    "race": 95,
+    "craft": 96,
+    "wet": 90,
+    "tyre": 92
+   },
+   "career": {
+    "pace": 97,
+    "race": 94,
+    "craft": 94,
+    "wet": 88,
+    "tyre": 90
+   },
+   "cons": 90,
+   "safety": 48,
+   "legacy": 94,
+   "overall": 90.3,
+   "rank": 18
+  },
+  {
+   "name": "Jimmie Johnson",
+   "series": "NASCAR",
+   "group": "All-time",
+   "peak": {
+    "pace": 90,
+    "race": 95,
+    "craft": 90,
+    "wet": 80,
+    "tyre": 96
+   },
+   "career": {
+    "pace": 88,
+    "race": 93,
+    "craft": 88,
+    "wet": 78,
+    "tyre": 94
+   },
+   "cons": 90,
+   "safety": 88,
+   "legacy": 92,
+   "overall": 90.3,
+   "rank": 18
+  },
+  {
+   "name": "A.J. Foyt",
+   "series": "IndyCar",
+   "group": "All-time",
+   "peak": {
+    "pace": 92,
+    "race": 94,
+    "craft": 92,
+    "wet": 80,
+    "tyre": 90
+   },
+   "career": {
+    "pace": 89,
+    "race": 91,
+    "craft": 90,
+    "wet": 78,
+    "tyre": 88
+   },
+   "cons": 92,
+   "safety": 72,
+   "legacy": 93,
+   "overall": 89.4,
+   "rank": 20
+  },
+  {
+   "name": "Niki Lauda",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 90,
+    "race": 94,
+    "craft": 90,
+    "wet": 90,
+    "tyre": 93
+   },
+   "career": {
+    "pace": 87,
+    "race": 92,
+    "craft": 88,
+    "wet": 88,
+    "tyre": 92
+   },
+   "cons": 88,
+   "safety": 80,
+   "legacy": 88,
+   "overall": 89.1,
+   "rank": 21
+  },
+  {
+   "name": "Sebastian Vettel",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 97,
+    "race": 95,
+    "craft": 88,
+    "wet": 90,
+    "tyre": 88
+   },
+   "career": {
+    "pace": 91,
+    "race": 91,
+    "craft": 84,
+    "wet": 86,
+    "tyre": 85
+   },
+   "cons": 78,
+   "safety": 76,
+   "legacy": 90,
+   "overall": 88,
+   "rank": 22
+  },
+  {
+   "name": "Lando Norris",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 94,
+    "race": 94,
+    "craft": 88,
+    "wet": 90,
+    "tyre": 90
+   },
+   "career": {
+    "pace": 91,
+    "race": 91,
+    "craft": 86,
+    "wet": 88,
+    "tyre": 88
+   },
+   "cons": 80,
+   "safety": 82,
+   "legacy": 80,
+   "overall": 87.1,
+   "rank": 23
+  },
+  {
+   "name": "Mario Andretti",
+   "series": "F1/IndyCar",
+   "group": "All-time",
+   "peak": {
+    "pace": 90,
+    "race": 90,
+    "craft": 88,
+    "wet": 85,
+    "tyre": 88
+   },
+   "career": {
+    "pace": 87,
+    "race": 87,
+    "craft": 85,
+    "wet": 82,
+    "tyre": 85
+   },
+   "cons": 85,
+   "safety": 80,
+   "legacy": 90,
+   "overall": 87,
+   "rank": 24
+  },
+  {
+   "name": "Mika Häkkinen",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 94,
+    "race": 94,
+    "craft": 92,
+    "wet": 90,
+    "tyre": 90
+   },
+   "career": {
+    "pace": 91,
+    "race": 91,
+    "craft": 89,
+    "wet": 88,
+    "tyre": 88
+   },
+   "cons": 74,
+   "safety": 82,
+   "legacy": 80,
+   "overall": 87,
+   "rank": 24
+  },
+  {
+   "name": "Al Unser",
+   "series": "IndyCar",
+   "group": "All-time",
+   "peak": {
+    "pace": 88,
+    "race": 92,
+    "craft": 88,
+    "wet": 76,
+    "tyre": 92
+   },
+   "career": {
+    "pace": 85,
+    "race": 89,
+    "craft": 85,
+    "wet": 74,
+    "tyre": 90
+   },
+   "cons": 85,
+   "safety": 86,
+   "legacy": 86,
+   "overall": 86.7,
+   "rank": 26
+  },
+  {
+   "name": "Derek Bell",
+   "series": "Endurance",
+   "group": "All-time",
+   "peak": {
+    "pace": 88,
+    "race": 91,
+    "craft": 88,
+    "wet": 92,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 85,
+    "race": 89,
+    "craft": 85,
+    "wet": 90,
+    "tyre": 92
+   },
+   "cons": 84,
+   "safety": 85,
+   "legacy": 78,
+   "overall": 86.4,
+   "rank": 27
+  },
+  {
+   "name": "Jack Brabham",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 87,
+    "race": 90,
+    "craft": 88,
+    "wet": 84,
+    "tyre": 88
+   },
+   "career": {
+    "pace": 85,
+    "race": 88,
+    "craft": 86,
+    "wet": 82,
+    "tyre": 86
+   },
+   "cons": 84,
+   "safety": 82,
+   "legacy": 85,
+   "overall": 86,
+   "rank": 28
+  },
+  {
+   "name": "Nelson Piquet",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 91,
+    "race": 90,
+    "craft": 86,
+    "wet": 85,
+    "tyre": 88
+   },
+   "career": {
+    "pace": 88,
+    "race": 88,
+    "craft": 84,
+    "wet": 83,
+    "tyre": 86
+   },
+   "cons": 82,
+   "safety": 78,
+   "legacy": 85,
+   "overall": 85.8,
+   "rank": 29
+  },
+  {
+   "name": "Graham Hill",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 88,
+    "race": 89,
+    "craft": 88,
+    "wet": 90,
+    "tyre": 86
+   },
+   "career": {
+    "pace": 84,
+    "race": 85,
+    "craft": 85,
+    "wet": 87,
+    "tyre": 83
+   },
+   "cons": 82,
+   "safety": 80,
+   "legacy": 85,
+   "overall": 85.5,
+   "rank": 30
+  },
+  {
+   "name": "Kimi Räikkönen",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 95,
+    "race": 90,
+    "craft": 86,
+    "wet": 85,
+    "tyre": 85
+   },
+   "career": {
+    "pace": 90,
+    "race": 87,
+    "craft": 82,
+    "wet": 82,
+    "tyre": 82
+   },
+   "cons": 82,
+   "safety": 80,
+   "legacy": 80,
+   "overall": 85.3,
+   "rank": 31
+  },
+  {
+   "name": "Hélio Castroneves",
+   "series": "IndyCar",
+   "group": "All-time",
+   "peak": {
+    "pace": 93,
+    "race": 88,
+    "craft": 90,
+    "wet": 84,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 90,
+    "race": 85,
+    "craft": 87,
+    "wet": 82,
+    "tyre": 80
+   },
+   "cons": 76,
+   "safety": 80,
+   "legacy": 80,
+   "overall": 84.5,
+   "rank": 32
+  },
+  {
+   "name": "Nigel Mansell",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 90,
+    "race": 92,
+    "craft": 96,
+    "wet": 90,
+    "tyre": 80
+   },
+   "career": {
+    "pace": 86,
+    "race": 88,
+    "craft": 94,
+    "wet": 87,
+    "tyre": 78
+   },
+   "cons": 72,
+   "safety": 70,
+   "legacy": 78,
+   "overall": 84.3,
+   "rank": 33
+  },
+  {
+   "name": "Oscar Piastri",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 91,
+    "race": 92,
+    "craft": 89,
+    "wet": 86,
+    "tyre": 90
+   },
+   "career": {
+    "pace": 89,
+    "race": 90,
+    "craft": 87,
+    "wet": 84,
+    "tyre": 88
+   },
+   "cons": 80,
+   "safety": 88,
+   "legacy": 62,
+   "overall": 84.1,
+   "rank": 34
+  },
+  {
+   "name": "George Russell",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 94,
+    "race": 90,
+    "craft": 88,
+    "wet": 91,
+    "tyre": 86
+   },
+   "career": {
+    "pace": 91,
+    "race": 88,
+    "craft": 85,
+    "wet": 89,
+    "tyre": 84
+   },
+   "cons": 80,
+   "safety": 82,
+   "legacy": 65,
+   "overall": 83.9,
+   "rank": 35
+  },
+  {
+   "name": "Charles Leclerc",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 98,
+    "race": 91,
+    "craft": 87,
+    "wet": 90,
+    "tyre": 84
+   },
+   "career": {
+    "pace": 95,
+    "race": 89,
+    "craft": 85,
+    "wet": 88,
+    "tyre": 82
+   },
+   "cons": 76,
+   "safety": 68,
+   "legacy": 70,
+   "overall": 83.6,
+   "rank": 36
+  },
+  {
+   "name": "Jenson Button",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 85,
+    "race": 90,
+    "craft": 85,
+    "wet": 92,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 82,
+    "race": 87,
+    "craft": 82,
+    "wet": 89,
+    "tyre": 91
+   },
+   "cons": 74,
+   "safety": 90,
+   "legacy": 72,
+   "overall": 83.4,
+   "rank": 37
+  },
+  {
+   "name": "Emerson Fittipaldi",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 89,
+    "race": 90,
+    "craft": 86,
+    "wet": 86,
+    "tyre": 88
+   },
+   "career": {
+    "pace": 85,
+    "race": 86,
+    "craft": 83,
+    "wet": 84,
+    "tyre": 85
+   },
+   "cons": 70,
+   "safety": 82,
+   "legacy": 80,
+   "overall": 83.4,
+   "rank": 37
+  },
+  {
+   "name": "Carlos Sainz",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 89,
+    "race": 90,
+    "craft": 88,
+    "wet": 88,
+    "tyre": 87
+   },
+   "career": {
+    "pace": 86,
+    "race": 87,
+    "craft": 85,
+    "wet": 85,
+    "tyre": 85
+   },
+   "cons": 85,
+   "safety": 86,
+   "legacy": 62,
+   "overall": 83.3,
+   "rank": 39
+  },
+  {
+   "name": "Daniel Ricciardo",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 88,
+    "race": 92,
+    "craft": 96,
+    "wet": 86,
+    "tyre": 85
+   },
+   "career": {
+    "pace": 85,
+    "race": 86,
+    "craft": 92,
+    "wet": 82,
+    "tyre": 82
+   },
+   "cons": 66,
+   "safety": 82,
+   "legacy": 66,
+   "overall": 82.2,
+   "rank": 40
+  },
+  {
+   "name": "Ken Miles",
+   "series": "Endurance",
+   "group": "All-time",
+   "peak": {
+    "pace": 92,
+    "race": 92,
+    "craft": 90,
+    "wet": 90,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 90,
+    "race": 90,
+    "craft": 88,
+    "wet": 88,
+    "tyre": 92
+   },
+   "cons": 60,
+   "safety": 82,
+   "legacy": 62,
+   "overall": 82,
+   "rank": 41
+  },
+  {
+   "name": "Nico Rosberg",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 91,
+    "race": 90,
+    "craft": 82,
+    "wet": 80,
+    "tyre": 85
+   },
+   "career": {
+    "pace": 87,
+    "race": 87,
+    "craft": 79,
+    "wet": 78,
+    "tyre": 83
+   },
+   "cons": 62,
+   "safety": 85,
+   "legacy": 75,
+   "overall": 81.1,
+   "rank": 42
+  },
+  {
+   "name": "Sergio Pérez",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 85,
+    "race": 90,
+    "craft": 86,
+    "wet": 84,
+    "tyre": 94
+   },
+   "career": {
+    "pace": 82,
+    "race": 87,
+    "craft": 83,
+    "wet": 81,
+    "tyre": 92
+   },
+   "cons": 72,
+   "safety": 72,
+   "legacy": 62,
+   "overall": 79.9,
+   "rank": 43
+  },
+  {
+   "name": "Valtteri Bottas",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 90,
+    "race": 86,
+    "craft": 80,
+    "wet": 82,
+    "tyre": 84
+   },
+   "career": {
+    "pace": 85,
+    "race": 83,
+    "craft": 77,
+    "wet": 80,
+    "tyre": 82
+   },
+   "cons": 75,
+   "safety": 86,
+   "legacy": 60,
+   "overall": 79.2,
+   "rank": 44
+  },
+  {
+   "name": "Felipe Massa",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 90,
+    "race": 88,
+    "craft": 78,
+    "wet": 86,
+    "tyre": 84
+   },
+   "career": {
+    "pace": 85,
+    "race": 84,
+    "craft": 75,
+    "wet": 83,
+    "tyre": 81
+   },
+   "cons": 66,
+   "safety": 80,
+   "legacy": 68,
+   "overall": 79,
+   "rank": 45
+  },
+  {
+   "name": "James Hunt",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 90,
+    "race": 88,
+    "craft": 90,
+    "wet": 88,
+    "tyre": 80
+   },
+   "career": {
+    "pace": 82,
+    "race": 80,
+    "craft": 84,
+    "wet": 80,
+    "tyre": 75
+   },
+   "cons": 55,
+   "safety": 62,
+   "legacy": 70,
+   "overall": 77.5,
+   "rank": 46
+  },
+  {
+   "name": "Juan Pablo Montoya",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 90,
+    "race": 88,
+    "craft": 91,
+    "wet": 85,
+    "tyre": 80
+   },
+   "career": {
+    "pace": 86,
+    "race": 84,
+    "craft": 87,
+    "wet": 82,
+    "tyre": 77
+   },
+   "cons": 55,
+   "safety": 55,
+   "legacy": 68,
+   "overall": 77.5,
+   "rank": 46
+  },
+  {
+   "name": "Nico Hülkenberg",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 90,
+    "race": 85,
+    "craft": 80,
+    "wet": 88,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 87,
+    "race": 82,
+    "craft": 78,
+    "wet": 85,
+    "tyre": 80
+   },
+   "cons": 78,
+   "safety": 76,
+   "legacy": 48,
+   "overall": 77.2,
+   "rank": 48
+  },
+  {
+   "name": "Pierre Gasly",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 85,
+    "race": 85,
+    "craft": 85,
+    "wet": 82,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 82,
+    "race": 82,
+    "craft": 82,
+    "wet": 80,
+    "tyre": 80
+   },
+   "cons": 70,
+   "safety": 82,
+   "legacy": 52,
+   "overall": 76.9,
+   "rank": 49
+  },
+  {
+   "name": "Robert Kubica",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 92,
+    "race": 88,
+    "craft": 90,
+    "wet": 88,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 85,
+    "race": 82,
+    "craft": 84,
+    "wet": 82,
+    "tyre": 76
+   },
+   "cons": 48,
+   "safety": 78,
+   "legacy": 52,
+   "overall": 76,
+   "rank": 50
+  },
+  {
+   "name": "Alexander Albon",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 84,
+    "race": 85,
+    "craft": 84,
+    "wet": 84,
+    "tyre": 86
+   },
+   "career": {
+    "pace": 82,
+    "race": 83,
+    "craft": 82,
+    "wet": 82,
+    "tyre": 84
+   },
+   "cons": 72,
+   "safety": 78,
+   "legacy": 42,
+   "overall": 75.6,
+   "rank": 51
+  },
+  {
+   "name": "Mark Webber",
+   "series": "F1",
+   "group": "All-time",
+   "peak": {
+    "pace": 88,
+    "race": 85,
+    "craft": 82,
+    "wet": 82,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 83,
+    "race": 82,
+    "craft": 80,
+    "wet": 79,
+    "tyre": 80
+   },
+   "cons": 60,
+   "safety": 76,
+   "legacy": 55,
+   "overall": 75.6,
+   "rank": 51
+  },
+  {
+   "name": "Esteban Ocon",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 83,
+    "race": 84,
+    "craft": 84,
+    "wet": 82,
+    "tyre": 82
+   },
+   "career": {
+    "pace": 80,
+    "race": 82,
+    "craft": 82,
+    "wet": 80,
+    "tyre": 80
+   },
+   "cons": 68,
+   "safety": 70,
+   "legacy": 50,
+   "overall": 74.9,
+   "rank": 53
+  },
+  {
+   "name": "Kimi Antonelli",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 90,
+    "race": 86,
+    "craft": 84,
+    "wet": 84,
+    "tyre": 80
+   },
+   "career": {
+    "pace": 86,
+    "race": 82,
+    "craft": 80,
+    "wet": 80,
+    "tyre": 76
+   },
+   "cons": 55,
+   "safety": 70,
+   "legacy": 40,
+   "overall": 72.9,
+   "rank": 54
+  },
+  {
+   "name": "Romain Grosjean",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 86,
+    "race": 82,
+    "craft": 78,
+    "wet": 80,
+    "tyre": 80
+   },
+   "career": {
+    "pace": 82,
+    "race": 79,
+    "craft": 74,
+    "wet": 77,
+    "tyre": 77
+   },
+   "cons": 62,
+   "safety": 58,
+   "legacy": 40,
+   "overall": 70.2,
+   "rank": 55
+  },
+  {
+   "name": "Kevin Magnussen",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 84,
+    "race": 82,
+    "craft": 85,
+    "wet": 80,
+    "tyre": 76
+   },
+   "career": {
+    "pace": 80,
+    "race": 78,
+    "craft": 82,
+    "wet": 78,
+    "tyre": 73
+   },
+   "cons": 62,
+   "safety": 55,
+   "legacy": 36,
+   "overall": 69.9,
+   "rank": 56
+  },
+  {
+   "name": "Oliver Bearman",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 86,
+    "race": 82,
+    "craft": 82,
+    "wet": 80,
+    "tyre": 78
+   },
+   "career": {
+    "pace": 83,
+    "race": 79,
+    "craft": 80,
+    "wet": 78,
+    "tyre": 76
+   },
+   "cons": 52,
+   "safety": 72,
+   "legacy": 30,
+   "overall": 69.4,
+   "rank": 57
+  },
+  {
+   "name": "Isack Hadjar",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 84,
+    "race": 83,
+    "craft": 82,
+    "wet": 80,
+    "tyre": 78
+   },
+   "career": {
+    "pace": 82,
+    "race": 80,
+    "craft": 80,
+    "wet": 78,
+    "tyre": 76
+   },
+   "cons": 52,
+   "safety": 70,
+   "legacy": 30,
+   "overall": 69.2,
+   "rank": 58
+  },
+  {
+   "name": "Yuki Tsunoda",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 87,
+    "race": 78,
+    "craft": 80,
+    "wet": 78,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 83,
+    "race": 76,
+    "craft": 78,
+    "wet": 76,
+    "tyre": 72
+   },
+   "cons": 55,
+   "safety": 65,
+   "legacy": 35,
+   "overall": 68.6,
+   "rank": 59
+  },
+  {
+   "name": "Lance Stroll",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 80,
+    "race": 77,
+    "craft": 76,
+    "wet": 88,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 76,
+    "race": 74,
+    "craft": 74,
+    "wet": 85,
+    "tyre": 71
+   },
+   "cons": 58,
+   "safety": 70,
+   "legacy": 36,
+   "overall": 68.1,
+   "rank": 60
+  },
+  {
+   "name": "Liam Lawson",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 82,
+    "race": 80,
+    "craft": 82,
+    "wet": 78,
+    "tyre": 76
+   },
+   "career": {
+    "pace": 79,
+    "race": 77,
+    "craft": 79,
+    "wet": 76,
+    "tyre": 74
+   },
+   "cons": 52,
+   "safety": 70,
+   "legacy": 28,
+   "overall": 67.6,
+   "rank": 61
+  },
+  {
+   "name": "Gabriel Bortoleto",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 83,
+    "race": 80,
+    "craft": 78,
+    "wet": 78,
+    "tyre": 78
+   },
+   "career": {
+    "pace": 80,
+    "race": 77,
+    "craft": 76,
+    "wet": 76,
+    "tyre": 76
+   },
+   "cons": 50,
+   "safety": 72,
+   "legacy": 28,
+   "overall": 67.2,
+   "rank": 62
+  },
+  {
+   "name": "Pastor Maldonado",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 88,
+    "race": 80,
+    "craft": 76,
+    "wet": 90,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 82,
+    "race": 76,
+    "craft": 72,
+    "wet": 85,
+    "tyre": 70
+   },
+   "cons": 42,
+   "safety": 38,
+   "legacy": 45,
+   "overall": 66.5,
+   "rank": 63
+  },
+  {
+   "name": "Daniil Kvyat",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 80,
+    "race": 78,
+    "craft": 78,
+    "wet": 76,
+    "tyre": 75
+   },
+   "career": {
+    "pace": 77,
+    "race": 75,
+    "craft": 75,
+    "wet": 74,
+    "tyre": 72
+   },
+   "cons": 52,
+   "safety": 58,
+   "legacy": 38,
+   "overall": 66.5,
+   "rank": 63
+  },
+  {
+   "name": "Stoffel Vandoorne",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 82,
+    "race": 78,
+    "craft": 76,
+    "wet": 76,
+    "tyre": 76
+   },
+   "career": {
+    "pace": 78,
+    "race": 75,
+    "craft": 73,
+    "wet": 74,
+    "tyre": 74
+   },
+   "cons": 45,
+   "safety": 78,
+   "legacy": 22,
+   "overall": 64.9,
+   "rank": 65
+  },
+  {
+   "name": "Franco Colapinto",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 80,
+    "race": 78,
+    "craft": 80,
+    "wet": 76,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 77,
+    "race": 75,
+    "craft": 77,
+    "wet": 74,
+    "tyre": 72
+   },
+   "cons": 45,
+   "safety": 65,
+   "legacy": 25,
+   "overall": 64.6,
+   "rank": 66
+  },
+  {
+   "name": "Pascal Wehrlein",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 80,
+    "race": 75,
+    "craft": 76,
+    "wet": 76,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 76,
+    "race": 72,
+    "craft": 74,
+    "wet": 73,
+    "tyre": 72
+   },
+   "cons": 45,
+   "safety": 74,
+   "legacy": 20,
+   "overall": 63.3,
+   "rank": 67
+  },
+  {
+   "name": "Brendon Hartley",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 80,
+    "race": 76,
+    "craft": 74,
+    "wet": 74,
+    "tyre": 76
+   },
+   "career": {
+    "pace": 76,
+    "race": 72,
+    "craft": 72,
+    "wet": 72,
+    "tyre": 74
+   },
+   "cons": 40,
+   "safety": 68,
+   "legacy": 26,
+   "overall": 62.9,
+   "rank": 68
+  },
+  {
+   "name": "Antonio Giovinazzi",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 81,
+    "race": 76,
+    "craft": 76,
+    "wet": 76,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 78,
+    "race": 74,
+    "craft": 74,
+    "wet": 74,
+    "tyre": 72
+   },
+   "cons": 45,
+   "safety": 68,
+   "legacy": 15,
+   "overall": 62.6,
+   "rank": 69
+  },
+  {
+   "name": "Alexander Rossi",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 74,
+    "race": 76,
+    "craft": 74,
+    "wet": 72,
+    "tyre": 72
+   },
+   "career": {
+    "pace": 72,
+    "race": 74,
+    "craft": 72,
+    "wet": 70,
+    "tyre": 70
+   },
+   "cons": 38,
+   "safety": 70,
+   "legacy": 30,
+   "overall": 62.4,
+   "rank": 70
+  },
+  {
+   "name": "Arvid Lindblad",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 78,
+    "race": 76,
+    "craft": 76,
+    "wet": 74,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 76,
+    "race": 74,
+    "craft": 74,
+    "wet": 72,
+    "tyre": 72
+   },
+   "cons": 40,
+   "safety": 70,
+   "legacy": 20,
+   "overall": 62.3,
+   "rank": 71
+  },
+  {
+   "name": "Zhou Guanyu",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 78,
+    "race": 76,
+    "craft": 74,
+    "wet": 74,
+    "tyre": 76
+   },
+   "career": {
+    "pace": 76,
+    "race": 74,
+    "craft": 72,
+    "wet": 72,
+    "tyre": 74
+   },
+   "cons": 45,
+   "safety": 72,
+   "legacy": 15,
+   "overall": 62.2,
+   "rank": 72
+  },
+  {
+   "name": "Nyck de Vries",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 80,
+    "race": 76,
+    "craft": 74,
+    "wet": 82,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 77,
+    "race": 73,
+    "craft": 72,
+    "wet": 78,
+    "tyre": 71
+   },
+   "cons": 38,
+   "safety": 62,
+   "legacy": 20,
+   "overall": 61.8,
+   "rank": 73
+  },
+  {
+   "name": "Rafael Camara",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 78,
+    "race": 75,
+    "craft": 74,
+    "wet": 74,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 76,
+    "race": 73,
+    "craft": 73,
+    "wet": 72,
+    "tyre": 72
+   },
+   "cons": 40,
+   "safety": 72,
+   "legacy": 15,
+   "overall": 61.3,
+   "rank": 74
+  },
+  {
+   "name": "Marcus Ericsson",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 76,
+    "race": 74,
+    "craft": 72,
+    "wet": 72,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 74,
+    "race": 72,
+    "craft": 70,
+    "wet": 70,
+    "tyre": 72
+   },
+   "cons": 42,
+   "safety": 68,
+   "legacy": 22,
+   "overall": 61.2,
+   "rank": 75
+  },
+  {
+   "name": "Paul di Resta",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 78,
+    "race": 76,
+    "craft": 74,
+    "wet": 74,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 76,
+    "race": 74,
+    "craft": 72,
+    "wet": 72,
+    "tyre": 72
+   },
+   "cons": 40,
+   "safety": 74,
+   "legacy": 10,
+   "overall": 60.8,
+   "rank": 76
+  },
+  {
+   "name": "Sergey Sirotkin",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 76,
+    "race": 74,
+    "craft": 72,
+    "wet": 72,
+    "tyre": 72
+   },
+   "career": {
+    "pace": 74,
+    "race": 72,
+    "craft": 70,
+    "wet": 70,
+    "tyre": 70
+   },
+   "cons": 40,
+   "safety": 70,
+   "legacy": 15,
+   "overall": 60,
+   "rank": 77
+  },
+  {
+   "name": "Felipe Nasr",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 76,
+    "race": 74,
+    "craft": 72,
+    "wet": 72,
+    "tyre": 74
+   },
+   "career": {
+    "pace": 74,
+    "race": 72,
+    "craft": 70,
+    "wet": 70,
+    "tyre": 72
+   },
+   "cons": 38,
+   "safety": 70,
+   "legacy": 14,
+   "overall": 59.7,
+   "rank": 78
+  },
+  {
+   "name": "Mick Schumacher",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 78,
+    "race": 76,
+    "craft": 74,
+    "wet": 76,
+    "tyre": 72
+   },
+   "career": {
+    "pace": 76,
+    "race": 74,
+    "craft": 72,
+    "wet": 74,
+    "tyre": 70
+   },
+   "cons": 38,
+   "safety": 52,
+   "legacy": 12,
+   "overall": 59.1,
+   "rank": 79
+  },
+  {
+   "name": "Esteban Gutiérrez",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 76,
+    "race": 72,
+    "craft": 70,
+    "wet": 72,
+    "tyre": 72
+   },
+   "career": {
+    "pace": 74,
+    "race": 70,
+    "craft": 68,
+    "wet": 70,
+    "tyre": 70
+   },
+   "cons": 40,
+   "safety": 68,
+   "legacy": 12,
+   "overall": 58.6,
+   "rank": 80
+  },
+  {
+   "name": "Nicholas Latifi",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 76,
+    "race": 74,
+    "craft": 70,
+    "wet": 72,
+    "tyre": 72
+   },
+   "career": {
+    "pace": 73,
+    "race": 71,
+    "craft": 68,
+    "wet": 70,
+    "tyre": 70
+   },
+   "cons": 38,
+   "safety": 60,
+   "legacy": 15,
+   "overall": 58.5,
+   "rank": 81
+  },
+  {
+   "name": "Jolyon Palmer",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 74,
+    "race": 72,
+    "craft": 70,
+    "wet": 70,
+    "tyre": 72
+   },
+   "career": {
+    "pace": 72,
+    "race": 70,
+    "craft": 68,
+    "wet": 68,
+    "tyre": 70
+   },
+   "cons": 40,
+   "safety": 70,
+   "legacy": 12,
+   "overall": 58.4,
+   "rank": 82
+  },
+  {
+   "name": "Jack Aitken",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 74,
+    "race": 72,
+    "craft": 70,
+    "wet": 70,
+    "tyre": 70
+   },
+   "career": {
+    "pace": 72,
+    "race": 70,
+    "craft": 68,
+    "wet": 68,
+    "tyre": 68
+   },
+   "cons": 25,
+   "safety": 70,
+   "legacy": 5,
+   "overall": 55.4,
+   "rank": 83
+  },
+  {
+   "name": "Jack Doohan",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 74,
+    "race": 70,
+    "craft": 68,
+    "wet": 68,
+    "tyre": 70
+   },
+   "career": {
+    "pace": 72,
+    "race": 68,
+    "craft": 66,
+    "wet": 66,
+    "tyre": 68
+   },
+   "cons": 28,
+   "safety": 60,
+   "legacy": 8,
+   "overall": 54.5,
+   "rank": 84
+  },
+  {
+   "name": "Pietro Fittipaldi",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 72,
+    "race": 70,
+    "craft": 70,
+    "wet": 70,
+    "tyre": 70
+   },
+   "career": {
+    "pace": 70,
+    "race": 68,
+    "craft": 68,
+    "wet": 68,
+    "tyre": 68
+   },
+   "cons": 25,
+   "safety": 66,
+   "legacy": 6,
+   "overall": 54.5,
+   "rank": 84
+  },
+  {
+   "name": "Will Stevens",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 72,
+    "race": 70,
+    "craft": 68,
+    "wet": 68,
+    "tyre": 68
+   },
+   "career": {
+    "pace": 70,
+    "race": 68,
+    "craft": 66,
+    "wet": 66,
+    "tyre": 66
+   },
+   "cons": 28,
+   "safety": 66,
+   "legacy": 6,
+   "overall": 54.3,
+   "rank": 86
+  },
+  {
+   "name": "Roberto Merhi",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 72,
+    "race": 70,
+    "craft": 68,
+    "wet": 68,
+    "tyre": 68
+   },
+   "career": {
+    "pace": 70,
+    "race": 68,
+    "craft": 66,
+    "wet": 66,
+    "tyre": 66
+   },
+   "cons": 28,
+   "safety": 64,
+   "legacy": 6,
+   "overall": 54.1,
+   "rank": 87
+  },
+  {
+   "name": "Logan Sargeant",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 72,
+    "race": 70,
+    "craft": 68,
+    "wet": 70,
+    "tyre": 70
+   },
+   "career": {
+    "pace": 70,
+    "race": 68,
+    "craft": 66,
+    "wet": 68,
+    "tyre": 68
+   },
+   "cons": 30,
+   "safety": 52,
+   "legacy": 8,
+   "overall": 53.9,
+   "rank": 88
+  },
+  {
+   "name": "Nikita Mazepin",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 70,
+    "race": 68,
+    "craft": 66,
+    "wet": 66,
+    "tyre": 68
+   },
+   "career": {
+    "pace": 69,
+    "race": 67,
+    "craft": 64,
+    "wet": 64,
+    "tyre": 67
+   },
+   "cons": 28,
+   "safety": 50,
+   "legacy": 6,
+   "overall": 52,
+   "rank": 89
+  },
+  {
+   "name": "Rio Haryanto",
+   "series": "F1",
+   "group": "Recent F1 (2015-26)",
+   "peak": {
+    "pace": 70,
+    "race": 68,
+    "craft": 64,
+    "wet": 66,
+    "tyre": 66
+   },
+   "career": {
+    "pace": 68,
+    "race": 66,
+    "craft": 62,
+    "wet": 64,
+    "tyre": 64
+   },
+   "cons": 25,
+   "safety": 62,
+   "legacy": 4,
+   "overall": 51.7,
+   "rank": 90
+  }
+ ],
+ "principals": [
+  {
+   "name": "Toto Wolff",
+   "group": "Recent F1",
+   "era": "Mercedes 2013-",
+   "strategy": 96,
+   "mentality": 98,
+   "mechanical": 92,
+   "overall": 95.4,
+   "rank": 1
+  },
+  {
+   "name": "Ross Brawn",
+   "group": "F1 great",
+   "era": "Benetton/Ferrari/Brawn GP/Mercedes",
+   "strategy": 99,
+   "mentality": 93,
+   "mechanical": 90,
+   "overall": 94.5,
+   "rank": 2
+  },
+  {
+   "name": "Wolfgang Ullrich",
+   "group": "Endurance",
+   "era": "Audi Sport 1993-2017",
+   "strategy": 92,
+   "mentality": 90,
+   "mechanical": 97,
+   "overall": 92.9,
+   "rank": 3
+  },
+  {
+   "name": "Chad Knaus",
+   "group": "NASCAR crew chief",
+   "era": "Jimmie Johnson",
+   "strategy": 92,
+   "mentality": 92,
+   "mechanical": 94,
+   "overall": 92.6,
+   "rank": 4
+  },
+  {
+   "name": "Ray Evernham",
+   "group": "NASCAR crew chief",
+   "era": "Jeff Gordon",
+   "strategy": 91,
+   "mentality": 92,
+   "mechanical": 90,
+   "overall": 91,
+   "rank": 5
+  },
+  {
+   "name": "Mike Hull",
+   "group": "IndyCar chief",
+   "era": "Ganassi",
+   "strategy": 92,
+   "mentality": 90,
+   "mechanical": 88,
+   "overall": 90.2,
+   "rank": 6
+  },
+  {
+   "name": "Jean Todt",
+   "group": "F1 great",
+   "era": "Ferrari 1993-2007",
+   "strategy": 88,
+   "mentality": 96,
+   "mechanical": 86,
+   "overall": 89.8,
+   "rank": 7
+  },
+  {
+   "name": "Ron Dennis",
+   "group": "F1 great",
+   "era": "McLaren",
+   "strategy": 88,
+   "mentality": 90,
+   "mechanical": 92,
+   "overall": 89.8,
+   "rank": 7
+  },
+  {
+   "name": "Andrea Stella",
+   "group": "Recent F1",
+   "era": "McLaren 2023-",
+   "strategy": 90,
+   "mentality": 91,
+   "mechanical": 88,
+   "overall": 89.7,
+   "rank": 9
+  },
+  {
+   "name": "Dale Inman",
+   "group": "NASCAR crew chief",
+   "era": "Petty / Labonte",
+   "strategy": 88,
+   "mentality": 86,
+   "mechanical": 90,
+   "overall": 88,
+   "rank": 10
+  },
+  {
+   "name": "Jim McGee",
+   "group": "IndyCar chief",
+   "era": "Penske / Newman-Haas and others",
+   "strategy": 85,
+   "mentality": 84,
+   "mechanical": 89,
+   "overall": 85.9,
+   "rank": 11
+  },
+  {
+   "name": "Frank Williams",
+   "group": "F1 great",
+   "era": "Williams",
+   "strategy": 82,
+   "mentality": 92,
+   "mechanical": 84,
+   "overall": 85.6,
+   "rank": 12
+  },
+  {
+   "name": "Leonard Wood",
+   "group": "NASCAR crew chief",
+   "era": "Wood Brothers",
+   "strategy": 85,
+   "mentality": 80,
+   "mechanical": 91,
+   "overall": 85.3,
+   "rank": 13
+  },
+  {
+   "name": "Jonathan Wheatley",
+   "group": "Recent F1",
+   "era": "Sauber/Audi Apr 2025-Mar 2026",
+   "strategy": 85,
+   "mentality": 78,
+   "mechanical": 92,
+   "overall": 85,
+   "rank": 14
+  },
+  {
+   "name": "Kirk Shelmerdine",
+   "group": "NASCAR crew chief",
+   "era": "Dale Earnhardt",
+   "strategy": 84,
+   "mentality": 84,
+   "mechanical": 86,
+   "overall": 84.6,
+   "rank": 15
+  },
+  {
+   "name": "George Bignotti",
+   "group": "IndyCar chief",
+   "era": "Foyt, Al Unser, Johncock, Sneva",
+   "strategy": 83,
+   "mentality": 82,
+   "mechanical": 89,
+   "overall": 84.5,
+   "rank": 16
+  },
+  {
+   "name": "Colin Chapman",
+   "group": "F1 great",
+   "era": "Lotus",
+   "strategy": 88,
+   "mentality": 90,
+   "mechanical": 74,
+   "overall": 84.4,
+   "rank": 17
+  },
+  {
+   "name": "Christian Horner",
+   "group": "Recent F1",
+   "era": "Red Bull 2005-Jul 2025",
+   "strategy": 85,
+   "mentality": 83,
+   "mechanical": 80,
+   "overall": 82.9,
+   "rank": 18
+  },
+  {
+   "name": "Malcolm Wilson",
+   "group": "Rally",
+   "era": "M-Sport / Ford",
+   "strategy": 78,
+   "mentality": 82,
+   "mechanical": 86,
+   "overall": 81.6,
+   "rank": 19
+  },
+  {
+   "name": "Flavio Briatore",
+   "group": "F1 great",
+   "era": "Benetton/Renault; Alpine adviser",
+   "strategy": 85,
+   "mentality": 85,
+   "mechanical": 72,
+   "overall": 81.1,
+   "rank": 20
+  },
+  {
+   "name": "Laurent Mekies",
+   "group": "Recent F1",
+   "era": "RB 2024-25; Red Bull Jul 2025-",
+   "strategy": 80,
+   "mentality": 78,
+   "mechanical": 82,
+   "overall": 80,
+   "rank": 21
+  },
+  {
+   "name": "James Vowles",
+   "group": "Recent F1",
+   "era": "Williams 2023-",
+   "strategy": 86,
+   "mentality": 78,
+   "mechanical": 74,
+   "overall": 80,
+   "rank": 21
+  },
+  {
+   "name": "Harry Hyde",
+   "group": "NASCAR crew chief",
+   "era": "Isaac, Allison and others",
+   "strategy": 77,
+   "mentality": 76,
+   "mechanical": 87,
+   "overall": 79.7,
+   "rank": 23
+  },
+  {
+   "name": "Ayao Komatsu",
+   "group": "Recent F1",
+   "era": "Haas Jan 2024-",
+   "strategy": 76,
+   "mentality": 80,
+   "mechanical": 84,
+   "overall": 79.6,
+   "rank": 24
+  },
+  {
+   "name": "Fred Vasseur",
+   "group": "Recent F1",
+   "era": "Sauber 2017-22; Ferrari 2023-",
+   "strategy": 76,
+   "mentality": 86,
+   "mechanical": 78,
+   "overall": 79.6,
+   "rank": 24
+  },
+  {
+   "name": "Andreas Seidl",
+   "group": "Recent F1",
+   "era": "McLaren Jan 2019-Dec 2022",
+   "strategy": 80,
+   "mentality": 78,
+   "mechanical": 80,
+   "overall": 79.4,
+   "rank": 26
+  },
+  {
+   "name": "Otmar Szafnauer",
+   "group": "Recent F1",
+   "era": "Force India/Racing Point/Aston; Alpine 2022-23",
+   "strategy": 82,
+   "mentality": 74,
+   "mechanical": 78,
+   "overall": 78.4,
+   "rank": 27
+  },
+  {
+   "name": "Alan Permane",
+   "group": "Recent F1",
+   "era": "Racing Bulls 2025-",
+   "strategy": 82,
+   "mentality": 72,
+   "mechanical": 80,
+   "overall": 78.4,
+   "rank": 27
+  },
+  {
+   "name": "Andy Cowell",
+   "group": "Recent F1",
+   "era": "Aston Martin Jan 2025-",
+   "strategy": 66,
+   "mentality": 74,
+   "mechanical": 90,
+   "overall": 75.6,
+   "rank": 29
+  },
+  {
+   "name": "Adrian Newey",
+   "group": "Recent F1",
+   "era": "Aston Martin 2026-",
+   "strategy": 62,
+   "mentality": 72,
+   "mechanical": 94,
+   "overall": 74.6,
+   "rank": 30
+  },
+  {
+   "name": "Mattia Binotto",
+   "group": "Recent F1",
+   "era": "Ferrari 2019-22; Audi 2026-",
+   "strategy": 66,
+   "mentality": 72,
+   "mechanical": 86,
+   "overall": 73.8,
+   "rank": 31
+  },
+  {
+   "name": "Mike Krack",
+   "group": "Recent F1",
+   "era": "Aston Martin 2022-24",
+   "strategy": 70,
+   "mentality": 70,
+   "mechanical": 74,
+   "overall": 71.2,
+   "rank": 32
+  },
+  {
+   "name": "Franz Tost",
+   "group": "Recent F1",
+   "era": "Toro Rosso/AlphaTauri to 2023",
+   "strategy": 66,
+   "mentality": 82,
+   "mechanical": 66,
+   "overall": 70.8,
+   "rank": 33
+  },
+  {
+   "name": "Guenther Steiner",
+   "group": "Recent F1",
+   "era": "Haas 2016-Dec 2023",
+   "strategy": 64,
+   "mentality": 84,
+   "mechanical": 66,
+   "overall": 70.6,
+   "rank": 34
+  },
+  {
+   "name": "Maurizio Arrivabene",
+   "group": "Recent F1",
+   "era": "Ferrari Nov 2014-Dec 2018",
+   "strategy": 70,
+   "mentality": 70,
+   "mechanical": 70,
+   "overall": 70,
+   "rank": 35
+  },
+  {
+   "name": "Marcin Budkowski",
+   "group": "Recent F1",
+   "era": "Cadillac Aug 2026-",
+   "strategy": 66,
+   "mentality": 62,
+   "mechanical": 78,
+   "overall": 68.4,
+   "rank": 36
+  },
+  {
+   "name": "Jost Capito",
+   "group": "Recent F1",
+   "era": "Williams Dec 2020-Dec 2022",
+   "strategy": 66,
+   "mentality": 68,
+   "mechanical": 66,
+   "overall": 66.6,
+   "rank": 37
+  },
+  {
+   "name": "Cyril Abiteboul",
+   "group": "Recent F1",
+   "era": "Renault Jul 2014-Dec 2021",
+   "strategy": 62,
+   "mentality": 62,
+   "mechanical": 68,
+   "overall": 63.8,
+   "rank": 38
+  },
+  {
+   "name": "Oliver Oakes",
+   "group": "Recent F1",
+   "era": "Alpine summer 2024-May 2025",
+   "strategy": 62,
+   "mentality": 70,
+   "mechanical": 60,
+   "overall": 63.8,
+   "rank": 38
+  },
+  {
+   "name": "Claire Williams",
+   "group": "Recent F1",
+   "era": "Williams 2013-Sep 2020",
+   "strategy": 62,
+   "mentality": 66,
+   "mechanical": 60,
+   "overall": 62.6,
+   "rank": 40
+  },
+  {
+   "name": "Graeme Lowdon",
+   "group": "Recent F1",
+   "era": "Cadillac 2025-Aug 2026",
+   "strategy": 60,
+   "mentality": 66,
+   "mechanical": 58,
+   "overall": 61.2,
+   "rank": 41
+  },
+  {
+   "name": "Eric Boullier",
+   "group": "Recent F1",
+   "era": "McLaren Jan 2014-Jul 2018",
+   "strategy": 60,
+   "mentality": 60,
+   "mechanical": 62,
+   "overall": 60.6,
+   "rank": 42
+  },
+  {
+   "name": "John Booth",
+   "group": "Recent F1",
+   "era": "Manor/Marussia 2010-2015",
+   "strategy": 58,
+   "mentality": 66,
+   "mechanical": 58,
+   "overall": 60.4,
+   "rank": 43
+  },
+  {
+   "name": "Monisha Kaltenborn",
+   "group": "Recent F1",
+   "era": "Sauber Oct 2012-Jun 2017",
+   "strategy": 56,
+   "mentality": 58,
+   "mechanical": 60,
+   "overall": 57.8,
+   "rank": 44
+  }
+ ],
+ "tracks": [
+  {
+   "id": 1,
+   "name": "Albert Park",
+   "region": "Australia",
+   "type": "Semi-street",
+   "w": {
+    "pace": 30,
+    "race": 30,
+    "craft": 25,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 30,
+    "engine": 30,
+    "susp": 25,
+    "cool": 15
+   },
+   "ovt": 6,
+   "rain": 0.25,
+   "sc": 0.55,
+   "crash": 1.15,
+   "mech": 1,
+   "wear": 4,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": true,
+   "early": 1,
+   "late": 1,
+   "finale": false
+  },
+  {
+   "id": 2,
+   "name": "Suzuka",
+   "region": "Japan",
+   "type": "Permanent",
+   "w": {
+    "pace": 30,
+    "race": 25,
+    "craft": 20,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 40,
+    "engine": 25,
+    "susp": 25,
+    "cool": 10
+   },
+   "ovt": 7,
+   "rain": 0.3,
+   "sc": 0.35,
+   "crash": 1.1,
+   "mech": 1,
+   "wear": 7,
+   "street": false,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": true
+  },
+  {
+   "id": 3,
+   "name": "Montreal",
+   "region": "Canada",
+   "type": "Semi-street",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 20,
+    "engine": 35,
+    "susp": 20,
+    "cool": 25
+   },
+   "ovt": 4,
+   "rain": 0.3,
+   "sc": 0.65,
+   "crash": 1.3,
+   "mech": 1.15,
+   "wear": 3,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 4,
+   "name": "Monaco",
+   "region": "Monaco",
+   "type": "Street",
+   "w": {
+    "pace": 45,
+    "race": 10,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 45,
+    "engine": 10,
+    "susp": 35,
+    "cool": 10
+   },
+   "ovt": 10,
+   "rain": 0.15,
+   "sc": 0.55,
+   "crash": 1.5,
+   "mech": 0.9,
+   "wear": 2,
+   "street": true,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": true,
+   "early": 5,
+   "late": 6,
+   "finale": false
+  },
+  {
+   "id": 5,
+   "name": "Barcelona-Catalunya",
+   "region": "Spain",
+   "type": "Permanent",
+   "w": {
+    "pace": 30,
+    "race": 30,
+    "craft": 15,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 40,
+    "engine": 20,
+    "susp": 30,
+    "cool": 10
+   },
+   "ovt": 8,
+   "rain": 0.1,
+   "sc": 0.2,
+   "crash": 0.8,
+   "mech": 1,
+   "wear": 8,
+   "street": false,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 6,
+   "name": "Red Bull Ring",
+   "region": "Austria",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 35,
+    "craft": 30,
+    "tyre": 10
+   },
+   "c": {
+    "aero": 20,
+    "engine": 45,
+    "susp": 15,
+    "cool": 20
+   },
+   "ovt": 4,
+   "rain": 0.25,
+   "sc": 0.35,
+   "crash": 1,
+   "mech": 1.05,
+   "wear": 4,
+   "street": false,
+   "power": true,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 7,
+   "name": "Silverstone",
+   "region": "Great Britain",
+   "type": "Permanent",
+   "w": {
+    "pace": 30,
+    "race": 30,
+    "craft": 20,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 45,
+    "engine": 25,
+    "susp": 25,
+    "cool": 5
+   },
+   "ovt": 5,
+   "rain": 0.35,
+   "sc": 0.4,
+   "crash": 1,
+   "mech": 1,
+   "wear": 7,
+   "street": false,
+   "power": false,
+   "down": true,
+   "highrain": true,
+   "always": true,
+   "early": 7,
+   "late": 9,
+   "finale": false
+  },
+  {
+   "id": 8,
+   "name": "Spa-Francorchamps",
+   "region": "Belgium",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 30,
+    "engine": 40,
+    "susp": 20,
+    "cool": 10
+   },
+   "ovt": 4,
+   "rain": 0.5,
+   "sc": 0.45,
+   "crash": 1.1,
+   "mech": 1,
+   "wear": 5,
+   "street": false,
+   "power": true,
+   "down": false,
+   "highrain": true,
+   "always": true,
+   "early": 12,
+   "late": 15,
+   "finale": false
+  },
+  {
+   "id": 9,
+   "name": "Baku City Circuit",
+   "region": "Azerbaijan",
+   "type": "Street",
+   "w": {
+    "pace": 25,
+    "race": 25,
+    "craft": 35,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 15,
+    "engine": 45,
+    "susp": 20,
+    "cool": 20
+   },
+   "ovt": 4,
+   "rain": 0.08,
+   "sc": 0.7,
+   "crash": 1.4,
+   "mech": 1,
+   "wear": 3,
+   "street": true,
+   "power": true,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 10,
+   "name": "Marina Bay",
+   "region": "Singapore",
+   "type": "Street",
+   "w": {
+    "pace": 30,
+    "race": 20,
+    "craft": 25,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 40,
+    "engine": 10,
+    "susp": 30,
+    "cool": 20
+   },
+   "ovt": 9,
+   "rain": 0.25,
+   "sc": 0.85,
+   "crash": 1.4,
+   "mech": 1.3,
+   "wear": 6,
+   "street": true,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 11,
+   "name": "Sepang",
+   "region": "Malaysia",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 25,
+    "craft": 25,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 25,
+    "engine": 35,
+    "susp": 15,
+    "cool": 25
+   },
+   "ovt": 4,
+   "rain": 0.55,
+   "sc": 0.35,
+   "crash": 1,
+   "mech": 1.3,
+   "wear": 8,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": true,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 12,
+   "name": "Circuit of the Americas",
+   "region": "USA",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 25,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 30,
+    "engine": 25,
+    "susp": 35,
+    "cool": 10
+   },
+   "ovt": 4,
+   "rain": 0.15,
+   "sc": 0.3,
+   "crash": 1,
+   "mech": 1,
+   "wear": 6,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 13,
+   "name": "Autodromo Hermanos Rodriguez",
+   "region": "Mexico",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 15,
+    "engine": 35,
+    "susp": 15,
+    "cool": 35
+   },
+   "ovt": 4,
+   "rain": 0.15,
+   "sc": 0.3,
+   "crash": 1,
+   "mech": 1.25,
+   "wear": 4,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": true,
+   "early": 14,
+   "late": 16,
+   "finale": false
+  },
+  {
+   "id": 14,
+   "name": "Interlagos",
+   "region": "Brazil",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 30,
+    "engine": 30,
+    "susp": 25,
+    "cool": 15
+   },
+   "ovt": 3,
+   "rain": 0.4,
+   "sc": 0.55,
+   "crash": 1.1,
+   "mech": 1,
+   "wear": 5,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": true,
+   "always": true,
+   "early": 17,
+   "late": 18,
+   "finale": true
+  },
+  {
+   "id": 15,
+   "name": "Yas Marina",
+   "region": "Abu Dhabi",
+   "type": "Permanent",
+   "w": {
+    "pace": 30,
+    "race": 30,
+    "craft": 20,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 30,
+    "engine": 30,
+    "susp": 20,
+    "cool": 20
+   },
+   "ovt": 6,
+   "rain": 0.02,
+   "sc": 0.25,
+   "crash": 0.9,
+   "mech": 1,
+   "wear": 4,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": true
+  },
+  {
+   "id": 16,
+   "name": "Bahrain International",
+   "region": "Bahrain",
+   "type": "Permanent",
+   "w": {
+    "pace": 20,
+    "race": 30,
+    "craft": 25,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 20,
+    "engine": 35,
+    "susp": 15,
+    "cool": 30
+   },
+   "ovt": 3,
+   "rain": 0.02,
+   "sc": 0.25,
+   "crash": 0.9,
+   "mech": 1.25,
+   "wear": 9,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 17,
+   "name": "Monza",
+   "region": "Italy",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 35,
+    "tyre": 10
+   },
+   "c": {
+    "aero": 10,
+    "engine": 60,
+    "susp": 10,
+    "cool": 20
+   },
+   "ovt": 4,
+   "rain": 0.2,
+   "sc": 0.3,
+   "crash": 1.1,
+   "mech": 1.1,
+   "wear": 3,
+   "street": false,
+   "power": true,
+   "down": false,
+   "highrain": false,
+   "always": true,
+   "early": 10,
+   "late": 12,
+   "finale": false
+  },
+  {
+   "id": 18,
+   "name": "Imola",
+   "region": "Italy",
+   "type": "Permanent",
+   "w": {
+    "pace": 35,
+    "race": 25,
+    "craft": 25,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 30,
+    "engine": 25,
+    "susp": 30,
+    "cool": 15
+   },
+   "ovt": 9,
+   "rain": 0.25,
+   "sc": 0.35,
+   "crash": 1.1,
+   "mech": 1,
+   "wear": 4,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 19,
+   "name": "Nurburgring GP",
+   "region": "Germany",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 25,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 30,
+    "engine": 30,
+    "susp": 25,
+    "cool": 15
+   },
+   "ovt": 5,
+   "rain": 0.45,
+   "sc": 0.35,
+   "crash": 1,
+   "mech": 1,
+   "wear": 5,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": true,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 20,
+   "name": "Kyalami",
+   "region": "South Africa",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 25,
+    "engine": 35,
+    "susp": 15,
+    "cool": 25
+   },
+   "ovt": 5,
+   "rain": 0.25,
+   "sc": 0.25,
+   "crash": 1,
+   "mech": 1.2,
+   "wear": 5,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 21,
+   "name": "Istanbul Park",
+   "region": "Turkey",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 15,
+    "tyre": 30
+   },
+   "c": {
+    "aero": 30,
+    "engine": 20,
+    "susp": 40,
+    "cool": 10
+   },
+   "ovt": 4,
+   "rain": 0.2,
+   "sc": 0.25,
+   "crash": 0.9,
+   "mech": 1,
+   "wear": 8,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 22,
+   "name": "Mugello",
+   "region": "Italy",
+   "type": "Permanent",
+   "w": {
+    "pace": 35,
+    "race": 30,
+    "craft": 15,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 45,
+    "engine": 20,
+    "susp": 25,
+    "cool": 10
+   },
+   "ovt": 6,
+   "rain": 0.15,
+   "sc": 0.3,
+   "crash": 1,
+   "mech": 1,
+   "wear": 6,
+   "street": false,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 23,
+   "name": "Estoril",
+   "region": "Portugal",
+   "type": "Permanent",
+   "w": {
+    "pace": 30,
+    "race": 25,
+    "craft": 20,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 35,
+    "engine": 20,
+    "susp": 30,
+    "cool": 15
+   },
+   "ovt": 6,
+   "rain": 0.25,
+   "sc": 0.25,
+   "crash": 0.9,
+   "mech": 1,
+   "wear": 6,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 24,
+   "name": "Magny-Cours",
+   "region": "France",
+   "type": "Permanent",
+   "w": {
+    "pace": 30,
+    "race": 30,
+    "craft": 15,
+    "tyre": 25
+   },
+   "c": {
+    "aero": 35,
+    "engine": 25,
+    "susp": 25,
+    "cool": 15
+   },
+   "ovt": 8,
+   "rain": 0.3,
+   "sc": 0.25,
+   "crash": 0.8,
+   "mech": 1,
+   "wear": 5,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 25,
+   "name": "Hungaroring",
+   "region": "Hungary",
+   "type": "Permanent",
+   "w": {
+    "pace": 35,
+    "race": 20,
+    "craft": 25,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 45,
+    "engine": 10,
+    "susp": 30,
+    "cool": 15
+   },
+   "ovt": 9,
+   "rain": 0.2,
+   "sc": 0.25,
+   "crash": 0.9,
+   "mech": 1.2,
+   "wear": 6,
+   "street": false,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 26,
+   "name": "Zandvoort",
+   "region": "Netherlands",
+   "type": "Permanent",
+   "w": {
+    "pace": 35,
+    "race": 25,
+    "craft": 20,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 45,
+    "engine": 15,
+    "susp": 30,
+    "cool": 10
+   },
+   "ovt": 9,
+   "rain": 0.3,
+   "sc": 0.3,
+   "crash": 1.1,
+   "mech": 1,
+   "wear": 6,
+   "street": false,
+   "power": false,
+   "down": true,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 27,
+   "name": "Shanghai",
+   "region": "China",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 25,
+    "engine": 35,
+    "susp": 20,
+    "cool": 20
+   },
+   "ovt": 4,
+   "rain": 0.35,
+   "sc": 0.25,
+   "crash": 0.9,
+   "mech": 1,
+   "wear": 8,
+   "street": false,
+   "power": false,
+   "down": false,
+   "highrain": true,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 28,
+   "name": "Hockenheim",
+   "region": "Germany",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 15,
+    "engine": 45,
+    "susp": 15,
+    "cool": 25
+   },
+   "ovt": 3,
+   "rain": 0.3,
+   "sc": 0.3,
+   "crash": 1,
+   "mech": 1,
+   "wear": 5,
+   "street": false,
+   "power": true,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 29,
+   "name": "Road America",
+   "region": "USA",
+   "type": "Permanent",
+   "w": {
+    "pace": 25,
+    "race": 30,
+    "craft": 25,
+    "tyre": 20
+   },
+   "c": {
+    "aero": 20,
+    "engine": 40,
+    "susp": 15,
+    "cool": 25
+   },
+   "ovt": 3,
+   "rain": 0.3,
+   "sc": 0.3,
+   "crash": 1,
+   "mech": 1,
+   "wear": 6,
+   "street": false,
+   "power": true,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  },
+  {
+   "id": 30,
+   "name": "Long Beach",
+   "region": "USA",
+   "type": "Street",
+   "w": {
+    "pace": 40,
+    "race": 15,
+    "craft": 30,
+    "tyre": 15
+   },
+   "c": {
+    "aero": 30,
+    "engine": 15,
+    "susp": 40,
+    "cool": 15
+   },
+   "ovt": 9,
+   "rain": 0.05,
+   "sc": 0.7,
+   "crash": 1.5,
+   "mech": 1,
+   "wear": 4,
+   "street": true,
+   "power": false,
+   "down": false,
+   "highrain": false,
+   "always": false,
+   "early": null,
+   "late": null,
+   "finale": false
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+import { loadData } from "../engine/data.js";
+import { createGame, draft, playSeason, offseason } from "../engine/season.js";
+const D = loadData();
+const t0 = Date.now();
+const g = createGame({ D, N: 30, seed: 7 });
+draft(g);
+for (const t of g.teams.slice(0, 3)) console.log(t.id, t.bot, t.drivers.map((i) => D.drivers[i].name), D.principals[t.principal].name, t.parts);
+const s = playSeason(g);
+console.log("DNF rate", (s.dnfRate * 100).toFixed(1) + "%");
+console.log("Top 5:", s.standings.slice(0, 5).map((t) => `${t.id}(${t.bot}) ${t.pts}`).join(", "));
+console.log("Bottom:", s.standings.slice(-3).map((t) => `${t.id} ${t.pts}`).join(", "));
+offseason(g, s.standings);
+const s2 = playSeason(g);
+console.log("S2 top:", s2.standings.slice(0, 5).map((t) => `${t.id} ${t.pts}`).join(", "));
+console.log("ms", Date.now() - t0);

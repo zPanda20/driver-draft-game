@@ -1,0 +1,33 @@
+2000 games, N=30, season 1 after the first draft
+Teams holding a top-10 driver win 78% of titles; each such team wins 1 season in 12.8
+Best driver on team  Teams/season  Share of titles  Per team
+-------------------  ------------  ---------------  --------
+top 5                5.0           52%              10.3%   
+6-10                 5.0           26%              5.3%    
+11-20                10.0          16%              1.6%    
+21-30                4.5           1%               0.2%    
+31-45                0.9           1%               1.1%    
+46+                  4.7           4%               0.9%    
+
+Bot type      Teams/season  Share of titles  Per team
+------------  ------------  ---------------  --------
+chaotic       3.0           20%              6.6%    
+driverFan     5.9           15%              2.5%    
+rankFollower  6.0           30%              4.9%    
+partsFan      5.9           7%               1.1%    
+balanced      9.2           29%              3.2%    
+
+Parts at +30 or better  Teams/season  Share of titles  Per team
+----------------------  ------------  ---------------  --------
+0                       9.7           27%              2.8%    
+1                       12.7          51%              4.0%    
+2                       4.1           17%              4.0%    
+3                       2.8           4%               1.4%    
+4                       0.6           1%               1.4%    
+
+Round-1 draft position     Share of titles  Per team
+-------------------------  ---------------  --------
+1st quarter (picks first)  26%              3.2%    
+2nd quarter                24%              3.4%    
+3rd quarter                27%              3.3%    
+4th quarter                24%              3.4%    

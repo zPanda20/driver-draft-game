@@ -1,0 +1,5 @@
+1500 drafts per row, seat 0 only, N=30
+Seat 0 plays  Total pick value kept  Mean season points  Title chance
+------------  ---------------------  ------------------  ------------
+honest        166.7                  332.6               3.8%        
+sandbag       124.5                  95.7                0.1%        

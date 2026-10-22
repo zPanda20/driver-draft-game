@@ -1,0 +1,22 @@
+{
+  "name": "driver-draft-game",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Multiplayer motorsport driver-draft game: authoritative Node server + browser client",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node tests/e2e.js",
+    "sim": "node tests/smoke.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

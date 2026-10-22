@@ -1,0 +1,553 @@
+[
+ {
+  "slug": "mclaren-papaya",
+  "name": "McLaren Papaya",
+  "body": "#FF8000",
+  "second": "#111214",
+  "accent": "#47C7FC",
+  "colors": [
+   "#FF8000",
+   "#111214",
+   "#47C7FC"
+  ],
+  "bgd": "#1B1209",
+  "bgl": "#FFF3E6",
+  "tagline": "Papaya takes it.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "red-bull",
+  "name": "Red Bull",
+  "body": "#1B2A5E",
+  "second": "#DB0A40",
+  "accent": "#FFC906",
+  "colors": [
+   "#1B2A5E",
+   "#DB0A40",
+   "#FFC906"
+  ],
+  "bgd": "#0B1128",
+  "bgl": "#EEF1FA",
+  "tagline": "Matte navy, flat out.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "mercedes-and-petronas",
+  "name": "Mercedes and Petronas",
+  "body": "#BFC5C9",
+  "second": "#0B0C0D",
+  "accent": "#00D2BE",
+  "colors": [
+   "#BFC5C9",
+   "#0B0C0D",
+   "#00D2BE"
+  ],
+  "bgd": "#0B0F10",
+  "bgl": "#EEF2F3",
+  "tagline": "Silver arrow, first home.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "modern-ferrari",
+  "name": "Modern Ferrari",
+  "body": "#B50E21",
+  "second": "#FFE100",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#B50E21",
+   "#FFE100",
+   "#FFFFFF"
+  ],
+  "bgd": "#170A0C",
+  "bgl": "#FCEEEE",
+  "tagline": "Rosso, once more.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "audi-f1",
+  "name": "Audi F1",
+  "body": "#8E979F",
+  "second": "#14171A",
+  "accent": "#E3001B",
+  "colors": [
+   "#8E979F",
+   "#14171A",
+   "#E3001B"
+  ],
+  "bgd": "#0F1113",
+  "bgl": "#EEF0F2",
+  "tagline": "Titanium and carbon, a new era.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "renault-2010s",
+  "name": "Renault 2010s",
+  "body": "#FFEC00",
+  "second": "#121212",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#FFEC00",
+   "#121212",
+   "#FFFFFF"
+  ],
+  "bgd": "#121212",
+  "bgl": "#FFFBD6",
+  "tagline": "Sharp, yellow, fast.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "red-bull-rb11-testing-livery",
+  "name": "Red Bull RB11 testing livery",
+  "body": "#121212",
+  "second": "#F5F5F5",
+  "accent": "#8C8C8C",
+  "colors": [
+   "#121212",
+   "#F5F5F5",
+   "#8C8C8C"
+  ],
+  "bgd": "#0C0C0C",
+  "bgl": "#F2F2F2",
+  "tagline": "Hidden in plain sight.",
+  "animal": null,
+  "exact": true
+ },
+ {
+  "slug": "2000s-ferrari",
+  "name": "2000s Ferrari",
+  "body": "#E10600",
+  "second": "#FFFFFF",
+  "accent": "#111111",
+  "colors": [
+   "#E10600",
+   "#FFFFFF",
+   "#111111"
+  ],
+  "bgd": "#1A0C0A",
+  "bgl": "#FFEFEC",
+  "tagline": "The red era.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "mclaren-mp4-23",
+  "name": "McLaren MP4-23",
+  "body": "#C9CCCF",
+  "second": "#E50000",
+  "accent": "#111111",
+  "colors": [
+   "#C9CCCF",
+   "#E50000",
+   "#111111"
+  ],
+  "bgd": "#15171A",
+  "bgl": "#F1F2F3",
+  "tagline": "Chrome and red, champions of 2008.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "renault-r26",
+  "name": "Renault R26",
+  "body": "#0072CE",
+  "second": "#FFD500",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#0072CE",
+   "#FFD500",
+   "#FFFFFF"
+  ],
+  "bgd": "#07203F",
+  "bgl": "#E8F3FD",
+  "tagline": "Blue and yellow, champions again.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "brawn-bgp-001",
+  "name": "Brawn BGP 001",
+  "body": "#F4F4F0",
+  "second": "#DAF000",
+  "accent": "#0B0B0B",
+  "colors": [
+   "#F4F4F0",
+   "#DAF000",
+   "#0B0B0B"
+  ],
+  "bgd": "#0E0F0A",
+  "bgl": "#F8FAEC",
+  "tagline": "One season. One title.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "jordan-198",
+  "name": "Jordan 198",
+  "body": "#FFC800",
+  "second": "#111111",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#FFC800",
+   "#111111",
+   "#FFFFFF"
+  ],
+  "bgd": "#17140A",
+  "bgl": "#FFF9DA",
+  "tagline": "Stinging fast.",
+  "animal": "hornet",
+  "exact": false
+ },
+ {
+  "slug": "williams-fw14b",
+  "name": "Williams FW14B",
+  "body": "#1E56C8",
+  "second": "#FFFFFF",
+  "accent": "#FFD500",
+  "colors": [
+   "#1E56C8",
+   "#FFFFFF",
+   "#FFD500"
+  ],
+  "bgd": "#091533",
+  "bgl": "#EAF0FB",
+  "tagline": "Active and unstoppable.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "marlboro-mclaren",
+  "name": "Marlboro McLaren",
+  "body": "#F4F4F1",
+  "second": "#E10A1E",
+  "accent": "#111111",
+  "colors": [
+   "#F4F4F1",
+   "#E10A1E",
+   "#111111"
+  ],
+  "bgd": "#17171A",
+  "bgl": "#F7F4F1",
+  "tagline": "Red chevrons, first across.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "john-player-special-lotus",
+  "name": "John Player Special Lotus",
+  "body": "#0A0A0A",
+  "second": "#D4AF37",
+  "accent": "#F2D675",
+  "colors": [
+   "#0A0A0A",
+   "#D4AF37",
+   "#F2D675"
+  ],
+  "bgd": "#0A0A0A",
+  "bgl": "#FAF5E6",
+  "tagline": "Black and gold, first home.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "gulf",
+  "name": "Gulf",
+  "body": "#7DB8E5",
+  "second": "#F57C00",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#7DB8E5",
+   "#F57C00",
+   "#FFFFFF"
+  ],
+  "bgd": "#0B1E30",
+  "bgl": "#EAF4FC",
+  "tagline": "Powder blue, first across the line.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "martini-racing",
+  "name": "Martini Racing",
+  "body": "#F6F6F3",
+  "second": "#00296B",
+  "accent": "#4FA8E8",
+  "colors": [
+   "#F6F6F3",
+   "#00296B",
+   "#4FA8E8",
+   "#D5001C"
+  ],
+  "bgd": "#0E1624",
+  "bgl": "#FAFAF7",
+  "tagline": "Stripes at speed.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "rothmans",
+  "name": "Rothmans",
+  "body": "#0C2C6E",
+  "second": "#F3F2EE",
+  "accent": "#C9A227",
+  "colors": [
+   "#0C2C6E",
+   "#F3F2EE",
+   "#C9A227",
+   "#C8102E"
+  ],
+  "bgd": "#09173A",
+  "bgl": "#F6F5F0",
+  "tagline": "Blue, white and gold, still ahead.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "silk-cut",
+  "name": "Silk Cut",
+  "body": "#5B2C83",
+  "second": "#F2F0F5",
+  "accent": "#C0C0CC",
+  "colors": [
+   "#5B2C83",
+   "#F2F0F5",
+   "#C0C0CC"
+  ],
+  "bgd": "#170A24",
+  "bgl": "#F4EEFA",
+  "tagline": "Purple reign.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "castrol",
+  "name": "Castrol",
+  "body": "#00923F",
+  "second": "#F6F6F3",
+  "accent": "#E4002B",
+  "colors": [
+   "#00923F",
+   "#F6F6F3",
+   "#E4002B"
+  ],
+  "bgd": "#06251A",
+  "bgl": "#EAF6EE",
+  "tagline": "Green and gone.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "alitalia",
+  "name": "Alitalia",
+  "body": "#F6F6F3",
+  "second": "#00843D",
+  "accent": "#D2232A",
+  "colors": [
+   "#F6F6F3",
+   "#00843D",
+   "#D2232A",
+   "#F2C300"
+  ],
+  "bgd": "#101714",
+  "bgl": "#F8F8F4",
+  "tagline": "Rally royalty.",
+  "animal": null,
+  "exact": true
+ },
+ {
+  "slug": "subaru-world-rally-team",
+  "name": "Subaru World Rally Team",
+  "body": "#13328A",
+  "second": "#FFCB05",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#13328A",
+   "#FFCB05",
+   "#FFFFFF"
+  ],
+  "bgd": "#08122E",
+  "bgl": "#EBEFFA",
+  "tagline": "Blue and gold, gravel dust.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "renown-mazda",
+  "name": "Renown Mazda",
+  "body": "#FF5530",
+  "second": "#2FA04A",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#FF5530",
+   "#2FA04A",
+   "#FFFFFF"
+  ],
+  "bgd": "#140F0B",
+  "bgl": "#FFF1EA",
+  "tagline": "Rotary winner.",
+  "animal": null,
+  "exact": true
+ },
+ {
+  "slug": "bmw-m",
+  "name": "BMW M",
+  "body": "#14171C",
+  "second": "#81C4FF",
+  "accent": "#0653B6",
+  "colors": [
+   "#14171C",
+   "#81C4FF",
+   "#0653B6",
+   "#E7222E"
+  ],
+  "bgd": "#0A0C10",
+  "bgl": "#F0F2F5",
+  "tagline": "Three slashes. One winner.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "jagermeister",
+  "name": "J\u00e4germeister",
+  "body": "#D9620A",
+  "second": "#0F5B34",
+  "accent": "#FFFFFF",
+  "colors": [
+   "#D9620A",
+   "#0F5B34",
+   "#FFFFFF"
+  ],
+  "bgd": "#1F0E04",
+  "bgl": "#FFF0E2",
+  "tagline": "Orange and green, loud and proud.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "audi-2010s-le-mans",
+  "name": "Audi 2010s Le Mans",
+  "body": "#F2F3F4",
+  "second": "#B7BCC2",
+  "accent": "#D6001C",
+  "colors": [
+   "#F2F3F4",
+   "#B7BCC2",
+   "#D6001C"
+  ],
+  "bgd": "#101214",
+  "bgl": "#F4F5F6",
+  "tagline": "Hybrid endurance, first home.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "falken",
+  "name": "Falken",
+  "body": "#1F4DA6",
+  "second": "#46D3B0",
+  "accent": "#A8F0DC",
+  "colors": [
+   "#1F4DA6",
+   "#46D3B0",
+   "#A8F0DC"
+  ],
+  "bgd": "#0A1D3D",
+  "bgl": "#E9F8F3",
+  "tagline": "Two-tone, one winner.",
+  "animal": null,
+  "exact": true
+ },
+ {
+  "slug": "flying-lizard-racing",
+  "name": "Flying Lizard Racing",
+  "body": "#EE4A2A",
+  "second": "#E6E8EA",
+  "accent": "#F5D400",
+  "colors": [
+   "#EE4A2A",
+   "#E6E8EA",
+   "#F5D400"
+  ],
+  "bgd": "#190B08",
+  "bgl": "#FFF0EC",
+  "tagline": "The lizard bites.",
+  "animal": "lizard",
+  "exact": false
+ },
+ {
+  "slug": "craft-bamboo",
+  "name": "CRAFT Bamboo",
+  "body": "#F4F4F0",
+  "second": "#6CC024",
+  "accent": "#FFD600",
+  "colors": [
+   "#F4F4F0",
+   "#6CC024",
+   "#FFD600",
+   "#101010"
+  ],
+  "bgd": "#0C1208",
+  "bgl": "#F3FAEA",
+  "tagline": "Fresh green, first home.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "jeff-gordon-flames",
+  "name": "Jeff Gordon Flames",
+  "body": "#1F57B8",
+  "second": "#E4262C",
+  "accent": "#F58220",
+  "colors": [
+   "#1F57B8",
+   "#E4262C",
+   "#F58220",
+   "#D7E000"
+  ],
+  "bgd": "#0B1530",
+  "bgl": "#EEF3FC",
+  "tagline": "Flames to the front.",
+  "animal": null,
+  "exact": true
+ },
+ {
+  "slug": "petty-blue-and-stp",
+  "name": "Petty Blue and STP",
+  "body": "#3B90D6",
+  "second": "#F5F5F5",
+  "accent": "#E8242A",
+  "colors": [
+   "#3B90D6",
+   "#F5F5F5",
+   "#E8242A"
+  ],
+  "bgd": "#0E2238",
+  "bgl": "#EDF5FC",
+  "tagline": "The King's blue.",
+  "animal": null,
+  "exact": false
+ },
+ {
+  "slug": "jimmie-johnson-lowes",
+  "name": "Jimmie Johnson Lowe's",
+  "body": "#3A47B8",
+  "second": "#C6E81B",
+  "accent": "#F4F4F1",
+  "colors": [
+   "#3A47B8",
+   "#C6E81B",
+   "#F4F4F1",
+   "#111111"
+  ],
+  "bgd": "#0A1136",
+  "bgl": "#EDF0FB",
+  "tagline": "Blue, white and lime, built to win.",
+  "animal": null,
+  "exact": true
+ }
+]
