@@ -59,7 +59,7 @@ const pages = () => [
       <li><b>Four rounds.</b> In each round, every team takes one part.</li>
       <li><b>The order.</b> Weakest team of last season first, champion last. The same order repeats every round. If the host chose "Snake", rounds 2 and 4 run backwards.</li>
       <li><b>Four slots.</b> Aero, Engine, Suspension, Cooling. You fill each slot once. So each pick also decides which slot you fill next.</li>
-      <li><b>Grades.</b> Elite +50, Strong +30, Solid +20, Basic +10. There is only <b>one Elite part for each slot</b>. There is exactly one part per team for each slot, so most parts are Basic or Solid.</li>
+      <li><b>Grades.</b> Elite +50, Strong +30, Solid +20, Basic +10. There is only <b>one Elite part for each slot</b>. Every slot has one part for each team plus a few spares, so most parts are Basic or Solid.</li>
     </ol>
     <p><b>On your turn:</b> open the slot you want, then press Take on a grade. You have ${cfg("partsSec", 12)} seconds, shown by the clock at the top right.</p>
     <p><b>On the screen you will see:</b> a line telling you what is happening, <b>Your car</b> with the four slots, the <b>Pick order</b> for all four rounds, and the pool.</p>

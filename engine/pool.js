@@ -36,8 +36,20 @@ export function pointsTable(N) {
   return out;
 }
 
+// A few spare parts per slot on top of one per team, so the last pickers still have a choice.
+// The Elite part stays at exactly 1; the spares are spread over Strong / Solid / Basic in the usual 7 : 10 : 12 mix.
+export const spareParts = (N) => Math.max(2, Math.round(N * 0.15));
+export function partCounts(N) {
+  const out = tierCounts(N), extra = spareParts(N), w = [0, 7, 10, 12], tot = 29;
+  const raw = w.map((x) => (x * extra) / tot), add = raw.map(Math.floor);
+  let rem = extra - add.reduce((a, b) => a + b, 0);
+  const order = raw.map((x, i) => [x - Math.floor(x), i]).filter(([, i]) => i > 0).sort((a, b) => b[0] - a[0]);
+  for (const [, i] of order) { if (rem <= 0) break; add[i]++; rem--; }
+  return out.map((c, i) => c + add[i]);
+}
+
 export function buildPartItems(N) {
-  const counts = tierCounts(N), items = [];
+  const counts = partCounts(N), items = [];
   for (const slot of SLOTS) {
     let k = 0;
     counts.forEach((c, t) => { for (let j = 0; j < c; j++) items.push({ id: `${slot}:${TIER_BONUS[t]}#${k++}`, kind: "part", slot, bonus: TIER_BONUS[t] }); });
