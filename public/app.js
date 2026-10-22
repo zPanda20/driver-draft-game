@@ -3,9 +3,10 @@ import { st, $, $$, esc, send, store, now, toast, buildIndex, applyTheme, chip, 
 import { draftView, draftHandlers } from "./draft.js";
 import { raceUpdate, raceHandlers, raceActive, raceReset } from "./race.js";
 import { offView, offHandlers } from "./off.js";
+import { helpHandlers, maybeHelp, renderHelp } from "./help.js";
 
 const app = $("#app");
-app.innerHTML = `<div id="top"></div><div id="body"></div><div id="garage"></div><div id="hostbar"></div>`;
+app.innerHTML = `<div id="top"></div><div id="body"></div><div id="garage"></div><div id="hostbar"></div><div id="help"></div>`;
 const el = { top: $("#top"), body: $("#body"), garage: $("#garage"), host: $("#hostbar") };
 
 const params = new URLSearchParams(location.search);
@@ -81,7 +82,7 @@ const A = {
   leave() { store("room", null); intent = null; st.ws?.close(); landing(); history.replaceState(null, "", "/"); },
   chatSend() { const i = $("#chatin"); if (i && i.value.trim()) { send({ t: "chat", text: i.value }); i.value = ""; } },
 };
-Object.assign(A, draftHandlers, raceHandlers, offHandlers);
+Object.assign(A, draftHandlers, raceHandlers, offHandlers, helpHandlers);
 
 app.addEventListener("click", (e) => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
@@ -111,7 +112,7 @@ function renderTop() {
   const S = st.S;
   const mt = myTeam(); const bslug = mt && mt.livery ? mt.livery : (S.players && (S.players.find((q) => q.you) || {}).livery);
   const bn = bslug && !st.watch ? ` style="--banner:url(/liveries/${esc(bslug)}/banner.png)"` : "";
-  el.top.innerHTML = `<div class="top"${bn}><span class="logo"><b>●</b> Driver Draft</span><span class="code" title="Room code">${esc(S.room)}</span><span class="phase">${esc(phaseLabel(S))}</span>${S.paused ? `<span class="paused">PAUSED</span>` : ""}<span class="timer" id="timer"></span></div>`;
+  el.top.innerHTML = `<div class="top"${bn}><span class="logo"><b>●</b> Driver Draft</span><span class="code" title="Room code">${esc(S.room)}</span><span class="phase">${esc(phaseLabel(S))}</span>${S.paused ? `<span class="paused">PAUSED</span>` : ""}<span class="timer" id="timer"></span>${st.watch ? "" : `<button class="helpbtn" data-act="help" title="How to play" aria-label="How to play">?</button>`}</div>`;
   tick();
 }
 function tick() {
@@ -200,6 +201,7 @@ function render() {
   const S = st.S; if (!S) return;
   applyTheme();
   renderTop();
+  maybeHelp(S);
   const isRace = S.phase === "season" && S.step.startsWith("race.");
   let main = "", side = "", full = false;
   if (S.step === "lobby") ({ main, side } = lobby(S));

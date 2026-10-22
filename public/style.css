@@ -227,3 +227,20 @@ h1,h2,h3{letter-spacing:.02em}
 .popup.won .verdict{color:var(--good)} .popup.lost .verdict{color:var(--bad)} .popup.pend .verdict{color:var(--warn);font-size:13px}
 .own{color:var(--mute);font-weight:500;font-size:.88em}
 .champ h2 .own{display:block;font-size:.55em;margin-top:2px}
+
+/* how to play */
+.helpbtn{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:800;font-size:15px;cursor:pointer;line-height:1;padding:0}
+.helpbtn:hover{border-color:var(--acc);color:var(--acc)}
+#help{position:relative;z-index:80}
+.helpback{position:fixed;inset:0;background:rgba(5,8,14,.72);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:14px;animation:fadein .2s}
+.helpcard{width:min(560px,100%);max-height:calc(100vh - 28px);display:flex;flex-direction:column;background:#121826;border:2px solid var(--acc);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.65);overflow:hidden}
+.helptabs{display:flex;gap:4px;padding:10px 10px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.helptabs button{flex:none;background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font-weight:700;font-size:13px;padding:8px 10px;cursor:pointer;white-space:nowrap}
+.helptabs button.on{color:#fff;border-bottom-color:var(--acc)}
+.helptabs button.x{margin-left:auto;font-size:15px}
+.helpbody{padding:18px 20px;overflow-y:auto;font-size:15.5px;line-height:1.5}
+.helpbody h2{font-size:22px;margin-bottom:10px}
+.helpbody p{margin:0 0 11px}
+.helpbody ul.hl,.helpbody ol.hl{margin:0 0 11px;padding-left:20px}
+.helpbody li{margin-bottom:8px}
+.helpnav{display:flex;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}
